@@ -1,0 +1,310 @@
+body {
+	font-family: "Segoe UI";
+	font-size: 14px;
+	height: 100%;
+	width: 100%;
+}
+
+.header {
+	height: 76px;
+	border-bottom: 1px #E5E4E2 solid;
+	margin: auto;
+	padding-top: 10px;
+	padding-bottom: 10px;
+	position: relative;
+}
+
+.header img {
+	float: left;
+	margin-left: 150px;
+}
+
+.header p {
+	float: left;
+	margin-left: 50px;
+	font-family: "Segoe UI";
+	font-size: 18pt;
+	font-weight: 600;
+	color: gray;
+	position: absolute;
+  top: 0%;
+  vertical-align: middle;
+  line-height: 76px;
+  left: 11%;
+}
+
+.multilingual-link, #help, #logout {
+	position: absolute;
+	top: 0%;
+	vertical-align: middle;
+	line-height: 76px;
+}
+
+.multilingual-link {
+	right: 30%;
+}
+
+.multilingual-link a, #help, #logout {
+	font-family: "Segoe UI";
+	font-size: 14pt;
+	font-weight: 600;
+	color: #333333;
+}
+
+#help {
+	right: 20%;
+}
+
+#logout {
+	right: 10%;
+}
+/* left menu */
+.menu {
+	position: absolute;
+	border-right: 1px #E5E4E2 solid;
+	height: 100vh;
+	padding-top: 40px;
+	left: 50%;
+}
+
+.menu ul {
+	list-style: none;
+	line-height: 40px;
+	padding: 0px;
+}
+
+.menu .activateItem {
+	font-family: "Segoe UI";
+	font-size: 18pt;
+	font-weight: 600;
+	color: #2F85FA;
+}
+
+.menu .potentialItem {
+	font-family: "Segoe UI";
+	font-size: 14pt;
+	font-weight: 600;
+	color: #333333;
+}
+
+.menu .regularItem {
+	font-family: "Segoe UI";
+	font-size: 14pt;
+	color: #666666;
+}
+/* content */
+.content {
+	position: relative;
+	left: 30%;
+	width: 70%;
+}
+
+.content .header {
+	float: left;
+	border-bottom: 1px #E5E4E2 solid;
+	padding-bottom: 50px;
+	padding-top: 40px;
+}
+
+.content .header-list {
+	margin-left: -2%;
+	padding-top: 10px;
+	width: 100%;
+	position: relative;
+}
+
+.content .header, .content .form, .content .form-button {
+	margin-left: -2%;
+	font-family: "Segoe UI";
+	font-size: 18pt;
+	font-weight: 600;
+	color: gray;
+	width: 80%;
+}
+
+.content .form {
+	border-bottom: 1px #E5E4E2 solid;
+	padding-bottom: 10px;
+	display: table;
+	padding-top: 60px;
+}
+
+input {
+	border-radius: 0.5;
+}
+
+.clear {
+	clear: both;
+}
+
+.normalText, .mandatory, .btnCancel, .btnCreate, .tbl-list {
+	font-family: "Segoe UI";
+	font-size: 14pt;
+	font-weight: 600;
+	color: #666666;
+}
+
+.mandatory {
+	color: red;
+}
+
+.lastLine {
+	border-bottom: 1px #E5E4E2 solid;
+}
+
+.tbl {
+	width: 100%;
+	line-height: 30px;
+	padding: 0px;
+}
+
+.tbl tr td {
+	height: 30px;
+	vertical-align: top;
+	border-bottom: 38px solid white;
+	padding: 0px;
+	width: 25%;
+}
+
+.tbl-list {
+	width: 80%;
+}
+
+.tbl-list thead tr td {
+	height: 32px;
+	padding-left: 10px;
+	border: 1px #E5E4E2 solid;
+	padding-right: 10px;
+	padding-bottom: 10px;
+}
+
+.tbl-list tbody tr td, .tbl-list tbody tr td:first-child, tbl-list tbody tr:last-child td
+	{
+	height: 38px;
+	padding-left: 10px;
+	border-right: 1px #E5E4E2 solid;
+	vertical-align: middle;
+}
+
+.paging {
+	margin-top: 30px;
+	margin-right: 0px;
+}
+
+.paging tr td {
+	height: 32px;
+	width: 30px;
+	vertical-align: middle;
+	text-align: center;
+}
+
+.pagination>li.active>a {
+	background: #DCDCDC;
+	color: black;
+}
+
+.checkbox {
+	height: 15px;
+	width: 15px;
+}
+
+.tbl-list tbody tr td:first-child {
+	border-left: 1px #E5E4E2 solid;
+}
+
+.tbl-list tbody tr td:first-child, .tbl-list tbody tr td:nth-child(2),
+	.tbl-list tbody tr td:last-child {
+	text-align: center;
+	padding: 0px;
+}
+
+.tbl-list tbody tr:last-child td {
+	height: 38px;
+	vertical-align: middle;
+	border-bottom: 1px #E5E4E2 solid;
+}
+
+.tbl-list tfoot tr {
+	background-color: #f4f3f2;
+	border: 1px #E5E4E2 solid;
+	height: 38px;
+}
+
+.btnCancel {
+	width: 200px;
+	height: 35px;
+	background-color: #B9B9B9;
+	color: black;
+}
+
+.btnCreate {
+	width: 200px;
+	height: 35px;
+	background-color: #2F85FA;
+	color: white;
+	vertical-align: middle;
+}
+/* common */
+.left {
+	float: left;
+}
+
+.right {
+	float: right;
+}
+
+.height30px {
+	height: 30px;
+}
+
+.width40 {
+	width: 40%;
+}
+
+.width45 {
+	width: 45%;
+}
+
+.width50 {
+	width: 50%;
+}
+
+.width60 {
+	width: 60%;
+}
+
+.width50px {
+	width: 100%;
+	margin-right: 15px;
+}
+
+.placeholder {
+	color: grey;
+}
+
+select option:first-child {
+	color: grey;
+	display: none;
+}
+
+select option {
+	color: #555;
+}
+
+.error {
+	border: 1px #FF7F50 solid;
+}
+
+.error-text {
+	color: #FF7F50;
+	font-size: 9pt;
+}
+
+.error-all {
+	height: 76px;
+	border-bottom: 1px #E5E4E2 solid;
+	margin: auto;
+	padding-top: 10px;
+	padding-bottom: 10px;
+	position: relative;
+}
