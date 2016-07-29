@@ -9,6 +9,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
+import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.context.support.ResourceBundleMessageSource;
@@ -20,6 +21,7 @@ import org.springframework.web.servlet.handler.SimpleUrlHandlerMapping;
 import org.springframework.web.servlet.i18n.CookieLocaleResolver;
 import org.springframework.web.servlet.i18n.LocaleChangeInterceptor;
 
+import vn.elca.training.config.SecurityConfiguration;
 import vn.elca.training.service.IProjectService;
 import vn.elca.training.validator.ProjectValidator;
 import vn.elca.training.web.ApplicationController;
@@ -29,8 +31,10 @@ import vn.elca.training.web.UpdatationController;
 
 @Configuration
 @EnableAutoConfiguration
+@Import(value = { SecurityConfiguration.class })
 @ComponentScan(basePackageClasses = { ApplicationLauncher.class, ApplicationController.class, IProjectService.class,
-        SessionScopedController.class, UpdatationController.class, GlobalDefaultExceptionHandler.class, ProjectValidator.class })
+        SessionScopedController.class, UpdatationController.class, GlobalDefaultExceptionHandler.class,
+        ProjectValidator.class })
 @PropertySource({ "classpath:/application.properties", "classpath:/message.properties",
         "classpath:/message_fr.properties" })
 @EnableAspectJAutoProxy

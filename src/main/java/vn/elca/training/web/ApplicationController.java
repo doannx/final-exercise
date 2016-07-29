@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.WebDataBinder;
@@ -217,6 +218,7 @@ public class ApplicationController {
      * @param id
      * @return update project list
      */
+    @PreAuthorize("hasRole('ADMIN'")
     @RequestMapping("/delete/{id}")
     ModelAndView delete(@PathVariable String id) {
         projectService.delete(id);
