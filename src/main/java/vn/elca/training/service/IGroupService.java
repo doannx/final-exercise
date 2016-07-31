@@ -2,8 +2,9 @@ package vn.elca.training.service;
 
 import java.util.List;
 
-import vn.elca.training.dom.Group;
+import vn.elca.training.dom.Department;
 
 public interface IGroupService {
-    List<Group> findAll();
+    List<Department> findAll();
+    Department getById(Long id);
 }

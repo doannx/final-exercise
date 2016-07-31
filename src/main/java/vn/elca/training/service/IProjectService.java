@@ -7,11 +7,12 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import vn.elca.training.dom.Project;
 import vn.elca.training.exception.ProjectNumberAlreadyExistsException;
 import vn.elca.training.model.ProjectVO;
+import vn.elca.training.model.SearchResultVO;
 
 public interface IProjectService {
     List<Project> findAll();
 
-    List<Project> findAll(int currentPage, int num);
+    SearchResultVO<Project> findAll(int currentPage, int num);
 
     /**
      * Find project(s) based on name. Search condition is LIKE operator.
@@ -21,7 +22,7 @@ public interface IProjectService {
      */
     List<Project> findByName(String name);
 
-    List<Project> findByName(String name, int currentPage, int num);
+    SearchResultVO<Project> findByName(String name, int currentPage, int num);
 
     /**
      * Find project(s) based on name & status.
@@ -32,7 +33,7 @@ public interface IProjectService {
      */
     List<Project> findByNameAndStatus(String name, String status);
 
-    List<Project> findByNameAndStatus(String name, String status, int currentPage, int num);
+    SearchResultVO<Project> findByNameAndStatus(String name, String status, int currentPage, int num);
 
     /**
      * Find project(s) based on status.
@@ -42,15 +43,15 @@ public interface IProjectService {
      */
     List<Project> findByStatus(String status);
 
-    List<Project> findByStatus(String status, int currentPage, int num);
+    SearchResultVO<Project> findByStatus(String status, int currentPage, int num);
 
     /**
      * Get the information of one project by its id.
      * 
      * @param id
-     * @return ProjectVO
+     * @return Project
      */
-    ProjectVO getById(String id);
+    Project getById(String id);
 
     /**
      * Update one project.
@@ -88,7 +89,7 @@ public interface IProjectService {
      * @return id of updated project
      * @exception ProjectNumberAlreadyExistsException
      */
-    Long add(ProjectVO p) throws ProjectNumberAlreadyExistsException;
+    Long add(Project p) throws ProjectNumberAlreadyExistsException;
 
     /**
      * Sort by [name].

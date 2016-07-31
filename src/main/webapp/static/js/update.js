@@ -25,7 +25,6 @@ $(document).ready(function() {
 	  // track enter key
 	  var keycode = (event.keyCode ? event.keyCode : (event.which ? event.which : event.charCode));
 	  if (keycode == 13) {
-		 alert('enter');
 	     $('#btnCreatePrj').click();
 	     return false;
 	  } else  {

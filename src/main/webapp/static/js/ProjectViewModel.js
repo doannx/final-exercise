@@ -28,7 +28,15 @@ function ProjectViewModel(value) {
 				status : $('#status').val()
 			}
 		}).done(function(data) {
-			renderPaging($('#hidTotalPage').val(), 1, 1);
+			$.ajax({
+				method : "POST",
+				url : "/count",
+			}).done(function(data) {
+				$('#hidTotalPage').val(data);
+				renderPaging(data, 1, 1);
+			}).fail(function(data) {
+			});
+			
 			hideNoResult();
 			self.projects(data);
 			if (data.length == 0) {
@@ -72,6 +80,15 @@ $(document).ready(function() {
 				name : $('#prjName').val()
 			}
 		}).done(function(data) {
+			$.ajax({
+				method : "POST",
+				url : "/count",
+			}).done(function(data) {
+				$('#hidTotalPage').val(data);
+				renderPaging(data, 1, 1);
+			}).fail(function(data) {
+			});
+			
 			hideNoResult();
 			myViewModel.projects(data);
 			if (data.length == 0) {

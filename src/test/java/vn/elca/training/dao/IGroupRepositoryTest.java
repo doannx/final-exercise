@@ -13,7 +13,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import vn.elca.training.ApplicationLauncher;
 import vn.elca.training.config.MyRepositoryConfiguration;
-import vn.elca.training.dom.Group;
+import vn.elca.training.dom.Department;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = { ApplicationLauncher.class, MyRepositoryConfiguration.class })
@@ -30,7 +30,7 @@ public class IGroupRepositoryTest {
 
     @Test
     public void testSaveGroup() {
-        Group g = new Group();
+        Department g = new Department();
         g.setName("XDG");
         
         assertNull(g.getId());

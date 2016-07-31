@@ -51,8 +51,8 @@ public class ProjectVO implements Serializable {
         this.group = group;
     }
 
-    public ProjectVO(Long id, String name, Date finishingDate, String status, String customer, String group,
-            List<MemberVO> members, Date startDate) {
+    public ProjectVO(Long id, String name, Date finishingDate, String status, String customer, List<MemberVO> members,
+            String group, Date endDate) {
         super();
         this.id = id;
         this.name = name;
@@ -61,7 +61,7 @@ public class ProjectVO implements Serializable {
         this.customer = customer;
         this.group = group;
         this.members = members;
-        this.endDate = startDate;
+        this.endDate = endDate;
     }
 
     public Long getId() {

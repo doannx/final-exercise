@@ -33,10 +33,10 @@
 						class="form-control placeholder" id="status">
 							<option value="-1" disabled selected hidden=true><spring:message
 									code="screen.statusplaceholder" /></option>
+							<option value="FIN"><spring:message code="status.fin" /></option>
+							<option value="INP"><spring:message code="status.inp" /></option>
 							<option value="NEW"><spring:message code="status.new" /></option>
 							<option value="PLA"><spring:message code="status.pla" /></option>
-							<option value="INP"><spring:message code="status.inp" /></option>
-							<option value="FIN"><spring:message code="status.fin" /></option>
 					</select></td>
 					<td style="border: 0px solid white; width: 2%;">&nbsp;</td>
 					<td style="border: 0px solid white; width: 12%;">

@@ -24,8 +24,6 @@ public class QProject extends EntityPathBase<Project> {
 
     public final StringPath customer = createString("customer");
 
-    public final DateTimePath<java.util.Date> endDate = createDateTime("endDate", java.util.Date.class);
-
     public final DateTimePath<java.util.Date> finishingDate = createDateTime("finishingDate", java.util.Date.class);
 
     public final QDepartment group;

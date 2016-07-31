@@ -32,8 +32,8 @@ import org.springframework.web.servlet.ModelAndView;
 
 import vn.elca.training.convertor.GroupEditor;
 import vn.elca.training.convertor.StatusEditor;
-import vn.elca.training.dom.Group;
-import vn.elca.training.dom.Member;
+import vn.elca.training.dom.Department;
+import vn.elca.training.dom.Project;
 import vn.elca.training.exception.ProjectNumberAlreadyExistsException;
 import vn.elca.training.model.GroupVO;
 import vn.elca.training.model.MemberVO;
@@ -50,7 +50,7 @@ public class UpdatationController {
      * Declare the [DummyProjectService].
      */
     @Autowired
-    @Qualifier(value = "dummyProjectService")
+    @Qualifier(value = "hibernateProjectService")
     private IProjectService projectService;
     @Autowired
     private IGroupService groupService;
@@ -87,9 +87,9 @@ public class UpdatationController {
     }
 
     @ModelAttribute("allGroups")
-    public List<Group> populateGroups(Locale locale) {
-        List<Group> groups = new ArrayList<Group>();
-        groups.add(new Group(-1L, messageSource.getMessage("ddl.selectgroup", null, locale)));
+    public List<Department> populateGroups(Locale locale) {
+        List<Department> groups = new ArrayList<Department>();
+        groups.add(new Department(-1L, messageSource.getMessage("ddl.selectgroup", null, locale)));
         groups.addAll(this.groupService.findAll());
         return groups;
     }
@@ -98,10 +98,11 @@ public class UpdatationController {
     public List<StatusVO> populateStatus(Locale locale) {
         List<StatusVO> status = new ArrayList<StatusVO>();
         status.add(new StatusVO("", messageSource.getMessage("ddl.selectstatus", null, locale)));
-        status.add(new StatusVO("NEW", messageSource.getMessage("status.new", null, locale)));
         status.add(new StatusVO("FIN", messageSource.getMessage("status.fin", null, locale)));
-        status.add(new StatusVO("PLA", messageSource.getMessage("status.pla", null, locale)));
         status.add(new StatusVO("INP", messageSource.getMessage("status.inp", null, locale)));
+        status.add(new StatusVO("NEW", messageSource.getMessage("status.new", null, locale)));
+        status.add(new StatusVO("PLA", messageSource.getMessage("status.pla", null, locale)));
+        
         return status;
     }
 
@@ -124,7 +125,10 @@ public class UpdatationController {
      */
     @RequestMapping("/detail/{id}")
     String detail(@PathVariable String id, HttpSession session, Model model) {
-        model.addAttribute("project", projectService.getById(id));
+        Project entity = projectService.getById(id);
+        ProjectVO vo = new ProjectVO(entity.getId(), entity.getName(), entity.getFinishingDate(), entity.getStatus(),
+                entity.getCustomer(), null, String.valueOf(entity.getGroup().getId()), entity.getEndDate());
+        model.addAttribute("project", vo);
         session.setAttribute("UPDATE_MODE", "update");
         return "update";
     }
@@ -151,18 +155,18 @@ public class UpdatationController {
      * @return [home] view after updating changes.
      */
     @RequestMapping(value = "/update", method = RequestMethod.POST)
-    public String submitForm(@ModelAttribute("project") ProjectVO projectVO, BindingResult result, HttpSession session,
+    public String submitForm(@ModelAttribute("project") ProjectVO vo, BindingResult result, HttpSession session,
             SessionStatus status, Locale locale) throws ProjectNumberAlreadyExistsException {
         String mode = session.getAttribute("UPDATE_MODE").toString();
         // validate
-        validator.validate(projectVO, result);
+        validator.validate(vo, result);
         if (result.hasErrors()) {
             session.setAttribute("ERROR_STATUS", true);
             return "update";
         } else {
             // once more check in [add] mode
             if ("add".equals(mode)) {
-                if (this.projectService.getById(projectVO.getId().toString()) != null) {
+                if (this.projectService.getById(vo.getId().toString()) != null) {
                     result.addError(new FieldError("project", "id",
                             messageSource.getMessage("error.idduplicate", null, locale)));
                     return "update";
@@ -171,10 +175,13 @@ public class UpdatationController {
         }
         session.setAttribute("ERROR_STATUS", false);
         // Store the employee information in database
+        Department group = this.groupService.getById(Long.parseLong(vo.getGroup()));
+        Project entity = new Project(vo.getId(), vo.getName(), vo.getFinishingDate(), vo.getStatus(), vo.getCustomer(),
+                group, vo.getEndDate());
         if ("update".equals(mode)) {
-            projectService.update(projectVO);
+            projectService.update(entity);
         } else {
-            projectService.add(projectVO);
+            projectService.add(entity);
         }
         // mark session complete
         status.setComplete();

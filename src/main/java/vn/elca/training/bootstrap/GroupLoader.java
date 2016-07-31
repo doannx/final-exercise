@@ -7,7 +7,7 @@ import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
 
 import vn.elca.training.dao.IGroupRepository;
-import vn.elca.training.dom.Group;
+import vn.elca.training.dom.Department;
 
 @Component
 public class GroupLoader implements ApplicationListener<ContextRefreshedEvent> {
@@ -21,15 +21,15 @@ public class GroupLoader implements ApplicationListener<ContextRefreshedEvent> {
 
     @Override
     public void onApplicationEvent(ContextRefreshedEvent event) {
-        Group x = new Group("XDG");
+        Department x = new Department("XDG");
         this.groupRepository.save(x);
-        x = new Group("KIM");
+        x = new Department("KIM");
         this.groupRepository.save(x);
-        x = new Group("VVH");
+        x = new Department("VVH");
         this.groupRepository.save(x);
-        x = new Group("THU");
+        x = new Department("THU");
         this.groupRepository.save(x);
-        x = new Group("TDP");
+        x = new Department("TDP");
         this.groupRepository.save(x);
         log.info("Save 5 initial groups...");
     }

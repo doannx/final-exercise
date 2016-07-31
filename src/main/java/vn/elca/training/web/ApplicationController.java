@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
+import org.springframework.context.MessageSource;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -30,6 +31,7 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.servlet.ModelAndView;
 
 import vn.elca.training.dom.Project;
+import vn.elca.training.model.SearchResultVO;
 import vn.elca.training.model.UserPreference;
 import vn.elca.training.service.IProjectService;
 import vn.elca.training.util.StringUtil;
@@ -41,26 +43,23 @@ public class ApplicationController {
      * Declare the [DummyProjectService].
      */
     @Autowired
-    @Qualifier(value = "dummyProjectService")
+    @Qualifier(value = "hibernateProjectService")
     private IProjectService projectService;
     @Value("${records.per.page}")
     private String recordsPerPage;
     @Autowired
     private UserPreference userPref;
+    @Autowired
+    MessageSource messageSource;
 
     @RequestMapping(value = "/", method = { RequestMethod.GET })
     ModelAndView main() {
         int numOfRecords = (int) projectService.countAll();
-        int totalPage = numOfRecords / Integer.valueOf(recordsPerPage);
-        System.out.println(numOfRecords % Integer.valueOf(recordsPerPage));
-        if (numOfRecords % Integer.valueOf(recordsPerPage) > 0) {
-            totalPage++;
-        }
         Map<String, Object> model = new HashMap<String, Object>();
         model.put("currentPage", "1");
         model.put("beginIndex", "1");
         model.put("recordsPerPage", recordsPerPage);
-        model.put("totalPage", totalPage);
+        model.put("totalPage", this.getTotalPage(numOfRecords, Integer.valueOf(recordsPerPage)));
         return new ModelAndView("search", model);
     }
 
@@ -86,9 +85,9 @@ public class ApplicationController {
     @RequestMapping("/query")
     @ResponseBody
     List<Project> query(HttpSession session, @RequestParam(value = "name", defaultValue = "all") String searchCriteria,
-            @RequestParam(value = "status", defaultValue = "-1") String status, Model model) {
+            @RequestParam(value = "status", defaultValue = "-1") String status, Model model, Locale locale) {
         this.userPref.setUserCriterion(searchCriteria);
-        List<Project> lstOfCurrentPage;
+        SearchResultVO<Project> resultVo;
         // in case search criteria is not [all] => save it into session
         if (!"all".equals(this.userPref.getUserCriterion())) {
             session.setAttribute("TEXT_SEARCH_CRITERIA", searchCriteria);
@@ -102,18 +101,31 @@ public class ApplicationController {
         }
         // return the search result
         if (!"all".equals(searchCriteria) && !"-1".equals(status)) {
-            lstOfCurrentPage = projectService.findByNameAndStatus(searchCriteria, status, 1,
+            resultVo = projectService.findByNameAndStatus(searchCriteria, status, 0,
                     Integer.valueOf(this.recordsPerPage).intValue());
         } else if (!"all".equals(searchCriteria)) {
-            lstOfCurrentPage = projectService.findByName(searchCriteria, 1, Integer.valueOf(this.recordsPerPage)
-                    .intValue());
+            resultVo = projectService.findByName(searchCriteria, 0, Integer.valueOf(this.recordsPerPage).intValue());
         } else if (!"-1".equals(status)) {
-            lstOfCurrentPage = projectService.findByStatus(status, 1, Integer.valueOf(this.recordsPerPage).intValue());
+            resultVo = projectService.findByStatus(status, 0, Integer.valueOf(this.recordsPerPage).intValue());
         } else {
-            lstOfCurrentPage = projectService.findAll(1, Integer.valueOf(this.recordsPerPage).intValue());
+            resultVo = projectService.findAll(0, Integer.valueOf(this.recordsPerPage).intValue());
         }
-        model.addAttribute("lstOfCurrentPage", lstOfCurrentPage);
-        return lstOfCurrentPage;
+        model.addAttribute("lstOfCurrentPage", resultVo.getLstResult());
+        session.setAttribute("TOTAL_PAGE_OF_LATEST_QUERY",
+                this.getTotalPage((int) resultVo.getSize(), Integer.valueOf(recordsPerPage)));
+        return this.multilingualForStatus(resultVo.getLstResult(), locale);
+    }
+
+    /**
+     * Get the [count] of latest query.
+     * 
+     * @param session
+     * @return [count] value
+     */
+    @RequestMapping("/count")
+    @ResponseBody
+    String query(HttpSession session) {
+        return session.getAttribute("TOTAL_PAGE_OF_LATEST_QUERY").toString();
     }
 
     /**
@@ -127,13 +139,13 @@ public class ApplicationController {
      */
     @RequestMapping("/paging/{page}")
     @ResponseBody
-    List<Project> paging(HttpSession session, @PathVariable String page, Model model) {
-        String searchCriteria = (session.getAttribute("TEXT_SEARCH_CRITERIA") != null ? session.getAttribute(
-                "TEXT_SEARCH_CRITERIA").toString() : "all");
-        String status = (session.getAttribute("STATUS_SEARCH_CRITERIA") != null ? session.getAttribute(
-                "STATUS_SEARCH_CRITERIA").toString() : "-1");
-        String sortOrdering = (session.getAttribute("SORT_ORDERING") != null ? session.getAttribute("SORT_ORDERING")
-                .toString() : "asc");
+    List<Project> paging(HttpSession session, @PathVariable String page, Model model, Locale locale) {
+        String searchCriteria = (session.getAttribute("TEXT_SEARCH_CRITERIA") != null
+                ? session.getAttribute("TEXT_SEARCH_CRITERIA").toString() : "all");
+        String status = (session.getAttribute("STATUS_SEARCH_CRITERIA") != null
+                ? session.getAttribute("STATUS_SEARCH_CRITERIA").toString() : "-1");
+        String sortOrdering = (session.getAttribute("SORT_ORDERING") != null
+                ? session.getAttribute("SORT_ORDERING").toString() : "asc");
         String sortName = (session.getAttribute("SORT_NAME") != null ? session.getAttribute("SORT_NAME").toString()
                 : "id");
         // return the search result
@@ -154,10 +166,10 @@ public class ApplicationController {
             lst = projectService.sortByName(lst, sortOrdering);
         }
         // paging
-        List<Project> lstOfCurrentPage = projectService.subListByIndex(lst, Integer.valueOf(page).intValue(), Integer
-                .valueOf(this.recordsPerPage).intValue());
+        List<Project> lstOfCurrentPage = projectService.subListByIndex(lst, Integer.valueOf(page).intValue(),
+                Integer.valueOf(this.recordsPerPage).intValue());
         model.addAttribute("lstOfCurrentPage", lstOfCurrentPage);
-        return lstOfCurrentPage;
+        return this.multilingualForStatus(lstOfCurrentPage, locale);
     }
 
     /**
@@ -171,12 +183,12 @@ public class ApplicationController {
      */
     @RequestMapping("/sort/{colName}")
     @ResponseBody
-    List<Project> sort(HttpSession session, @PathVariable String colName, Model model) {
+    List<Project> sort(HttpSession session, @PathVariable String colName, Model model, Locale locale) {
         // process session variables
-        String searchCriteria = (session.getAttribute("TEXT_SEARCH_CRITERIA") != null ? session.getAttribute(
-                "TEXT_SEARCH_CRITERIA").toString() : "all");
-        String status = (session.getAttribute("STATUS_SEARCH_CRITERIA") != null ? session.getAttribute(
-                "STATUS_SEARCH_CRITERIA").toString() : "-1");
+        String searchCriteria = (session.getAttribute("TEXT_SEARCH_CRITERIA") != null
+                ? session.getAttribute("TEXT_SEARCH_CRITERIA").toString() : "all");
+        String status = (session.getAttribute("STATUS_SEARCH_CRITERIA") != null
+                ? session.getAttribute("STATUS_SEARCH_CRITERIA").toString() : "-1");
         String sortOrdering = "asc";
         if (session.getAttribute("SORT_ORDERING") != null) {
             sortOrdering = session.getAttribute("SORT_ORDERING").toString();
@@ -206,10 +218,10 @@ public class ApplicationController {
             lst = projectService.sortByName(lst, sortOrdering);
         }
         // paging
-        List<Project> lstOfCurrentPage = projectService.subListByIndex(lst, 1, Integer.valueOf(this.recordsPerPage)
-                .intValue());
+        List<Project> lstOfCurrentPage = projectService.subListByIndex(lst, 1,
+                Integer.valueOf(this.recordsPerPage).intValue());
         model.addAttribute("lstOfCurrentPage", lstOfCurrentPage);
-        return lstOfCurrentPage;
+        return this.multilingualForStatus(lstOfCurrentPage, locale);
     }
 
     /**
@@ -294,8 +306,8 @@ public class ApplicationController {
     }
 
     /**
-     * Convert from [String] type to [Date] type for [finishingDate] parameter. The input formatting of [finishingDate]
-     * should be [dd/MM/yyyy"].
+     * Convert from [String] type to [Date] type for [finishingDate] parameter.
+     * The input formatting of [finishingDate] should be [dd/MM/yyyy"].
      * 
      * @param binder
      */
@@ -304,5 +316,39 @@ public class ApplicationController {
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
         dateFormat.setLenient(false);
         binder.registerCustomEditor(Date.class, new CustomDateEditor(dateFormat, false));
+    }
+
+    private int getTotalPage(int numOfRecords, int recordsPerPage) {
+        int totalPage = numOfRecords / Integer.valueOf(recordsPerPage);
+        System.out.println(numOfRecords % Integer.valueOf(recordsPerPage));
+        if (numOfRecords % Integer.valueOf(recordsPerPage) > 0) {
+            totalPage++;
+        }
+        return totalPage;
+    }
+
+    private List<Project> multilingualForStatus(List<Project> lst, Locale locale) {
+        String newSta = messageSource.getMessage("status.new", null, locale);
+        String finSta = messageSource.getMessage("status.fin", null, locale);
+        String plaSta = messageSource.getMessage("status.pla", null, locale);
+        String inpSta = messageSource.getMessage("status.inp", null, locale);
+
+        for (Project p : lst) {
+            switch (p.getStatus()) {
+            case "NEW":
+                p.setStatus(newSta);
+                break;
+            case "FIN":
+                p.setStatus(finSta);
+                break;
+            case "PLA":
+                p.setStatus(plaSta);
+                break;
+            default:
+                p.setStatus(inpSta);
+                break;
+            }
+        }
+        return lst;
     }
 }

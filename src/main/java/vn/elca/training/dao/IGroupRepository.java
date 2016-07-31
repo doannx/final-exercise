@@ -1,9 +1,10 @@
 package vn.elca.training.dao;
 
-import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.querydsl.QueryDslPredicateExecutor;
 
-import vn.elca.training.dom.Group;
+import vn.elca.training.dom.Department;
 
-public interface IGroupRepository extends CrudRepository<Group, Long>{
+public interface IGroupRepository extends JpaRepository<Department, Long>, QueryDslPredicateExecutor<Department> {
 
 }
