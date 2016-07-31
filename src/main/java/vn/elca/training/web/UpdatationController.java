@@ -32,11 +32,13 @@ import org.springframework.web.servlet.ModelAndView;
 
 import vn.elca.training.convertor.GroupEditor;
 import vn.elca.training.convertor.StatusEditor;
+import vn.elca.training.dom.Group;
 import vn.elca.training.exception.ProjectNumberAlreadyExistsException;
 import vn.elca.training.model.GroupVO;
 import vn.elca.training.model.MemberVO;
 import vn.elca.training.model.ProjectVO;
 import vn.elca.training.model.StatusVO;
+import vn.elca.training.service.IGroupService;
 import vn.elca.training.service.IProjectService;
 import vn.elca.training.validator.ProjectValidator;
 
@@ -48,6 +50,8 @@ public class UpdatationController {
     @Autowired
     @Qualifier(value = "dummyProjectService")
     private IProjectService projectService;
+    @Autowired
+    private IGroupService groupService;
     @Autowired
     MessageSource messageSource;
     @Autowired
@@ -79,13 +83,11 @@ public class UpdatationController {
     }
 
     @ModelAttribute("allGroups")
-    public List<GroupVO> populateDepartments(Locale locale) {
-        List<GroupVO> departments = new ArrayList<GroupVO>();
-        departments.add(new GroupVO(-1, messageSource.getMessage("ddl.selectgroup", null, locale)));
-        departments.add(new GroupVO(1, "VVH"));
-        departments.add(new GroupVO(2, "THU"));
-        departments.add(new GroupVO(3, "TDP"));
-        return departments;
+    public List<Group> populateGroups(Locale locale) {
+        List<Group> groups = new ArrayList<Group>();
+        groups.add(new Group(-1L, messageSource.getMessage("ddl.selectgroup", null, locale)));
+        groups.addAll(this.groupService.findAll());
+        return groups;
     }
 
     @ModelAttribute("allStatus")
@@ -169,8 +171,8 @@ public class UpdatationController {
             // once more check in [add] mode
             if ("add".equals(mode)) {
                 if (this.projectService.getById(projectVO.getId().toString()) != null) {
-                    result.addError(new FieldError("project", "id", messageSource.getMessage("error.idduplicate", null,
-                            locale)));
+                    result.addError(new FieldError("project", "id",
+                            messageSource.getMessage("error.idduplicate", null, locale)));
                     return "update";
                 }
             }

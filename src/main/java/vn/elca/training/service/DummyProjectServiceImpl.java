@@ -25,10 +25,10 @@ import vn.elca.training.util.StringUtil;
  */
 @Service
 @Qualifier(value = "dummyProjectService")
-public class DummyProjectService implements IProjectService {
+public class DummyProjectServiceImpl implements IProjectService {
     private Map<Long, ProjectVO> projectRepository;
 
-    public DummyProjectService() {
+    public DummyProjectServiceImpl() {
         projectRepository = new HashMap<Long, ProjectVO>();
         // save some dummy test data
         List<MemberVO> members = new ArrayList<MemberVO>();

@@ -2,6 +2,8 @@ package vn.elca.training.service;
 
 import java.util.List;
 
+import org.springframework.security.access.prepost.PreAuthorize;
+
 import vn.elca.training.dom.Project;
 import vn.elca.training.exception.ProjectNumberAlreadyExistsException;
 import vn.elca.training.model.ProjectVO;
@@ -75,6 +77,7 @@ public interface IProjectService {
      *            project's id
      * @return void
      */
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     void delete(String id);
 
     /**
