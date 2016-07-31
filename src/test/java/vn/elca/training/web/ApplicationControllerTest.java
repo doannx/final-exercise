@@ -13,7 +13,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import vn.elca.training.ApplicationLauncher;
-import vn.elca.training.dom.UserPreference;
+import vn.elca.training.model.UserPreference;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = ApplicationLauncher.class)

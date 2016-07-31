@@ -1,4 +1,4 @@
-package vn.elca.training.dom;
+package vn.elca.training.model;
 
 import java.io.Serializable;
 

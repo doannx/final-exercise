@@ -33,12 +33,14 @@ import org.springframework.web.servlet.ModelAndView;
 import vn.elca.training.convertor.GroupEditor;
 import vn.elca.training.convertor.StatusEditor;
 import vn.elca.training.dom.Group;
+import vn.elca.training.dom.Member;
 import vn.elca.training.exception.ProjectNumberAlreadyExistsException;
 import vn.elca.training.model.GroupVO;
 import vn.elca.training.model.MemberVO;
 import vn.elca.training.model.ProjectVO;
 import vn.elca.training.model.StatusVO;
 import vn.elca.training.service.IGroupService;
+import vn.elca.training.service.IMemberService;
 import vn.elca.training.service.IProjectService;
 import vn.elca.training.validator.ProjectValidator;
 
@@ -52,6 +54,8 @@ public class UpdatationController {
     private IProjectService projectService;
     @Autowired
     private IGroupService groupService;
+    @Autowired
+    private IMemberService memberService;
     @Autowired
     MessageSource messageSource;
     @Autowired
@@ -103,19 +107,7 @@ public class UpdatationController {
 
     @ModelAttribute("allMember")
     public List<MemberVO> populateMembers() {
-        List<MemberVO> members = new ArrayList<MemberVO>();
-        members.add(new MemberVO("XDG1", "XDG1: NGUYEN XUAN DOAN 1"));
-        members.add(new MemberVO("XDG2", "XDG2: NGUYEN XUAN DOAN 2"));
-        members.add(new MemberVO("XDG3", "XDG3: NGUYEN XUAN DOAN 3"));
-        members.add(new MemberVO("XDG4", "XDG4: NGUYEN XUAN DOAN 4"));
-        members.add(new MemberVO("XDG5", "XDG5: NGUYEN XUAN DOAN 5"));
-        members.add(new MemberVO("XDG6", "XDG6: NGUYEN XUAN DOAN 6"));
-        members.add(new MemberVO("XDG7", "XDG7: NGUYEN XUAN DOAN 7"));
-        members.add(new MemberVO("XDG8", "XDG8: NGUYEN XUAN DOAN 8"));
-        members.add(new MemberVO("XDG9", "XDG9: NGUYEN XUAN DOAN 9"));
-        members.add(new MemberVO("XDG10", "XDG10: NGUYEN XUAN DOAN 10"));
-        members.add(new MemberVO("XDG11", "XDG11: NGUYEN XUAN DOAN 11"));
-        members.add(new MemberVO("XDG12", "XDG12: NGUYEN XUAN DOAN 12"));
+        List<MemberVO> members = this.memberService.convert(this.memberService.findAll());
         this.lstMemberCache = new HashMap<String, MemberVO>();
         for (MemberVO m : members) {
             this.lstMemberCache.put(String.valueOf(m.getVisa()), m);

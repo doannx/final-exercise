@@ -7,7 +7,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "Depart")
+@Table(name = "depart")
 public class Group {
     @Id
     @GeneratedValue

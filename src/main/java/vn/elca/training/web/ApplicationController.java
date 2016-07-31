@@ -30,7 +30,7 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.servlet.ModelAndView;
 
 import vn.elca.training.dom.Project;
-import vn.elca.training.dom.UserPreference;
+import vn.elca.training.model.UserPreference;
 import vn.elca.training.service.IProjectService;
 import vn.elca.training.util.StringUtil;
 
