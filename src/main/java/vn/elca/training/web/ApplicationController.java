@@ -237,6 +237,12 @@ public class ApplicationController {
         // callback to main() to re-display [home] view
         return main();
     }
+    
+    @RequestMapping("/deleteitems")
+    ModelAndView deleteMultiplePrj(@RequestParam List<String> prjIds) {
+        // callback to main() to re-display [home] view
+        return main();
+    }
 
     /**
      * Filtering.

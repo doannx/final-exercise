@@ -10,6 +10,8 @@
 	value="&nbsp;<spring:message code="grid.itemsslected" />" />
 <input type="hidden" id="hidNoPrjFoundText"
 	value="&nbsp;<spring:message code="gird.noprjfound" />" />
+<input type="hidden" id="hidConfirmDelText"
+	value="&nbsp;<spring:message code="confirm.delete" />" />
 <input type="hidden" id="hidSearchRes" value="0" />
 <input type="hidden" id="hidTotalPage" value="${totalPage }" />
 <input type="hidden" id="hidBeginIndex" value="${beginIndex }" />
@@ -82,7 +84,7 @@
 			<tbody data-bind="foreach: projects">
 				<tr>
 					<td><input type="checkbox"
-						data-bind="attr: {id: id, disabled: status !== 'NEW'}"
+						data-bind="attr: {id: id, disabled: status !== 'New' && status !== 'Nouveau'}"
 						onclick="javascript:clickCheckbox();" /></td>
 					<td><a style="color: #666666;"
 						data-bind="attr: {href: '/detail/' + id}, text: id"></a></td>
@@ -92,7 +94,7 @@
 					<td data-bind="text: moment(finishingDate).format('DD.MM.YYYY')"></td>
 					<td><a
 						style="vertical-align: middle; padding-bottom: 2px; color: #FF7F50;"
-						data-bind="visible: status == 'NEW', attr: {href: '/delete/' + id}"><span
+						data-bind="visible: status == 'New' || status == 'Nouveau', attr: {onclick: 'del(' + id + ',\'' + name + '\')'}"><span
 							class="glyphicon glyphicon-trash"></span></a></td>
 				</tr>
 			</tbody>

@@ -103,14 +103,25 @@ $(document).ready(function() {
 			$(this).removeClass('placeholder');
 		}
 	});
-	$('#deleteSelectedItems').click(function(){
+	$('#deleteSelectedItems').click(function() {
+		var prjIds = [];
 		$('.tbl-list tr').each(function (i, row) {
 	        var $row = $(row);
-	        var $row = $(row);
-	        if($row.find('input:checked').val()==="on"){
-	        	window.location = "/delete/" + $row.find('input:checked').attr("id");
+	        if($row.find('input:checked').val()==="on") {
+	        	prjIds.push($row.find('input:checked').attr("id"));
+	        	// window.location = "/delete/" + $row.find('input:checked').attr("id");
 	        }
 		});
+		$.ajax({
+			method : "POST",
+			url : "/deleteitems",
+			data : {
+				prjIds : "5"
+			}
+		}).done(function(data) {
+			
+		});
+		
 	});
 	window.next = function() {
 		// hide the footer
@@ -278,5 +289,11 @@ $(document).ready(function() {
 				$('#filterStartDate').removeAttr('disabled');
 			}
 		});
-	}
+	};
+	window.del = function(id, name) {
+		var r = confirm($('#hidConfirmDelText').val() + name + ']?');
+		if (r == true) {
+			window.location = "/delete/" + id;
+		}
+	};
 });
