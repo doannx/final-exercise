@@ -102,13 +102,15 @@ public class ApplicationController {
         // return the search result
         if (!"all".equals(searchCriteria) && !"-1".equals(status)) {
             resultVo = projectService.findByNameAndStatus(searchCriteria, status, 0,
-                    Integer.valueOf(this.recordsPerPage).intValue());
+                    Integer.valueOf(this.recordsPerPage).intValue(), "id", "asc");
         } else if (!"all".equals(searchCriteria)) {
-            resultVo = projectService.findByName(searchCriteria, 0, Integer.valueOf(this.recordsPerPage).intValue());
+            resultVo = projectService.findByName(searchCriteria, 0, Integer.valueOf(this.recordsPerPage).intValue(),
+                    "id", "asc");
         } else if (!"-1".equals(status)) {
-            resultVo = projectService.findByStatus(status, 0, Integer.valueOf(this.recordsPerPage).intValue());
+            resultVo = projectService.findByStatus(status, 0, Integer.valueOf(this.recordsPerPage).intValue(), "id",
+                    "asc");
         } else {
-            resultVo = projectService.findAll(0, Integer.valueOf(this.recordsPerPage).intValue());
+            resultVo = projectService.findAll(0, Integer.valueOf(this.recordsPerPage).intValue(), "id", "asc");
         }
         model.addAttribute("lstOfCurrentPage", resultVo.getLstResult());
         session.setAttribute("TOTAL_PAGE_OF_LATEST_QUERY",
@@ -140,36 +142,31 @@ public class ApplicationController {
     @RequestMapping("/paging/{page}")
     @ResponseBody
     List<Project> paging(HttpSession session, @PathVariable String page, Model model, Locale locale) {
-        String searchCriteria = (session.getAttribute("TEXT_SEARCH_CRITERIA") != null
-                ? session.getAttribute("TEXT_SEARCH_CRITERIA").toString() : "all");
-        String status = (session.getAttribute("STATUS_SEARCH_CRITERIA") != null
-                ? session.getAttribute("STATUS_SEARCH_CRITERIA").toString() : "-1");
-        String sortOrdering = (session.getAttribute("SORT_ORDERING") != null
-                ? session.getAttribute("SORT_ORDERING").toString() : "asc");
+        SearchResultVO<Project> resultVo;
+        String searchCriteria = (session.getAttribute("TEXT_SEARCH_CRITERIA") != null ? session.getAttribute(
+                "TEXT_SEARCH_CRITERIA").toString() : "all");
+        String status = (session.getAttribute("STATUS_SEARCH_CRITERIA") != null ? session.getAttribute(
+                "STATUS_SEARCH_CRITERIA").toString() : "-1");
+        String sortOrdering = (session.getAttribute("SORT_ORDERING") != null ? session.getAttribute("SORT_ORDERING")
+                .toString() : "asc");
         String sortName = (session.getAttribute("SORT_NAME") != null ? session.getAttribute("SORT_NAME").toString()
                 : "id");
         // return the search result
-        List<Project> lst;
         if (!"all".equals(searchCriteria) && !"-1".equals(status)) {
-            lst = projectService.findByNameAndStatus(searchCriteria, status);
+            resultVo = projectService.findByNameAndStatus(searchCriteria, status, 0,
+                    Integer.valueOf(this.recordsPerPage).intValue() - 1, sortName, sortOrdering);
         } else if (!"all".equals(searchCriteria)) {
-            lst = projectService.findByName(searchCriteria);
+            resultVo = projectService.findByName(searchCriteria, Integer.valueOf(page),
+                    Integer.valueOf(this.recordsPerPage).intValue() - 1, sortName, sortOrdering);
         } else if (!"-1".equals(status)) {
-            lst = projectService.findByStatus(status);
+            resultVo = projectService.findByStatus(status, Integer.valueOf(page) - 1,
+                    Integer.valueOf(this.recordsPerPage).intValue(), sortName, sortOrdering);
         } else {
-            lst = projectService.findAll();
+            resultVo = projectService.findAll(Integer.valueOf(page) - 1, Integer.valueOf(this.recordsPerPage)
+                    .intValue(), sortName, sortOrdering);
         }
-        // sort
-        if ("id".equals(sortName)) {
-            lst = projectService.sortById(lst, sortOrdering);
-        } else if ("name".equals(sortName)) {
-            lst = projectService.sortByName(lst, sortOrdering);
-        }
-        // paging
-        List<Project> lstOfCurrentPage = projectService.subListByIndex(lst, Integer.valueOf(page).intValue(),
-                Integer.valueOf(this.recordsPerPage).intValue());
-        model.addAttribute("lstOfCurrentPage", lstOfCurrentPage);
-        return this.multilingualForStatus(lstOfCurrentPage, locale);
+        model.addAttribute("lstOfCurrentPage", resultVo.getLstResult());
+        return this.multilingualForStatus(resultVo.getLstResult(), locale);
     }
 
     /**
@@ -185,10 +182,10 @@ public class ApplicationController {
     @ResponseBody
     List<Project> sort(HttpSession session, @PathVariable String colName, Model model, Locale locale) {
         // process session variables
-        String searchCriteria = (session.getAttribute("TEXT_SEARCH_CRITERIA") != null
-                ? session.getAttribute("TEXT_SEARCH_CRITERIA").toString() : "all");
-        String status = (session.getAttribute("STATUS_SEARCH_CRITERIA") != null
-                ? session.getAttribute("STATUS_SEARCH_CRITERIA").toString() : "-1");
+        String searchCriteria = (session.getAttribute("TEXT_SEARCH_CRITERIA") != null ? session.getAttribute(
+                "TEXT_SEARCH_CRITERIA").toString() : "all");
+        String status = (session.getAttribute("STATUS_SEARCH_CRITERIA") != null ? session.getAttribute(
+                "STATUS_SEARCH_CRITERIA").toString() : "-1");
         String sortOrdering = "asc";
         if (session.getAttribute("SORT_ORDERING") != null) {
             sortOrdering = session.getAttribute("SORT_ORDERING").toString();
@@ -218,8 +215,8 @@ public class ApplicationController {
             lst = projectService.sortByName(lst, sortOrdering);
         }
         // paging
-        List<Project> lstOfCurrentPage = projectService.subListByIndex(lst, 1,
-                Integer.valueOf(this.recordsPerPage).intValue());
+        List<Project> lstOfCurrentPage = projectService.subListByIndex(lst, 1, Integer.valueOf(this.recordsPerPage)
+                .intValue());
         model.addAttribute("lstOfCurrentPage", lstOfCurrentPage);
         return this.multilingualForStatus(lstOfCurrentPage, locale);
     }
@@ -306,8 +303,8 @@ public class ApplicationController {
     }
 
     /**
-     * Convert from [String] type to [Date] type for [finishingDate] parameter.
-     * The input formatting of [finishingDate] should be [dd/MM/yyyy"].
+     * Convert from [String] type to [Date] type for [finishingDate] parameter. The input formatting of [finishingDate]
+     * should be [dd/MM/yyyy"].
      * 
      * @param binder
      */
@@ -332,7 +329,6 @@ public class ApplicationController {
         String finSta = messageSource.getMessage("status.fin", null, locale);
         String plaSta = messageSource.getMessage("status.pla", null, locale);
         String inpSta = messageSource.getMessage("status.inp", null, locale);
-
         for (Project p : lst) {
             switch (p.getStatus()) {
             case "NEW":

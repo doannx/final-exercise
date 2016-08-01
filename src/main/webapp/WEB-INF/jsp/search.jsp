@@ -82,7 +82,7 @@
 			<tbody data-bind="foreach: projects">
 				<tr>
 					<td><input type="checkbox"
-						data-bind="attr: {id: id, disabled: status !== 'NEW'}"
+						data-bind="attr: {id: id, disabled: status !== 'New' && status !== 'Nouveau'}"
 						onclick="javascript:clickCheckbox();" /></td>
 					<td><a style="color: #666666;"
 						data-bind="attr: {href: '/detail/' + id}, text: id"></a></td>
@@ -90,9 +90,8 @@
 					<td data-bind="text: status"></td>
 					<td data-bind="text: customer"></td>
 					<td data-bind="text: moment(finishingDate).format('DD.MM.YYYY')"></td>
-					<td><a
-						style="vertical-align: middle; padding-bottom: 2px; color: #FF7F50;"
-						data-bind="visible: status == 'NEW', attr: {href: '/delete/' + id}"><span
+					<td><a style="vertical-align: middle; padding-bottom: 2px; color: #FF7F50;"
+						data-bind="visible: (status === 'New' || status === 'Nouveau'), attr: {href: '/delete/' + id}"><span
 							class="glyphicon glyphicon-trash"></span></a></td>
 				</tr>
 			</tbody>
@@ -100,7 +99,7 @@
 				<tr>
 					<td colspan="3" align="left" style="padding-left: 10px;"><div
 							style="color: #1E90FF;" id="selectedItem"></div></td>
-					<td colspan="4" align="right" style="padding-right: 45px;"><a
+					<td colspan="4" align="right" style="padding-right: 30px;"><a
 						href="#" style="color: #FF7F50;" id="deleteSelectedItems"><spring:message
 								code="grid.deleteselected" />&nbsp;<span
 							class="glyphicon glyphicon-trash"></span></a></td>

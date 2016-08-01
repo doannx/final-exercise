@@ -106,7 +106,6 @@ $(document).ready(function() {
 	$('#deleteSelectedItems').click(function(){
 		$('.tbl-list tr').each(function (i, row) {
 	        var $row = $(row);
-	        var $row = $(row);
 	        if($row.find('input:checked').val()==="on"){
 	        	window.location = "/delete/" + $row.find('input:checked').attr("id");
 	        }
@@ -238,7 +237,7 @@ $(document).ready(function() {
 				if (i === currentPage) {
 					html += '<li class="active" id="paging'
 							+ i
-							+ '"><a onclick="javascript:paging(' + i + ');">' + i + '</a></li>';
+							+ '"><a onclick="javascript:paging(' + i  + ');">' + i + '</a></li>';
 				} else {
 					html += '<li id="paging'
 							+ i

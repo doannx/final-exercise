@@ -12,9 +12,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import com.google.common.collect.Lists;
-import com.mysema.query.types.expr.BooleanExpression;
-
 import vn.elca.training.dao.IProjectRepository;
 import vn.elca.training.dom.Project;
 import vn.elca.training.dom.QProject;
@@ -22,6 +19,9 @@ import vn.elca.training.exception.ProjectNumberAlreadyExistsException;
 import vn.elca.training.model.ProjectVO;
 import vn.elca.training.model.SearchResultVO;
 import vn.elca.training.util.StringUtil;
+
+import com.google.common.collect.Lists;
+import com.mysema.query.types.expr.BooleanExpression;
 
 @Service
 @Qualifier(value = "hibernateProjectService")
@@ -97,8 +97,8 @@ public class ProjectServiceImpl implements IProjectService {
     }
 
     @Override
-    public SearchResultVO<Project> findAll(int nextPage, int num) {
-        Pageable page = new PageRequest(nextPage, num, Sort.Direction.ASC, "id");
+    public SearchResultVO<Project> findAll(int nextPage, int num, String sortColName, String sortDirection) {
+        Pageable page = new PageRequest(nextPage, num, Sort.Direction.fromString(sortDirection), sortColName);
         SearchResultVO<Project> res = new SearchResultVO<Project>();
         res.setLstResult(Lists.newArrayList(this.projectRepository.findAll(page)));
         res.setSize(this.projectRepository.count());
@@ -106,11 +106,11 @@ public class ProjectServiceImpl implements IProjectService {
     }
 
     @Override
-    public SearchResultVO<Project> findByName(String name, int nextPage, int num) {
+    public SearchResultVO<Project> findByName(String name, int nextPage, int num, String sortColName,
+            String sortDirection) {
         SearchResultVO<Project> res = new SearchResultVO<Project>();
-        String regex = StringUtil.buildRegexFromcriterion(name);
-
-        Pageable page = new PageRequest(nextPage, num, Sort.Direction.ASC, "id");
+        String regex = StringUtil.buildRegexFromcriterion(name.toLowerCase());
+        Pageable page = new PageRequest(nextPage, num, Sort.Direction.fromString(sortDirection), sortColName);
         // filter by [project number]
         try {
             Long id = Long.parseLong(name);
@@ -120,8 +120,8 @@ public class ProjectServiceImpl implements IProjectService {
         } catch (NumberFormatException ex) {
             try {
                 // filter by [project name] or [customer name]
-                BooleanExpression prjAndCus = QProject.project.name.matches(regex)
-                        .or(QProject.project.customer.matches(regex));
+                BooleanExpression prjAndCus = QProject.project.name.lower().matches(regex)
+                        .or(QProject.project.customer.lower().matches(regex));
                 res.setLstResult(Lists.newArrayList(this.projectRepository.findAll(prjAndCus, page)));
                 res.setSize(this.projectRepository.count(prjAndCus.or(prjAndCus)));
             } catch (Exception miscEx) {
@@ -133,18 +133,19 @@ public class ProjectServiceImpl implements IProjectService {
     }
 
     @Override
-    public SearchResultVO<Project> findByNameAndStatus(String name, String status, int nextPage, int num) {
+    public SearchResultVO<Project> findByNameAndStatus(String name, String status, int nextPage, int num,
+            String sortColName, String sortDirection) {
         SearchResultVO<Project> res = new SearchResultVO<Project>();
-        String regex = StringUtil.buildRegexFromcriterion(name);
-        Pageable page = new PageRequest(nextPage, num, Sort.Direction.ASC, "id");
+        String regex = StringUtil.buildRegexFromcriterion(name.toLowerCase());
+        Pageable page = new PageRequest(nextPage, num, Sort.Direction.fromString(sortDirection), sortColName);
         // filter by [project name] or [customer name] or [project number]
-        BooleanExpression prjAndCus = QProject.project.name.matches(regex).or(QProject.project.customer.matches(regex));
+        BooleanExpression prjAndCus = QProject.project.name.lower().matches(regex)
+                .or(QProject.project.customer.lower().matches(regex));
         BooleanExpression prjStatus = QProject.project.status.eq(status);
         try {
             Long id = Long.parseLong(name);
             BooleanExpression prjId = QProject.project.id.eq(id);
-            res.setLstResult(
-                    Lists.newArrayList(this.projectRepository.findAll(prjAndCus.or(prjId).and(prjStatus), page)));
+            res.setLstResult(Lists.newArrayList(this.projectRepository.findAll(prjId.and(prjStatus), page)));
             res.setSize(this.projectRepository.count(prjStatus));
         } catch (NumberFormatException ex) {
             res.setLstResult(Lists.newArrayList(this.projectRepository.findAll(prjAndCus.and(prjStatus), page)));
@@ -154,15 +155,15 @@ public class ProjectServiceImpl implements IProjectService {
     }
 
     @Override
-    public SearchResultVO<Project> findByStatus(String status, int nextPage, int num) {
+    public SearchResultVO<Project> findByStatus(String status, int nextPage, int num, String sortColName,
+            String sortDirection) {
         SearchResultVO<Project> res = new SearchResultVO<Project>();
-        Pageable page = new PageRequest(nextPage, num, Sort.Direction.ASC, "id");
+        Pageable page = new PageRequest(nextPage, num, Sort.Direction.fromString(sortDirection), sortColName);
         // filter by [status]
         BooleanExpression prjStatus = QProject.project.status.eq(status);
         res.setLstResult(Lists.newArrayList(this.projectRepository.findAll(prjStatus, page)));
         res.setSize(this.projectRepository.count(prjStatus));
         return res;
-
     }
 
     /**
@@ -187,7 +188,6 @@ public class ProjectServiceImpl implements IProjectService {
     @Override
     public Long update(Project p) {
         return this.projectRepository.saveAndFlush(p).getId();
-
     }
 
     @Override

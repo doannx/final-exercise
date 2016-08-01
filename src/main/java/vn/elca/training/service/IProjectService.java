@@ -12,7 +12,7 @@ import vn.elca.training.model.SearchResultVO;
 public interface IProjectService {
     List<Project> findAll();
 
-    SearchResultVO<Project> findAll(int currentPage, int num);
+    SearchResultVO<Project> findAll(int nextPage, int num, String sortColName, String sortDirection);
 
     /**
      * Find project(s) based on name. Search condition is LIKE operator.
@@ -22,7 +22,7 @@ public interface IProjectService {
      */
     List<Project> findByName(String name);
 
-    SearchResultVO<Project> findByName(String name, int currentPage, int num);
+    SearchResultVO<Project> findByName(String name, int currentPage, int num, String sortColName, String sortDirection);
 
     /**
      * Find project(s) based on name & status.
@@ -33,7 +33,8 @@ public interface IProjectService {
      */
     List<Project> findByNameAndStatus(String name, String status);
 
-    SearchResultVO<Project> findByNameAndStatus(String name, String status, int currentPage, int num);
+    SearchResultVO<Project> findByNameAndStatus(String name, String status, int currentPage, int num,
+            String sortColName, String sortDirection);
 
     /**
      * Find project(s) based on status.
@@ -43,7 +44,8 @@ public interface IProjectService {
      */
     List<Project> findByStatus(String status);
 
-    SearchResultVO<Project> findByStatus(String status, int currentPage, int num);
+    SearchResultVO<Project> findByStatus(String status, int currentPage, int num, String sortColName,
+            String sortDirection);
 
     /**
      * Get the information of one project by its id.
