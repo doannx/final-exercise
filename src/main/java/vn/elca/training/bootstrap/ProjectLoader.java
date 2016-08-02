@@ -1,6 +1,8 @@
 package vn.elca.training.bootstrap;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,31 +11,44 @@ import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
 
 import vn.elca.training.dao.IGroupRepository;
+import vn.elca.training.dao.IMemberRepository;
 import vn.elca.training.dao.IProjectRepository;
 import vn.elca.training.dom.Department;
+import vn.elca.training.dom.Member;
 import vn.elca.training.dom.Project;
 
 @Component
 public class ProjectLoader implements ApplicationListener<ContextRefreshedEvent> {
     private IProjectRepository projectRepository;
     private IGroupRepository groupRepository;
+    private IMemberRepository memberRepository;
 
     @Autowired
     public void setGroupRepository(IGroupRepository groupRepository) {
         this.groupRepository = groupRepository;
     }
-    
+
     @Autowired
-    public void setprojectRepository(IProjectRepository projectRepository) {
+    public void setProjectRepository(IProjectRepository projectRepository) {
         this.projectRepository = projectRepository;
     }
+
+    @Autowired
+    public void setMemberRepository(IMemberRepository memberRepository) {
+        this.memberRepository = memberRepository;
+    }
+
     private Logger log = Logger.getLogger(ProjectLoader.class);
 
     @Override
     public void onApplicationEvent(ContextRefreshedEvent event) {
         Department group = new Department("KTG");
         this.groupRepository.save(group);
-        Project dummyPrj = new Project(1L, "KSTA", new Date(), "NEW", "Helm AG", group);
+        Member member = new Member("XDG", "NGUYEN XUAN DOAN");
+        this.memberRepository.save(member);
+        List<Member> members = new ArrayList<Member>();
+        members.add(member);
+        Project dummyPrj = new Project(1L, "KSTA", new Date(), "NEW", "Helm AG", group, members);
         this.projectRepository.save(dummyPrj);
         dummyPrj = new Project(2L, "LAGAPEO", new Date(), "NEW", "Lanxess AG", group);
         this.projectRepository.save(dummyPrj);
