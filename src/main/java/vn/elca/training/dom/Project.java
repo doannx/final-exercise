@@ -1,11 +1,15 @@
 package vn.elca.training.dom;
 
 import java.util.Date;
+import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 
 @Entity
@@ -25,7 +29,10 @@ public class Project {
     private Department group;
     @Column
     private Date endDate;
-    
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(name = "project_member", joinColumns = @JoinColumn(name = "project_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "member_id", referencedColumnName = "visa"))
+    private List<Member> members;
+
     public void setStatus(String status) {
         this.status = status;
     }
@@ -54,7 +61,6 @@ public class Project {
         this.finishingDate = finishingDate;
     }
 
-    
     public Project(Long id, String name, Date finishingDate, String status, String customer, Department group) {
         super();
         this.id = id;
@@ -95,5 +101,13 @@ public class Project {
 
     public String getCustomer() {
         return customer;
+    }
+
+    public List<Member> getMembers() {
+        return members;
+    }
+
+    public void setMembers(List<Member> members) {
+        this.members = members;
     }
 }

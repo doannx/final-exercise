@@ -1,16 +1,20 @@
 package vn.elca.training.dom;
 
+import java.util.List;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 
 @Entity
 public class Member {
     @Id
     private String visa;
-
     @Column(nullable = false)
     private String name;
+    @ManyToMany(mappedBy = "members")
+    private List<Project> projects;
 
     public Member() {
     }
@@ -37,4 +41,11 @@ public class Member {
         this.name = name;
     }
 
+    public List<Project> getProjects() {
+        return projects;
+    }
+
+    public void setProjects(List<Project> projects) {
+        this.projects = projects;
+    }
 }

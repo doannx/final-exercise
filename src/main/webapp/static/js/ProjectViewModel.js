@@ -109,17 +109,16 @@ $(document).ready(function() {
 	        var $row = $(row);
 	        if($row.find('input:checked').val()==="on") {
 	        	prjIds.push($row.find('input:checked').attr("id"));
-	        	// window.location = "/delete/" + $row.find('input:checked').attr("id");
 	        }
 		});
 		$.ajax({
 			method : "POST",
 			url : "/deleteitems",
 			data : {
-				prjIds : "5"
+				prjIds : prjIds
 			}
 		}).done(function(data) {
-			
+			window.location="/";
 		});
 		
 	});

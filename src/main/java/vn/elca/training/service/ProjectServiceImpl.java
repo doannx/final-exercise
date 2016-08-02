@@ -226,8 +226,8 @@ public class ProjectServiceImpl implements IProjectService {
     }
 
     @Override
-    public void delete(String id) {
-        this.projectRepository.delete(Long.parseLong(id));
+    public void delete(Long id) {
+        this.projectRepository.delete(id);
     }
 
     @Override

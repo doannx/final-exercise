@@ -229,16 +229,20 @@ public class ApplicationController {
      */
     @PreAuthorize("hasRole('ADMIN'")
     @RequestMapping("/delete/{id}")
-    ModelAndView delete(@PathVariable String id) {
+    ModelAndView delete(@PathVariable Long id) {
         projectService.delete(id);
         // callback to main() to re-display [home] view
         return main();
     }
-    
+
     @RequestMapping("/deleteitems")
-    ModelAndView deleteMultiplePrj(@RequestParam List<String> prjIds) {
+    @ResponseBody
+    String deleteMultiplePrj(@RequestParam(value = "prjIds[]") List<Long> prjIds) {
+        for (Long id : prjIds) {
+            this.projectService.delete(id);
+        }
         // callback to main() to re-display [home] view
-        return main();
+        return "success";
     }
 
     /**

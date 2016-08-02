@@ -81,7 +81,7 @@ public interface IProjectService {
      * @return void
      */
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    void delete(String id);
+    void delete(Long id);
 
     /**
      * Add one project.
