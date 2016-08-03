@@ -7,6 +7,8 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 @Entity
 public class Member {
     @Id
@@ -14,6 +16,7 @@ public class Member {
     @Column(nullable = false)
     private String name;
     @ManyToMany(mappedBy = "members")
+    @JsonBackReference
     private List<Project> projects;
 
     public Member() {
