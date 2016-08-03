@@ -80,7 +80,7 @@ public interface IProjectService {
      *            project's id
      * @return void
      */
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     void delete(Long id);
 
     /**

@@ -11,12 +11,15 @@ import java.util.Map;
 
 import javax.servlet.http.HttpSession;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.context.MessageSource;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.WebDataBinder;
@@ -30,6 +33,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.servlet.ModelAndView;
 
+import vn.elca.training.bootstrap.ProjectLoader;
 import vn.elca.training.dom.Project;
 import vn.elca.training.model.SearchResultVO;
 import vn.elca.training.model.UserPreference;
@@ -51,6 +55,7 @@ public class ApplicationController {
     private UserPreference userPref;
     @Autowired
     MessageSource messageSource;
+    private Logger log = Logger.getLogger(ApplicationController.class);
 
     @RequestMapping(value = "/", method = { RequestMethod.GET })
     ModelAndView main() {
@@ -143,12 +148,12 @@ public class ApplicationController {
     @ResponseBody
     List<Project> paging(HttpSession session, @PathVariable String page, Model model, Locale locale) {
         SearchResultVO<Project> resultVo;
-        String searchCriteria = (session.getAttribute("TEXT_SEARCH_CRITERIA") != null ? session.getAttribute(
-                "TEXT_SEARCH_CRITERIA").toString() : "all");
-        String status = (session.getAttribute("STATUS_SEARCH_CRITERIA") != null ? session.getAttribute(
-                "STATUS_SEARCH_CRITERIA").toString() : "-1");
-        String sortOrdering = (session.getAttribute("SORT_ORDERING") != null ? session.getAttribute("SORT_ORDERING")
-                .toString() : "asc");
+        String searchCriteria = (session.getAttribute("TEXT_SEARCH_CRITERIA") != null
+                ? session.getAttribute("TEXT_SEARCH_CRITERIA").toString() : "all");
+        String status = (session.getAttribute("STATUS_SEARCH_CRITERIA") != null
+                ? session.getAttribute("STATUS_SEARCH_CRITERIA").toString() : "-1");
+        String sortOrdering = (session.getAttribute("SORT_ORDERING") != null
+                ? session.getAttribute("SORT_ORDERING").toString() : "asc");
         String sortName = (session.getAttribute("SORT_NAME") != null ? session.getAttribute("SORT_NAME").toString()
                 : "id");
         // return the search result
@@ -162,8 +167,8 @@ public class ApplicationController {
             resultVo = projectService.findByStatus(status, Integer.valueOf(page) - 1,
                     Integer.valueOf(this.recordsPerPage).intValue(), sortName, sortOrdering);
         } else {
-            resultVo = projectService.findAll(Integer.valueOf(page) - 1, Integer.valueOf(this.recordsPerPage)
-                    .intValue(), sortName, sortOrdering);
+            resultVo = projectService.findAll(Integer.valueOf(page) - 1,
+                    Integer.valueOf(this.recordsPerPage).intValue(), sortName, sortOrdering);
         }
         model.addAttribute("lstOfCurrentPage", resultVo.getLstResult());
         return this.multilingualForStatus(resultVo.getLstResult(), locale);
@@ -182,10 +187,10 @@ public class ApplicationController {
     @ResponseBody
     List<Project> sort(HttpSession session, @PathVariable String colName, Model model, Locale locale) {
         // process session variables
-        String searchCriteria = (session.getAttribute("TEXT_SEARCH_CRITERIA") != null ? session.getAttribute(
-                "TEXT_SEARCH_CRITERIA").toString() : "all");
-        String status = (session.getAttribute("STATUS_SEARCH_CRITERIA") != null ? session.getAttribute(
-                "STATUS_SEARCH_CRITERIA").toString() : "-1");
+        String searchCriteria = (session.getAttribute("TEXT_SEARCH_CRITERIA") != null
+                ? session.getAttribute("TEXT_SEARCH_CRITERIA").toString() : "all");
+        String status = (session.getAttribute("STATUS_SEARCH_CRITERIA") != null
+                ? session.getAttribute("STATUS_SEARCH_CRITERIA").toString() : "-1");
         String sortOrdering = "asc";
         if (session.getAttribute("SORT_ORDERING") != null) {
             sortOrdering = session.getAttribute("SORT_ORDERING").toString();
@@ -215,8 +220,8 @@ public class ApplicationController {
             lst = projectService.sortByName(lst, sortOrdering);
         }
         // paging
-        List<Project> lstOfCurrentPage = projectService.subListByIndex(lst, 1, Integer.valueOf(this.recordsPerPage)
-                .intValue());
+        List<Project> lstOfCurrentPage = projectService.subListByIndex(lst, 1,
+                Integer.valueOf(this.recordsPerPage).intValue());
         model.addAttribute("lstOfCurrentPage", lstOfCurrentPage);
         return this.multilingualForStatus(lstOfCurrentPage, locale);
     }
@@ -227,9 +232,16 @@ public class ApplicationController {
      * @param id
      * @return update project list
      */
-    @PreAuthorize("hasRole('ADMIN'")
     @RequestMapping("/delete/{id}")
     ModelAndView delete(@PathVariable Long id) {
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String username = "unknown";
+        if (principal instanceof UserDetails) {
+            username = ((UserDetails) principal).getUsername();
+        } else {
+            username = principal.toString();
+        }
+        log.info("Username: " + username);
         projectService.delete(id);
         // callback to main() to re-display [home] view
         return main();
@@ -313,8 +325,8 @@ public class ApplicationController {
     }
 
     /**
-     * Convert from [String] type to [Date] type for [finishingDate] parameter. The input formatting of [finishingDate]
-     * should be [dd/MM/yyyy"].
+     * Convert from [String] type to [Date] type for [finishingDate] parameter.
+     * The input formatting of [finishingDate] should be [dd/MM/yyyy"].
      * 
      * @param binder
      */

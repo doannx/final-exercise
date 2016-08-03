@@ -7,7 +7,10 @@
 <html lang="en-US">
 <head>
   <meta charset="utf-8">
-  <script type='text/javascript' src='https://code.jquery.com/jquery-2.1.4.js'></script>
+  <meta name="_csrf" content="${_csrf.token}" />
+  <!-- default header name is X-CSRF-TOKEN -->
+  <meta name="_csrf_header" content="${_csrf.headerName}" />
+<script type='text/javascript' src='https://code.jquery.com/jquery-2.1.4.js'></script>
   <script type='text/javascript' src='http://ajax.aspnetcdn.com/ajax/knockout/knockout-3.1.0.js'></script>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.css">
   <!-- Optional theme -->
@@ -28,7 +31,7 @@
   <div class="multilingual-link">
     <a href="?locale=en" id="en">EN</a>&nbsp;<b>|</b>&nbsp;<a href="?locale=fr" id="fr">FR</a>
   </div>
-  <a href="#" id="help"><spring:message code="menu.help" /></a> <a href="#" id="logout"><spring:message code="menu.logout" /></a>
+  <a href="#" id="help"><spring:message code="menu.help" /></a> <a href="/logout" id="logout"><spring:message code="menu.logout" /></a>
 </div>
 <!-- LEFT MENU -->
 <div style="width: 25%; position: relative;">
