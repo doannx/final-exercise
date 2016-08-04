@@ -11,6 +11,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.Version;
 
 @Entity
 public class Project {
@@ -29,6 +30,9 @@ public class Project {
     private Department group;
     @Column
     private Date endDate;
+    @Version
+    @Column(name="VERSION")
+    private Integer version;
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name = "project_member", joinColumns = @JoinColumn(name = "project_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "member_id", referencedColumnName = "visa"))
     private List<Member> members;
@@ -135,4 +139,28 @@ public class Project {
     public void setMembers(List<Member> members) {
         this.members = members;
     }
+
+    public Integer getVersion() {
+        return version;
+    }
+
+    public void setVersion(Integer version) {
+        this.version = version;
+    }
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setFinishingDate(Date finishingDate) {
+        this.finishingDate = finishingDate;
+    }
+
+    public void setCustomer(String customer) {
+        this.customer = customer;
+    }
+    
 }

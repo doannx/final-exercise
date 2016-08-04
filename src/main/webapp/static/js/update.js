@@ -1,7 +1,4 @@
 $(document).ready(function() {
-	if($('#mode').val()=='update'){
-		$('#prjnumber').attr('disabled', 'disabled');
-	}
 	var config = {
 		'.chosen-select-width' : {
 			width : "75%"
@@ -33,4 +30,8 @@ $(document).ready(function() {
 	  } else  {
 	     return true;
 	}});
+	if($('#mode').val()=='update'){
+		$('#prjnumber').attr('disabled', 'disabled');
+		$('#btnCreatePrj').attr('value', $('#hidUpdatePrjBtn').val());
+	}
 });

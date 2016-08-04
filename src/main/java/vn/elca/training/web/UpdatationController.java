@@ -128,6 +128,7 @@ public class UpdatationController {
         ProjectVO vo = new ProjectVO(entity.getId(), entity.getName(), entity.getFinishingDate(), entity.getStatus(),
                 entity.getCustomer(), entity.getMembers(), String.valueOf(entity.getGroup().getId()),
                 entity.getEndDate());
+        vo.setVersion(entity.getVersion());
         model.addAttribute("project", vo);
         session.setAttribute("UPDATE_MODE", "update");
         return "update";
@@ -174,11 +175,8 @@ public class UpdatationController {
             }
         }
         session.setAttribute("ERROR_STATUS", false);
-        // Store the employee information in database
-        Department group = this.groupService.getById(Long.parseLong(vo.getGroup()));
-        Project entity = new Project(vo.getId(), vo.getName(), vo.getFinishingDate(), vo.getStatus(), vo.getCustomer(),
-                group, vo.getEndDate(), vo.getMembers());
-        projectService.update(entity, mode);
+        // store the project change in database
+        projectService.update(vo, mode);
         // mark session complete
         status.setComplete();
         return "redirect:/";

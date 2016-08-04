@@ -26,6 +26,15 @@ public class ProjectVO implements Serializable {
     private String group;
     private List<Member> members;
     private Date endDate;
+    private Integer version;
+
+    public Integer getVersion() {
+        return version;
+    }
+
+    public void setVersion(Integer version) {
+        this.version = version;
+    }
 
     public ProjectVO() {
     }

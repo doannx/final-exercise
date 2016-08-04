@@ -24,7 +24,9 @@
   </c:if>
   <br class="clear" />
   <form:form method="post" modelAttribute="project" action="/update">
-  	<input type="hidden" id="mode" name="mode" value="${mode}"/>
+  	<input type="hidden" id="mode" name="mode" value="${UPDATE_MODE}"/>
+  	<input type="hidden" id="hidUpdatePrjBtn" name="hidUpdatePrjBtn" value="<spring:message code="btn.updateprj" />"/>
+  	<form:hidden path="version"/>
     <div class="form">
       <div style="float: left; width: 5%;">&nbsp;</div>
       <div style="float: left; width: 95%; border: 0px #E5E4E2 solid; display: table-cell;">

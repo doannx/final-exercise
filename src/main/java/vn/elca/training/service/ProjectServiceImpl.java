@@ -2,6 +2,8 @@ package vn.elca.training.service;
 
 import java.util.ArrayList;
 
+import javax.persistence.EntityNotFoundException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.PageRequest;
@@ -9,22 +11,27 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import com.google.common.collect.Lists;
+import com.mysema.query.types.expr.BooleanExpression;
+
+import vn.elca.training.dao.IGroupRepository;
 import vn.elca.training.dao.IProjectRepository;
+import vn.elca.training.dom.Department;
 import vn.elca.training.dom.Project;
 import vn.elca.training.dom.QProject;
 import vn.elca.training.exception.ProjectNumberAlreadyExistsException;
+import vn.elca.training.model.ProjectVO;
 import vn.elca.training.model.SearchCriteriaVO;
 import vn.elca.training.model.SearchResultVO;
 import vn.elca.training.util.StringUtil;
-
-import com.google.common.collect.Lists;
-import com.mysema.query.types.expr.BooleanExpression;
 
 @Service
 @Qualifier(value = "hibernateProjectService")
 public class ProjectServiceImpl implements IProjectService {
     @Autowired
     private IProjectRepository projectRepository;
+    @Autowired
+    private IGroupRepository groupRepository;
 
     @Override
     public SearchResultVO<Project> findAll(int nextPage, int num, String sortColName, String sortDirection) {
@@ -92,8 +99,26 @@ public class ProjectServiceImpl implements IProjectService {
      * @throws Exception
      */
     @Override
-    public Long update(Project p, String mode) throws ProjectNumberAlreadyExistsException {
-        return this.projectRepository.saveAndFlush(p).getId();
+    public Long update(ProjectVO vo, String mode) throws ProjectNumberAlreadyExistsException {
+        Project originalEntity = new Project();
+        if (this.projectRepository.findOne(vo.getId()) != null) {
+            if ("add".equals(mode)) {
+                throw new ProjectNumberAlreadyExistsException();
+            } else {
+                originalEntity = this.projectRepository.findOne(vo.getId());
+            }
+        }
+        Department group = this.groupRepository.getOne(Long.parseLong(vo.getGroup()));
+        originalEntity.setName(vo.getName());
+        originalEntity.setCustomer(vo.getCustomer());
+        originalEntity.setEndDate(vo.getEndDate());
+        originalEntity.setFinishingDate(vo.getFinishingDate());
+        originalEntity.setGroup(group);
+        originalEntity.setId(vo.getId());
+        originalEntity.setMembers(vo.getMembers());
+        originalEntity.setStatus(vo.getStatus());
+        originalEntity.setVersion(vo.getVersion());
+        return this.projectRepository.saveAndFlush(originalEntity).getId();
     }
 
     /**

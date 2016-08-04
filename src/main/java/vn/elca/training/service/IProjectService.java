@@ -4,6 +4,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 
 import vn.elca.training.dom.Project;
 import vn.elca.training.exception.ProjectNumberAlreadyExistsException;
+import vn.elca.training.model.ProjectVO;
 import vn.elca.training.model.SearchCriteriaVO;
 import vn.elca.training.model.SearchResultVO;
 
@@ -37,7 +38,7 @@ public interface IProjectService {
      * @return id of updated project
      * @exception ProjectNumberAlreadyExistsException
      */
-    Long update(Project p, String mode) throws ProjectNumberAlreadyExistsException;
+    Long update(ProjectVO p, String mode) throws ProjectNumberAlreadyExistsException;
 
     /**
      * Count all existing projects.
