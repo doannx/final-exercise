@@ -1,4 +1,7 @@
 $(document).ready(function() {
+	if($('#mode').val()=='update'){
+		$('#prjnumber').attr('disabled', 'disabled');
+	}
 	var config = {
 		'.chosen-select-width' : {
 			width : "75%"

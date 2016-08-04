@@ -95,6 +95,19 @@ public class Project {
         this.endDate = endDate;
     }
 
+    public Project(Long id, String name, Date finishingDate, String status, String customer, Department group,
+            Date endDate, List<Member> members) {
+        super();
+        this.id = id;
+        this.name = name;
+        this.finishingDate = finishingDate;
+        this.status = status;
+        this.customer = customer;
+        this.group = group;
+        this.endDate = endDate;
+        this.members = members;
+    }
+
     public Long getId() {
         return id;
     }

@@ -1,10 +1,7 @@
 package vn.elca.training.service;
 
 import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
 
-import org.hibernate.cfg.NotYetImplementedException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.PageRequest;
@@ -16,7 +13,7 @@ import vn.elca.training.dao.IProjectRepository;
 import vn.elca.training.dom.Project;
 import vn.elca.training.dom.QProject;
 import vn.elca.training.exception.ProjectNumberAlreadyExistsException;
-import vn.elca.training.model.ProjectVO;
+import vn.elca.training.model.SearchCriteriaVO;
 import vn.elca.training.model.SearchResultVO;
 import vn.elca.training.util.StringUtil;
 
@@ -30,73 +27,6 @@ public class ProjectServiceImpl implements IProjectService {
     private IProjectRepository projectRepository;
 
     @Override
-    public List<Project> findAll() {
-        List<Project> lst = this.projectRepository.findAll();
-        return this.sortById(lst, "asc");
-    }
-
-    /**
-     * Find project(s) based on name. Search condition is LIKE operator.
-     * 
-     * @param name
-     * @return List<Project>
-     */
-    @Override
-    public List<Project> findByName(String name) {
-        List<Project> lstResult = new ArrayList<Project>();
-        String regex = StringUtil.buildRegexFromcriterion(name);
-        // filter by [project name] or [customer name] or [project number]
-        BooleanExpression prjAndCus = QProject.project.name.matches(regex).or(QProject.project.customer.matches(regex));
-        try {
-            Long id = Long.parseLong(name);
-            BooleanExpression prjId = QProject.project.id.eq(id);
-            lstResult = Lists.newArrayList(this.projectRepository.findAll(prjAndCus.or(prjId)));
-        } catch (NumberFormatException ex) {
-            lstResult = Lists.newArrayList(this.projectRepository.findAll(prjAndCus));
-        }
-        return this.sortById(lstResult, "asc");
-    }
-
-    /**
-     * Find projects based on status.
-     * 
-     * @param name
-     * @return List<Project>
-     */
-    @Override
-    public List<Project> findByStatus(String status) {
-        List<Project> lstResult = new ArrayList<Project>();
-        // filter by [status]
-        BooleanExpression prjStatus = QProject.project.status.eq(status);
-        lstResult = Lists.newArrayList(this.projectRepository.findAll(prjStatus));
-        return this.sortById(lstResult, "asc");
-    }
-
-    /**
-     * Find project(s) based on name & status.
-     * 
-     * @param name
-     * @param status
-     * @return List<Project>
-     */
-    @Override
-    public List<Project> findByNameAndStatus(String name, String status) {
-        List<Project> lstResult = new ArrayList<Project>();
-        String regex = StringUtil.buildRegexFromcriterion(name);
-        // filter by [project name] or [customer name] or [project number]
-        BooleanExpression prjAndCus = QProject.project.name.matches(regex).or(QProject.project.customer.matches(regex));
-        BooleanExpression prjStatus = QProject.project.status.eq(status);
-        try {
-            Long id = Long.parseLong(name);
-            BooleanExpression prjId = QProject.project.id.eq(id);
-            lstResult = Lists.newArrayList(this.projectRepository.findAll(prjAndCus.or(prjId).and(prjStatus)));
-        } catch (NumberFormatException ex) {
-            lstResult = Lists.newArrayList(this.projectRepository.findAll(prjAndCus.and(prjStatus)));
-        }
-        return this.sortById(lstResult, "asc");
-    }
-
-    @Override
     public SearchResultVO<Project> findAll(int nextPage, int num, String sortColName, String sortDirection) {
         Pageable page = new PageRequest(nextPage, num, Sort.Direction.fromString(sortDirection), sortColName);
         SearchResultVO<Project> res = new SearchResultVO<Project>();
@@ -106,63 +36,39 @@ public class ProjectServiceImpl implements IProjectService {
     }
 
     @Override
-    public SearchResultVO<Project> findByName(String name, int nextPage, int num, String sortColName,
+    public SearchResultVO<Project> findByCriteria(SearchCriteriaVO criteria, int nextPage, int num, String sortColName,
             String sortDirection) {
         SearchResultVO<Project> res = new SearchResultVO<Project>();
-        String regex = StringUtil.buildRegexFromcriterion(name.toLowerCase());
-        Pageable page = new PageRequest(nextPage, num, Sort.Direction.fromString(sortDirection), sortColName);
-        // filter by [project number]
-        try {
-            Long id = Long.parseLong(name);
-            BooleanExpression prjId = QProject.project.id.eq(id);
-            res.setSize(this.projectRepository.count(prjId));
-            res.setLstResult(Lists.newArrayList(this.projectRepository.findAll(prjId, page)));
-        } catch (NumberFormatException ex) {
+        BooleanExpression condExp = null;
+        // the first search criterion
+        if (!"all".equals(criteria.getCreteria().get("text"))) {
+            String regex = StringUtil.buildRegexFromcriterion(criteria.getCreteria().get("text").toLowerCase());
             try {
-                // filter by [project name] or [customer name]
-                BooleanExpression prjAndCus = QProject.project.name.lower().matches(regex)
+                // filter by [project number]
+                Long id = Long.parseLong(criteria.getCreteria().get("text"));
+                condExp = QProject.project.id.eq(id);
+            } catch (NumberFormatException ex) {
+                // filter by [project name] and [customer name]
+                condExp = QProject.project.name.lower().matches(regex)
                         .or(QProject.project.customer.lower().matches(regex));
-                res.setLstResult(Lists.newArrayList(this.projectRepository.findAll(prjAndCus, page)));
-                res.setSize(this.projectRepository.count(prjAndCus.or(prjAndCus)));
+            }
+        }
+        // the second search criterion
+        if (!"-1".equals(criteria.getCreteria().get("status"))) {
+            condExp = condExp != null ? condExp.and(QProject.project.status.eq(criteria.getCreteria().get("status")))
+                    : QProject.project.status.eq(criteria.getCreteria().get("status"));
+        }
+        // get the result
+        if (condExp != null) {
+            Pageable page = new PageRequest(nextPage, num, Sort.Direction.fromString(sortDirection), sortColName);
+            try {
+                res.setSize(this.projectRepository.count(condExp));
+                res.setLstResult(Lists.newArrayList(this.projectRepository.findAll(condExp, page)));
             } catch (Exception miscEx) {
                 res.setLstResult(new ArrayList<Project>());
                 res.setSize(0);
             }
         }
-        return res;
-    }
-
-    @Override
-    public SearchResultVO<Project> findByNameAndStatus(String name, String status, int nextPage, int num,
-            String sortColName, String sortDirection) {
-        SearchResultVO<Project> res = new SearchResultVO<Project>();
-        String regex = StringUtil.buildRegexFromcriterion(name.toLowerCase());
-        Pageable page = new PageRequest(nextPage, num, Sort.Direction.fromString(sortDirection), sortColName);
-        // filter by [project name] or [customer name] or [project number]
-        BooleanExpression prjAndCus = QProject.project.name.lower().matches(regex)
-                .or(QProject.project.customer.lower().matches(regex));
-        BooleanExpression prjStatus = QProject.project.status.eq(status);
-        try {
-            Long id = Long.parseLong(name);
-            BooleanExpression prjId = QProject.project.id.eq(id);
-            res.setLstResult(Lists.newArrayList(this.projectRepository.findAll(prjId.and(prjStatus), page)));
-            res.setSize(this.projectRepository.count(prjStatus));
-        } catch (NumberFormatException ex) {
-            res.setLstResult(Lists.newArrayList(this.projectRepository.findAll(prjAndCus.and(prjStatus), page)));
-            res.setSize(this.projectRepository.count(prjAndCus.and(prjStatus)));
-        }
-        return res;
-    }
-
-    @Override
-    public SearchResultVO<Project> findByStatus(String status, int nextPage, int num, String sortColName,
-            String sortDirection) {
-        SearchResultVO<Project> res = new SearchResultVO<Project>();
-        Pageable page = new PageRequest(nextPage, num, Sort.Direction.fromString(sortDirection), sortColName);
-        // filter by [status]
-        BooleanExpression prjStatus = QProject.project.status.eq(status);
-        res.setLstResult(Lists.newArrayList(this.projectRepository.findAll(prjStatus, page)));
-        res.setSize(this.projectRepository.count(prjStatus));
         return res;
     }
 
@@ -186,13 +92,8 @@ public class ProjectServiceImpl implements IProjectService {
      * @throws Exception
      */
     @Override
-    public Long update(Project p) {
+    public Long update(Project p, String mode) throws ProjectNumberAlreadyExistsException {
         return this.projectRepository.saveAndFlush(p).getId();
-    }
-
-    @Override
-    public Long update(ProjectVO p) {
-        throw new NotYetImplementedException("ProjectService.update() is not implemented yet...");
     }
 
     /**
@@ -205,57 +106,8 @@ public class ProjectServiceImpl implements IProjectService {
         return this.projectRepository.count();
     }
 
-    /**
-     * Sort the project list based on id follow by ascending.
-     * 
-     * @param lst
-     * @return
-     */
-    public List<Project> sortById(List<Project> lst, final String ordering) {
-        lst.sort(new Comparator<Project>() {
-            @Override
-            public int compare(Project o1, Project o2) {
-                if ("asc".equals(ordering)) {
-                    return (int) (o1.getId() - o2.getId());
-                } else {
-                    return (int) (o2.getId() - o1.getId());
-                }
-            }
-        });
-        return lst;
-    }
-
     @Override
     public void delete(Long id) {
         this.projectRepository.delete(id);
-    }
-
-    @Override
-    public Long add(Project p) throws ProjectNumberAlreadyExistsException {
-        this.projectRepository.saveAndFlush(p);
-        return p.getId();
-    }
-
-    @Override
-    public List<Project> sortByName(List<Project> lst, final String ordering) {
-        lst.sort(new Comparator<Project>() {
-            @Override
-            public int compare(Project o1, Project o2) {
-                if ("asc".equals(ordering)) {
-                    return (int) (o1.getName().compareTo(o2.getName()));
-                } else {
-                    return (int) (o2.getName().compareTo(o1.getName()));
-                }
-            }
-        });
-        return lst;
-    }
-
-    @Override
-    public List<Project> subListByIndex(List<Project> lst, int nextPage, int num) {
-        int beginIndex = (nextPage - 1) * num;
-        int endIndex = beginIndex + num;
-        endIndex = (endIndex >= lst.size() ? lst.size() : endIndex);
-        return lst.subList(beginIndex, endIndex);
     }
 }

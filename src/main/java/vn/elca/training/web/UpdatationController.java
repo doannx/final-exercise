@@ -33,10 +33,10 @@ import org.springframework.web.servlet.ModelAndView;
 import vn.elca.training.convertor.GroupEditor;
 import vn.elca.training.convertor.StatusEditor;
 import vn.elca.training.dom.Department;
+import vn.elca.training.dom.Member;
 import vn.elca.training.dom.Project;
 import vn.elca.training.exception.ProjectNumberAlreadyExistsException;
 import vn.elca.training.model.GroupVO;
-import vn.elca.training.model.MemberVO;
 import vn.elca.training.model.ProjectVO;
 import vn.elca.training.model.StatusVO;
 import vn.elca.training.service.IGroupService;
@@ -60,7 +60,7 @@ public class UpdatationController {
     MessageSource messageSource;
     @Autowired
     private ProjectValidator validator;
-    private Map<String, MemberVO> lstMemberCache;
+    private Map<String, Member> lstMemberCache;
 
     @InitBinder
     public void initBinder(WebDataBinder binder) {
@@ -71,12 +71,12 @@ public class UpdatationController {
         binder.registerCustomEditor(Date.class, new CustomDateEditor(dateFormat, true));
         binder.registerCustomEditor(List.class, "members", new CustomCollectionEditor(List.class) {
             protected Object convertElement(Object element) {
-                if (element instanceof MemberVO) {
-                    System.out.println("Converting from MemberVO to MemberVO: " + element);
+                if (element instanceof Member) {
+                    System.out.println("Converting from Member to Member: " + element);
                     return element;
                 }
                 if (element instanceof String) {
-                    MemberVO staff = lstMemberCache.get(element);
+                    Member staff = lstMemberCache.get(element);
                     System.out.println("Looking up member for visa " + element + ": " + staff);
                     return staff;
                 }
@@ -102,15 +102,14 @@ public class UpdatationController {
         status.add(new StatusVO("INP", messageSource.getMessage("status.inp", null, locale)));
         status.add(new StatusVO("NEW", messageSource.getMessage("status.new", null, locale)));
         status.add(new StatusVO("PLA", messageSource.getMessage("status.pla", null, locale)));
-        
         return status;
     }
 
     @ModelAttribute("allMember")
-    public List<MemberVO> populateMembers() {
-        List<MemberVO> members = this.memberService.convert(this.memberService.findAll());
-        this.lstMemberCache = new HashMap<String, MemberVO>();
-        for (MemberVO m : members) {
+    public List<Member> populateMembers() {
+        List<Member> members = this.memberService.findAll();
+        this.lstMemberCache = new HashMap<String, Member>();
+        for (Member m : this.memberService.findAll()) {
             this.lstMemberCache.put(String.valueOf(m.getVisa()), m);
         }
         return members;
@@ -127,7 +126,8 @@ public class UpdatationController {
     String detail(@PathVariable String id, HttpSession session, Model model) {
         Project entity = projectService.getById(id);
         ProjectVO vo = new ProjectVO(entity.getId(), entity.getName(), entity.getFinishingDate(), entity.getStatus(),
-                entity.getCustomer(), null, String.valueOf(entity.getGroup().getId()), entity.getEndDate());
+                entity.getCustomer(), entity.getMembers(), String.valueOf(entity.getGroup().getId()),
+                entity.getEndDate());
         model.addAttribute("project", vo);
         session.setAttribute("UPDATE_MODE", "update");
         return "update";
@@ -167,8 +167,8 @@ public class UpdatationController {
             // once more check in [add] mode
             if ("add".equals(mode)) {
                 if (this.projectService.getById(vo.getId().toString()) != null) {
-                    result.addError(new FieldError("project", "id",
-                            messageSource.getMessage("error.idduplicate", null, locale)));
+                    result.addError(new FieldError("project", "id", messageSource.getMessage("error.idduplicate", null,
+                            locale)));
                     return "update";
                 }
             }
@@ -177,12 +177,8 @@ public class UpdatationController {
         // Store the employee information in database
         Department group = this.groupService.getById(Long.parseLong(vo.getGroup()));
         Project entity = new Project(vo.getId(), vo.getName(), vo.getFinishingDate(), vo.getStatus(), vo.getCustomer(),
-                group, vo.getEndDate());
-        if ("update".equals(mode)) {
-            projectService.update(entity);
-        } else {
-            projectService.add(entity);
-        }
+                group, vo.getEndDate(), vo.getMembers());
+        projectService.update(entity, mode);
         // mark session complete
         status.setComplete();
         return "redirect:/";

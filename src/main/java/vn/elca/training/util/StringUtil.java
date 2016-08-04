@@ -20,11 +20,13 @@ public class StringUtil {
         if (criterion.startsWith("*") && criterion.endsWith("*")) {
             rexPattern.append(".*").append(criterion.toLowerCase().substring(1).replace("*", ".*"));
         } else if (criterion.startsWith("*")) { // if *criterion => .*criterion$
-            rexPattern.append(".*").append(criterion.toLowerCase().substring(1)).append("$");
+            rexPattern.append(".*").append(criterion.toLowerCase().substring(1)).append("");
         } else if (criterion.endsWith("*")) { // if criterion* => ^criterion.*
-            rexPattern.append("^").append(criterion.toLowerCase().replace("*", ".*"));
-        } else { // if criterion1*criterion2 => ^criterion1.*criterion2$
-            rexPattern.append("^").append(criterion.toLowerCase().replace("*", ".*")).append("$");
+            rexPattern.append("").append(criterion.toLowerCase().replace("*", ".*"));
+        } else if (criterion.contains("*")) { // if criterion1*criterion2 => ^criterion1.*criterion2$
+            rexPattern.append("").append(criterion.toLowerCase().replace("*", ".*")).append("");
+        } else {
+            rexPattern.append(criterion.toLowerCase());
         }
         return rexPattern.toString();
     }

@@ -44,11 +44,11 @@ public class ProjectLoader implements ApplicationListener<ContextRefreshedEvent>
     public void onApplicationEvent(ContextRefreshedEvent event) {
         Department group = new Department("KTG");
         this.groupRepository.save(group);
-        Member member = new Member("XDG", "NGUYEN XUAN DOAN");
+        Member member = new Member("KIM", "NGUYEN KIM THY");
         this.memberRepository.save(member);
         List<Member> members = new ArrayList<Member>();
         members.add(member);
-        Project dummyPrj = new Project(1L, "KSTA", new Date(), "NEW", "Helm AG", group, members);
+        Project dummyPrj = new Project(1L, "KSTA", new Date(), "NEW", "Helm AG", group);
         this.projectRepository.save(dummyPrj);
         dummyPrj = new Project(2L, "LAGAPEO", new Date(), "NEW", "Lanxess AG", group);
         this.projectRepository.save(dummyPrj);

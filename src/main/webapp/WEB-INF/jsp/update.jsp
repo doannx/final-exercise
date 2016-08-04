@@ -31,7 +31,7 @@
           <table class="tbl normalText">
             <tr>
               <td><spring:message code="form.prjnumber" />&nbsp;<span class="mandatory">*</span></td>
-              <td><form:input path="id" class="form-control height30px" cssErrorClass="form-control height30px error" autofocus="true"/></td>
+              <td><form:input id="prjnumber" path="id" class="form-control height30px" cssErrorClass="form-control height30px error" autofocus="true"/></td>
               <td colspan="2" style="padding-left: 10px;"><form:errors path="id" cssClass="error-text" /></td>
             </tr>
             <tr>

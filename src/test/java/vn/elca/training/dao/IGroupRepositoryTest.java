@@ -1,8 +1,6 @@
 package vn.elca.training.dao;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -18,7 +16,12 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import vn.elca.training.ApplicationLauncher;
 import vn.elca.training.config.MyRepositoryConfiguration;
 import vn.elca.training.dom.Department;
+import vn.elca.training.dom.Member;
 import vn.elca.training.dom.Project;
+import vn.elca.training.dom.QDepartment;
+
+import com.google.common.collect.Lists;
+import com.mysema.query.types.expr.BooleanExpression;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = { ApplicationLauncher.class, MyRepositoryConfiguration.class })
@@ -27,23 +30,28 @@ public class IGroupRepositoryTest {
     private IGroupRepository groupRepo;
     @Autowired
     private IProjectRepository projectRepo;
+    @Autowired
+    private IMemberRepository memberRepo;
 
     @Test
     @Transactional
     public void testSaveGroup() {
+        // new member
+        Member member = new Member("TC1", "TEST ACC 1");
+        this.memberRepo.save(member);
+        // new group
         Department g = new Department();
-        g.setName("XDG");
-        assertNull(g.getId());
+        g.setName("TEST");
+        g.setLeader(member);
         this.groupRepo.save(g);
-        assertNotNull(g.getId());
-        System.out.println(g.getId());
-        Project dummyPrj = new Project(123L, "KSTA", new Date(), "NEW", "Helm AG", g);
+        // new project
+        List<Member> members = new ArrayList<Member>();
+        members.add(member);
+        Project dummyPrj = new Project(123L, "TEST PRJ", new Date(), "NEW", "TEST CUS", g, members);
         this.projectRepo.save(dummyPrj);
         // verify
-        List<Department> lst = this.groupRepo.findAll();
-        Project savedPrj = this.projectRepo.getOne(123L);
-        Assert.assertEquals("XDG", savedPrj.getGroup().getName());
-        //
-        // System.out.println(this.groupRepo.getOne(7L).getProjects().size());
+        BooleanExpression groupName = QDepartment.department.name.eq("TEST");
+        Assert.assertEquals("TEST ACC 1", Lists.newArrayList(this.groupRepo.findAll(groupName).iterator()).get(0)
+                .getLeader().getName());
     }
 }

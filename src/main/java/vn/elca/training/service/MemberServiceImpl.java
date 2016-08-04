@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 
 import vn.elca.training.dao.IMemberRepository;
 import vn.elca.training.dom.Member;
-import vn.elca.training.model.MemberVO;
 
 @Service
 public class MemberServiceImpl implements IMemberService {
@@ -29,10 +28,10 @@ public class MemberServiceImpl implements IMemberService {
     }
 
     @Override
-    public List<MemberVO> convert(List<Member> lst) {
-        List<MemberVO> lstVo = new ArrayList<MemberVO>();
+    public List<Member> convert(List<Member> lst) {
+        List<Member> lstVo = new ArrayList<Member>();
         for (Member m : lst) {
-            lstVo.add(new MemberVO(m.getVisa(), m.getVisa() + ":" + m.getName()));
+            lstVo.add(new Member(m.getVisa(), m.getVisa() + ":" + m.getName()));
         }
         return lstVo;
     }
@@ -50,5 +49,4 @@ public class MemberServiceImpl implements IMemberService {
         });
         return lst;
     }
-
 }
