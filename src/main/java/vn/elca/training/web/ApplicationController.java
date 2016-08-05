@@ -16,7 +16,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.context.MessageSource;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.WebDataBinder;
@@ -218,17 +217,9 @@ public class ApplicationController {
      * @param id
      * @return update project list
      */
-    @PreAuthorize("hasRole('ADMIN'")
-    @RequestMapping("/delete/{id}")
-    ModelAndView delete(@PathVariable Long id) {
-        projectService.delete(id);
-        // callback to main() to re-display [home] view
-        return main();
-    }
-
-    @RequestMapping("/deleteitems")
+    @RequestMapping("/delete")
     @ResponseBody
-    String deleteMultiplePrj(@RequestParam(value = "prjIds[]") List<Long> prjIds) {
+    String delete(@RequestParam(value = "prjIds[]") List<Long> prjIds) {
         for (Long id : prjIds) {
             this.projectService.delete(id);
         }
