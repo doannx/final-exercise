@@ -6,6 +6,8 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
@@ -16,26 +18,29 @@ import javax.persistence.Version;
 @Entity
 public class Project {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "ID")
     private Long id;
-    @Column(nullable = false)
+    @Column(name = "PROJECT_NUMBER", unique = true)
+    private Integer prjNumber;
+    @Column(name = "NAME")
     private String name;
-    @Column
+    @Column(name = "START_DATE")
     private Date finishingDate;
-    @Column
+    @Column(name = "STATUS")
     private String status;
-    @Column
+    @Column(name = "CUSTOMER")
     private String customer;
     @ManyToOne
     @JoinColumn(name = "department_id")
     private Department group;
-    @Column
+    @Column(name = "END_DATE")
     private Date endDate;
     @Version
-    @Column(name="VERSION")
+    @Column(name = "VERSION")
     private Integer version;
     @ManyToMany(cascade = CascadeType.ALL)
-    @JoinTable(name = "project_member", joinColumns = @JoinColumn(name = "project_id", referencedColumnName = "id"), 
-    inverseJoinColumns = @JoinColumn(name = "member_id", referencedColumnName = "visa"))
+    @JoinTable(name = "project_member", joinColumns = @JoinColumn(name = "project_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "member_id", referencedColumnName = "visa"))
     private List<Member> members;
 
     public void setStatus(String status) {
@@ -148,6 +153,7 @@ public class Project {
     public void setVersion(Integer version) {
         this.version = version;
     }
+
     public void setId(Long id) {
         this.id = id;
     }
@@ -163,5 +169,12 @@ public class Project {
     public void setCustomer(String customer) {
         this.customer = customer;
     }
-    
+
+    public Integer getPrjNumber() {
+        return prjNumber;
+    }
+
+    public void setPrjNumber(Integer prjNumber) {
+        this.prjNumber = prjNumber;
+    }
 }
