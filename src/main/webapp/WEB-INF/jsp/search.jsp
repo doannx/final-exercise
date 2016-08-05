@@ -87,7 +87,7 @@
 						data-bind="attr: {id: id, disabled: status !== 'New' && status !== 'Nouveau'}"
 						onclick="javascript:clickCheckbox();" /></td>
 					<td style="text-align: right; padding-right: 10px;"><a style="color: #666666;"
-						data-bind="attr: {href: '/detail/' + id}, text: prjNumber"></a></td>
+						data-bind="attr: {href: '/detail/' + id}, text: number"></a></td>
 					<td data-bind="text: name"></td>
 					<td data-bind="text: status"></td>
 					<td data-bind="text: customer"></td>

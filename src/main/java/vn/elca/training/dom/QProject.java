@@ -24,15 +24,23 @@ public class QProject extends EntityPathBase<Project> {
 
     public final StringPath customer = createString("customer");
 
+    public final DateTimePath<java.util.Date> endDate = createDateTime("endDate", java.util.Date.class);
+
     public final DateTimePath<java.util.Date> finishingDate = createDateTime("finishingDate", java.util.Date.class);
 
     public final QDepartment group;
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
+    public final ListPath<Member, QMember> members = this.<Member, QMember>createList("members", Member.class, QMember.class, PathInits.DIRECT2);
+
     public final StringPath name = createString("name");
 
+    public final NumberPath<Integer> number = createNumber("number", Integer.class);
+
     public final StringPath status = createString("status");
+
+    public final NumberPath<Integer> version = createNumber("version", Integer.class);
 
     public QProject(String variable) {
         this(Project.class, forVariable(variable), INITS);
@@ -52,7 +60,7 @@ public class QProject extends EntityPathBase<Project> {
 
     public QProject(Class<? extends Project> type, PathMetadata<?> metadata, PathInits inits) {
         super(type, metadata, inits);
-        this.group = inits.isInitialized("group") ? new QDepartment(forProperty("group")) : null;
+        this.group = inits.isInitialized("group") ? new QDepartment(forProperty("group"), inits.get("group")) : null;
     }
 
 }

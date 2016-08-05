@@ -18,24 +18,39 @@ public class QDepartment extends EntityPathBase<Department> {
 
     private static final long serialVersionUID = -751481089L;
 
+    private static final PathInits INITS = PathInits.DIRECT2;
+
     public static final QDepartment department = new QDepartment("department");
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
+
+    public final QMember leader;
 
     public final StringPath name = createString("name");
 
     public final SetPath<Project, QProject> projects = this.<Project, QProject>createSet("projects", Project.class, QProject.class, PathInits.DIRECT2);
 
+    public final NumberPath<Integer> version = createNumber("version", Integer.class);
+
     public QDepartment(String variable) {
-        super(Department.class, forVariable(variable));
+        this(Department.class, forVariable(variable), INITS);
     }
 
     public QDepartment(Path<? extends Department> path) {
-        super(path.getType(), path.getMetadata());
+        this(path.getType(), path.getMetadata(), path.getMetadata().isRoot() ? INITS : PathInits.DEFAULT);
     }
 
     public QDepartment(PathMetadata<?> metadata) {
-        super(Department.class, metadata);
+        this(metadata, metadata.isRoot() ? INITS : PathInits.DEFAULT);
+    }
+
+    public QDepartment(PathMetadata<?> metadata, PathInits inits) {
+        this(Department.class, metadata, inits);
+    }
+
+    public QDepartment(Class<? extends Department> type, PathMetadata<?> metadata, PathInits inits) {
+        super(type, metadata, inits);
+        this.leader = inits.isInitialized("leader") ? new QMember(forProperty("leader")) : null;
     }
 
 }

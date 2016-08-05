@@ -126,7 +126,7 @@ public class UpdatationController {
     @RequestMapping("/detail/{id}")
     String detail(@PathVariable String id, HttpSession session, Model model) {
         Project entity = projectService.getById(id);
-        ProjectVO vo = new ProjectVO(entity.getId(), entity.getName(), entity.getFinishingDate(), entity.getStatus(),
+        ProjectVO vo = new ProjectVO(entity.getId(), entity.getNumber(), entity.getName(), entity.getFinishingDate(), entity.getStatus(),
                 entity.getCustomer(), entity.getMembers(), String.valueOf(entity.getGroup().getId()),
                 entity.getEndDate());
         vo.setVersion(entity.getVersion());
@@ -157,7 +157,7 @@ public class UpdatationController {
      * @return [home] view after updating changes.
      */
     @RequestMapping(value = "/update", method = RequestMethod.POST)
-    public String submitForm(@ModelAttribute("project") ProjectVO vo, BindingResult result, HttpSession session,
+    public String save(@ModelAttribute("project") ProjectVO vo, BindingResult result, HttpSession session,
             SessionStatus status, Locale locale) throws ProjectNumberAlreadyExistsException {
         String mode = session.getAttribute("UPDATE_MODE").toString();
         // validate
@@ -168,8 +168,8 @@ public class UpdatationController {
         } else {
             // once more check in [add] mode
             if ("add".equals(mode)) {
-                if (this.projectService.getById(vo.getId().toString()) != null) {
-                    result.addError(new FieldError("project", "id", messageSource.getMessage("error.idduplicate", null,
+                if (this.projectService.getByPrjNumber(vo.getNumber()) != null) {
+                    result.addError(new FieldError("project", "number", messageSource.getMessage("error.idduplicate", null,
                             locale)));
                     return "update";
                 }

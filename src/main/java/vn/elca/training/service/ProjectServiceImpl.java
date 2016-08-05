@@ -102,13 +102,14 @@ public class ProjectServiceImpl implements IProjectService {
      */
     @Override
     public Long update(ProjectVO vo, String mode) throws ProjectNumberAlreadyExistsException {
+        if ("add".equals(mode) && this.getByPrjNumber(vo.getNumber()) != null) {
+            throw new ProjectNumberAlreadyExistsException();
+        }
         Project originalEntity = new Project();
-        if (this.projectRepository.findOne(vo.getId()) != null) {
-            if ("add".equals(mode)) {
-                throw new ProjectNumberAlreadyExistsException();
-            } else {
-                originalEntity = this.projectRepository.findOne(vo.getId());
-            }
+        if ("update".equals(mode)) {
+            originalEntity = this.projectRepository.findOne(vo.getId());
+            originalEntity.setId(vo.getId());
+            originalEntity.setVersion(vo.getVersion());
         }
         Department group = this.groupRepository.getOne(Long.parseLong(vo.getGroup()));
         originalEntity.setName(vo.getName());
@@ -116,10 +117,10 @@ public class ProjectServiceImpl implements IProjectService {
         originalEntity.setEndDate(vo.getEndDate());
         originalEntity.setFinishingDate(vo.getFinishingDate());
         originalEntity.setGroup(group);
-        originalEntity.setId(vo.getId());
+        originalEntity.setNumber(vo.getNumber());
         originalEntity.setMembers(vo.getMembers());
         originalEntity.setStatus(vo.getStatus());
-        originalEntity.setVersion(vo.getVersion());
+        
         return this.projectRepository.saveAndFlush(originalEntity).getId();
     }
 
@@ -150,10 +151,10 @@ public class ProjectServiceImpl implements IProjectService {
     public Long clone(Long id) {
         Project old = this.projectRepository.findOne(id);
         // get the max id
-        Pageable page = new PageRequest(0, 1, Sort.Direction.DESC, "id");
-        Long maxId = this.projectRepository.findAll(page).getContent().get(0).getId() + 1;
+        Pageable page = new PageRequest(0, 1, Sort.Direction.DESC, "number");
+        Integer nextPrjNumber = this.projectRepository.findAll(page).getContent().get(0).getNumber() + 1;
         // create the clone one
-        Project clone = new Project(maxId, old.getName() + "Maint." + Calendar.getInstance().get(Calendar.YEAR),
+        Project clone = new Project(nextPrjNumber, old.getName() + "Maint." + Calendar.getInstance().get(Calendar.YEAR),
                 new Date(), "NEW", old.getCustomer(), old.getGroup(), null, null);
         this.projectRepository.saveAndFlush(clone);
         // update the old one
@@ -162,4 +163,10 @@ public class ProjectServiceImpl implements IProjectService {
         // return result
         return clone.getId();
     }
+
+    @Override
+    public Project getByPrjNumber(Integer num) {
+        return this.projectRepository.findOne(QProject.project.number.eq(num));
+    }
+
 }

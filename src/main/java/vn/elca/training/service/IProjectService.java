@@ -62,4 +62,7 @@ public interface IProjectService {
      * @return id of clone one
      */
     Long clone(Long id);
+    
+    Project getByPrjNumber(Integer num);
+    
 }

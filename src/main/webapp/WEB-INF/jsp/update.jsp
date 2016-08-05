@@ -26,6 +26,7 @@
   <form:form method="post" modelAttribute="project" action="/update">
   	<input type="hidden" id="mode" name="mode" value="${UPDATE_MODE}"/>
   	<input type="hidden" id="hidUpdatePrjBtn" name="hidUpdatePrjBtn" value="<spring:message code="btn.updateprj" />"/>
+  	<form:hidden path="id"/>
   	<form:hidden path="version"/>
     <div class="form">
       <div style="float: left; width: 5%;">&nbsp;</div>
@@ -33,8 +34,8 @@
           <table class="tbl normalText">
             <tr>
               <td><spring:message code="form.prjnumber" />&nbsp;<span class="mandatory">*</span></td>
-              <td><form:input id="prjnumber" path="id" class="form-control height30px" cssErrorClass="form-control height30px error" autofocus="true"/></td>
-              <td colspan="2" style="padding-left: 10px;"><form:errors path="id" cssClass="error-text" /></td>
+              <td><form:input id="prjnumber" path="number" class="form-control height30px" cssErrorClass="form-control height30px error" autofocus="true"/></td>
+              <td colspan="2" style="padding-left: 10px;"><form:errors path="number" cssClass="error-text" /></td>
             </tr>
             <tr>
               <td><spring:message code="form.prjname" />&nbsp;<span class="mandatory">*</span></td>

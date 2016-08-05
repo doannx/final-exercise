@@ -14,6 +14,8 @@ public class ProjectVO implements Serializable {
     private static final long serialVersionUID = 1L;
     @NotNull
     private Long id;
+    @NotNull
+    private Integer number;
     @NotEmpty
     private String name;
     @NotNull
@@ -50,22 +52,11 @@ public class ProjectVO implements Serializable {
         this.finishingDate = finishingDate;
     }
 
-    public ProjectVO(Long id, String name, Date finishingDate, String status, String customer, List<Member> members,
-            String group) {
-        super();
-        this.id = id;
-        this.name = name;
-        this.finishingDate = finishingDate;
-        this.status = status;
-        this.customer = customer;
-        this.members = members;
-        this.group = group;
-    }
-
-    public ProjectVO(Long id, String name, Date finishingDate, String status, String customer, List<Member> members,
+    public ProjectVO(Long id, Integer number, String name, Date finishingDate, String status, String customer, List<Member> members,
             String group, Date endDate) {
         super();
         this.id = id;
+        this.number = number;
         this.name = name;
         this.finishingDate = finishingDate;
         this.status = status;
@@ -138,4 +129,13 @@ public class ProjectVO implements Serializable {
     public void setGroup(String group) {
         this.group = group;
     }
+
+    public Integer getNumber() {
+        return number;
+    }
+
+    public void setNumber(Integer number) {
+        this.number = number;
+    }
+    
 }

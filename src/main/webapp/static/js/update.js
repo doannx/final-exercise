@@ -31,7 +31,7 @@ $(document).ready(function() {
 	  } else  {
 	     return true;
 	}});
-	if($('#mode').val()=='update'){
+	if ($('#mode').val() == 'update') {
 		$('#prjnumber').attr('readonly', 'readonly');
 		$('#btnCreatePrj').attr('value', $('#hidUpdatePrjBtn').val());
 	}

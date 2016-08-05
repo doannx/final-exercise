@@ -22,7 +22,7 @@ public class Project {
     @Column(name = "ID")
     private Long id;
     @Column(name = "PROJECT_NUMBER", unique = true)
-    private Integer prjNumber;
+    private Integer number;
     @Column(name = "NAME")
     private String name;
     @Column(name = "START_DATE")
@@ -71,9 +71,9 @@ public class Project {
         this.finishingDate = finishingDate;
     }
 
-    public Project(Long id, String name, Date finishingDate, String status, String customer, Department group) {
+    public Project(Integer number, String name, Date finishingDate, String status, String customer, Department group) {
         super();
-        this.id = id;
+        this.number = number;
         this.name = name;
         this.finishingDate = finishingDate;
         this.status = status;
@@ -81,10 +81,10 @@ public class Project {
         this.group = group;
     }
 
-    public Project(Long id, String name, Date finishingDate, String status, String customer, Department group,
+    public Project(Integer number, String name, Date finishingDate, String status, String customer, Department group,
             List<Member> members) {
         super();
-        this.id = id;
+        this.number = number;
         this.name = name;
         this.finishingDate = finishingDate;
         this.status = status;
@@ -93,10 +93,10 @@ public class Project {
         this.members = members;
     }
 
-    public Project(Long id, String name, Date finishingDate, String status, String customer, Department group,
+    public Project(Integer number, String name, Date finishingDate, String status, String customer, Department group,
             Date endDate) {
         super();
-        this.id = id;
+        this.number = number;
         this.name = name;
         this.finishingDate = finishingDate;
         this.status = status;
@@ -105,10 +105,10 @@ public class Project {
         this.endDate = endDate;
     }
 
-    public Project(Long id, String name, Date finishingDate, String status, String customer, Department group,
+    public Project(Integer number, String name, Date finishingDate, String status, String customer, Department group,
             Date endDate, List<Member> members) {
         super();
-        this.id = id;
+        this.number = number;
         this.name = name;
         this.finishingDate = finishingDate;
         this.status = status;
@@ -170,11 +170,11 @@ public class Project {
         this.customer = customer;
     }
 
-    public Integer getPrjNumber() {
-        return prjNumber;
+    public Integer getNumber() {
+        return number;
     }
 
-    public void setPrjNumber(Integer prjNumber) {
-        this.prjNumber = prjNumber;
+    public void setNumber(Integer prjNumber) {
+        this.number = prjNumber;
     }
 }

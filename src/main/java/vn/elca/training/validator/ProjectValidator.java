@@ -14,7 +14,7 @@ public class ProjectValidator implements Validator {
     }
 
     public void validate(Object target, Errors errors) {
-        ValidationUtils.rejectIfEmptyOrWhitespace(errors, "id", "error.id", "");
+        ValidationUtils.rejectIfEmptyOrWhitespace(errors, "number", "error.number", "");
         ValidationUtils.rejectIfEmptyOrWhitespace(errors, "name", "error.name", "");
         ValidationUtils.rejectIfEmptyOrWhitespace(errors, "customer", "error.customer", "");
         ValidationUtils.rejectIfEmptyOrWhitespace(errors, "group", "error.group", "");

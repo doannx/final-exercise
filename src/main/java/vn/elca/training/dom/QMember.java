@@ -7,6 +7,7 @@ import com.mysema.query.types.path.*;
 import com.mysema.query.types.PathMetadata;
 import javax.annotation.Generated;
 import com.mysema.query.types.Path;
+import com.mysema.query.types.path.PathInits;
 
 
 /**
@@ -20,6 +21,8 @@ public class QMember extends EntityPathBase<Member> {
     public static final QMember member = new QMember("member1");
 
     public final StringPath name = createString("name");
+
+    public final ListPath<Project, QProject> projects = this.<Project, QProject>createList("projects", Project.class, QProject.class, PathInits.DIRECT2);
 
     public final StringPath visa = createString("visa");
 

@@ -47,7 +47,7 @@ public class IGroupRepositoryTest {
         // new project
         List<Member> members = new ArrayList<Member>();
         members.add(member);
-        Project dummyPrj = new Project(123L, "TEST PRJ", new Date(), "NEW", "TEST CUS", g, members);
+        Project dummyPrj = new Project(123, "TEST PRJ", new Date(), "NEW", "TEST CUS", g, members);
         this.projectRepo.save(dummyPrj);
         // verify
         BooleanExpression groupName = QDepartment.department.name.eq("TEST");
