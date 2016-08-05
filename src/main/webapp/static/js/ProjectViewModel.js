@@ -47,6 +47,11 @@ function ProjectViewModel(value) {
 }
 
 $(document).ready(function() {
+	$('#linkPrjlist').removeAttr('href');
+	$('#linkPrjlist').css('color', 'gray');
+	$('#linkPrjlist').css('text-decoration','none');
+	$('#linkPrj').removeClass('potentialItem');
+	$('#linkPrj').addClass('regularItem');
 	// set default button
 	$("#prjName").bind("keyup", function(event) {
 	  // track enter key
@@ -319,4 +324,31 @@ $(document).ready(function() {
 	    });
 		
 	});
+	window.clone = function(id, name) {
+		var r = confirm($('#hidConfirmCloneText').val() + name + ']?');
+		if (r == true) {
+			$.ajax({
+				method : "POST",
+				url : "/clone",
+				data : {
+					id : id
+				}
+			}).done(function(data) {
+				if (data == "success") {
+					window.location = "/";
+				} else {
+					alert('Houston, we have a problem...');
+				}
+				
+			}).fail(function (jqXHR, textStatus, errorThrown) {
+		        if (jqXHR.status === 401) {
+		            alert('401');
+		        } else if (jqXHR.status === 403) {
+		            alert('403');
+		        } else {
+		            alert('Houston, we have a problem...');
+		        }
+		    });
+		}
+	};
 });

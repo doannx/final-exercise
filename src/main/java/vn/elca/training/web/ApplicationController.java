@@ -228,6 +228,18 @@ public class ApplicationController {
     }
 
     /**
+     * Clone new project from one specific project by its [id].
+     * 
+     * @param id
+     * @return result of clone
+     */
+    @RequestMapping("/clone")
+    @ResponseBody
+    String clone(@RequestParam(value = "id") Long id) {
+        return this.projectService.clone(id) != -1 ? "success" : "fail";
+    }
+
+    /**
      * Filtering.
      * 
      * @param http
@@ -320,6 +332,7 @@ public class ApplicationController {
         String finSta = messageSource.getMessage("status.fin", null, locale);
         String plaSta = messageSource.getMessage("status.pla", null, locale);
         String inpSta = messageSource.getMessage("status.inp", null, locale);
+        String maiSta = messageSource.getMessage("status.mai", null, locale);
         for (Project p : lst) {
             switch (p.getStatus()) {
             case "NEW":
@@ -331,8 +344,14 @@ public class ApplicationController {
             case "PLA":
                 p.setStatus(plaSta);
                 break;
-            default:
+            case "INP":
                 p.setStatus(inpSta);
+                break;
+            case "MAI":
+                p.setStatus(maiSta);
+                break;
+            default:
+                p.setStatus(newSta);
                 break;
             }
         }

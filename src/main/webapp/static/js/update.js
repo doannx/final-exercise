@@ -1,4 +1,5 @@
 $(document).ready(function() {
+	
 	var config = {
 		'.chosen-select-width' : {
 			width : "75%"

@@ -53,4 +53,13 @@ public interface IProjectService {
      * @return void
      */
     void delete(Long id);
+
+    /**
+     * Clone one project from existing one.
+     * 
+     * @param id
+     *            project's id
+     * @return id of clone one
+     */
+    Long clone(Long id);
 }

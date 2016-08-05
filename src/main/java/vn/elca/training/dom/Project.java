@@ -34,7 +34,8 @@ public class Project {
     @Column(name="VERSION")
     private Integer version;
     @ManyToMany(cascade = CascadeType.ALL)
-    @JoinTable(name = "project_member", joinColumns = @JoinColumn(name = "project_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "member_id", referencedColumnName = "visa"))
+    @JoinTable(name = "project_member", joinColumns = @JoinColumn(name = "project_id", referencedColumnName = "id"), 
+    inverseJoinColumns = @JoinColumn(name = "member_id", referencedColumnName = "visa"))
     private List<Member> members;
 
     public void setStatus(String status) {

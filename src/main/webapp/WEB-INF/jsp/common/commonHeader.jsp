@@ -28,16 +28,16 @@
   <div class="multilingual-link">
     <a href="?locale=en" id="en">EN</a>&nbsp;<b>|</b>&nbsp;<a href="?locale=fr" id="fr">FR</a>
   </div>
-  <a href="#" id="help"><spring:message code="menu.help" /></a> <a href="#" id="logout"><spring:message code="menu.logout" /></a>
+  <a href="#" id="help" style="color: #2F85FA;"><spring:message code="menu.help" /></a> <a href="#" id="logout" style="color: #9d9d9d;"><spring:message code="menu.logout" /></a>
 </div>
 <!-- LEFT MENU -->
 <div style="width: 25%; position: relative;">
   <div class="menu width50">
     <ul>
-      <li><a href="/" class="activateItem"><spring:message code="menu.projectlist" /></a></li>
+      <li><a href="/" class="activateItem" id="linkPrjlist"><spring:message code="menu.projectlist" /></a></li>
       <li style="line-height: 20px;">&nbsp;</li>
-      <li><a href="/add" class="activateItem"><spring:message code="menu.new" /></a></li>
-      <li class="potentialItem"><spring:message code="menu.project" /></li>
+      <li><a href="/add" class="activateItem" id="linkNew"><spring:message code="menu.new" /></a></li>
+      <li class="potentialItem" id="linkPrj"><spring:message code="menu.project" /></li>
       <li class="regularItem"><spring:message code="menu.customer" /></li>
       <li class="regularItem"><spring:message code="menu.supplier" /></li>
     </ul>

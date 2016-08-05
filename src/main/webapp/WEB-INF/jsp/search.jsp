@@ -6,12 +6,10 @@
 	value="${sessionScope.TEXT_SEARCH_CRITERIA}" />
 <input type="hidden" id="statusCriteria"
 	value="${sessionScope.STATUS_SEARCH_CRITERIA}" />
-<input type="hidden" id="hidSelectedItemText"
-	value="&nbsp;<spring:message code="grid.itemsslected" />" />
-<input type="hidden" id="hidNoPrjFoundText"
-	value="&nbsp;<spring:message code="gird.noprjfound" />" />
-<input type="hidden" id="hidConfirmDelText"
-	value="&nbsp;<spring:message code="confirm.delete" />" />
+<input type="hidden" id="hidSelectedItemText"	value="&nbsp;<spring:message code="grid.itemsslected" />" />
+<input type="hidden" id="hidNoPrjFoundText" value="&nbsp;<spring:message code="gird.noprjfound" />" />
+<input type="hidden" id="hidConfirmDelText" value="&nbsp;<spring:message code="confirm.delete" />" />
+<input type="hidden" id="hidConfirmCloneText" value="&nbsp;<spring:message code="confirm.clone" />" />
 <input type="hidden" id="hidSearchRes" value="0" />
 <input type="hidden" id="hidTotalPage" value="${totalPage }" />
 <input type="hidden" id="hidBeginIndex" value="${beginIndex }" />
@@ -38,6 +36,7 @@
 							<option value="FIN"><spring:message code="status.fin" /></option>
 							<option value="INP"><spring:message code="status.inp" /></option>
 							<option value="NEW"><spring:message code="status.new" /></option>
+              <option value="MAI"><spring:message code="status.mai" /></option>
 							<option value="PLA"><spring:message code="status.pla" /></option>
 					</select></td>
 					<td style="border: 0px solid white; width: 2%;">&nbsp;</td>
@@ -55,18 +54,18 @@
 		<table class="tbl-list" id="tbl-list-result">
 			<thead class="">
 				<tr>
-					<td>&nbsp;</td>
-					<td>
-						<a onclick="javascript:sort('id');" style="cursor: pointer;"><spring:message code="grid.number" /></a>
+					<td style="width: 4%;">&nbsp;</td>
+					<td style="width: 10%;">
+						<a onclick="javascript:sort('id');" style="cursor: pointer;color:#666666;text-decoration: none;"><spring:message code="grid.number" /></a>
 						<br/>
 						<input type="text" id="filterNumber" class="form-control width50px" onkeyup="javascript:filter();"/>
 					</td>
 					<td><a onclick="javascript:sort('name');"
-						style="cursor: pointer;"><spring:message code="grid.name" /></a>
+						style="cursor: pointer;color:#666666;text-decoration: none;"><spring:message code="grid.name" /></a>
 						<br/>
 						<input type="text" id="filterName" class="form-control width50px" onkeyup="javascript:filter();"/>
 					</td>
-					<td><spring:message code="grid.status" />
+					<td style="width: 15%;"><spring:message code="grid.status" />
 						<br/>
 						<input type="text" id="filterStatus" class="form-control width50px" onkeyup="javascript:filter();"/>
 					</td>
@@ -74,11 +73,12 @@
 						<br/>
 						<input type="text" id="filterCustomer" class="form-control width50px" onkeyup="javascript:filter();"/>
 					</td>
-					<td><spring:message code="grid.startdate" />
+					<td style="width: 10%;"><spring:message code="grid.startdate" />
 						<br/>
 						<input type="text" id="filterStartDate" class="form-control width50px" onkeyup="javascript:filter();"/>
 					</td>
-					<td><spring:message code="grid.delete" /></td>
+					<td><spring:message code="grid.clone" /></td>
+          <td><spring:message code="grid.delete" /></td>
 				</tr>
 			</thead>
 			<tbody data-bind="foreach: projects">
@@ -86,14 +86,18 @@
 					<td><input type="checkbox"
 						data-bind="attr: {id: id, disabled: status !== 'New' && status !== 'Nouveau'}"
 						onclick="javascript:clickCheckbox();" /></td>
-					<td><a style="color: #666666;"
+					<td style="text-align: right; padding-right: 10px;"><a style="color: #666666;"
 						data-bind="attr: {href: '/detail/' + id}, text: id"></a></td>
 					<td data-bind="text: name"></td>
 					<td data-bind="text: status"></td>
 					<td data-bind="text: customer"></td>
 					<td data-bind="text: moment(finishingDate).format('DD.MM.YYYY')"></td>
-					<td><a
-						style="vertical-align: middle; padding-bottom: 2px; color: #FF7F50;"
+					<td style="text-align: center;padding: 0px;"><a
+            style="vertical-align: middle; padding-bottom: 2px; color: #FF7F50;cursor: pointer;"
+            data-bind="visible: status != 'Maintenance' && status != 'Entretien', attr: {onclick: 'clone(' + id + ',\'' + name + '\')'}">
+            <span class="glyphicon glyphicon-plus"></span></a></td>
+          <td><a
+						style="vertical-align: middle; padding-bottom: 2px; color: #FF7F50;cursor: pointer;"
 						data-bind="visible: status == 'New' || status == 'Nouveau', attr: {onclick: 'del(' + id + ',\'' + name + '\')'}">
             <span class="glyphicon glyphicon-trash"></span></a></td>
 				</tr>
@@ -102,7 +106,7 @@
 				<tr>
 					<td colspan="3" align="left" style="padding-left: 10px;"><div
 							style="color: #1E90FF;" id="selectedItem"></div></td>
-					<td colspan="4" align="right" style="padding-right: 30px;"><a
+					<td colspan="5" align="right" style="padding-right: 30px;"><a
 						href="#" style="color: #FF7F50;" id="deleteSelectedItems"><spring:message
 								code="grid.deleteselected" />&nbsp;<span
 							class="glyphicon glyphicon-trash"></span></a></td>

@@ -101,6 +101,7 @@ public class UpdatationController {
         status.add(new StatusVO("FIN", messageSource.getMessage("status.fin", null, locale)));
         status.add(new StatusVO("INP", messageSource.getMessage("status.inp", null, locale)));
         status.add(new StatusVO("NEW", messageSource.getMessage("status.new", null, locale)));
+        status.add(new StatusVO("MAI", messageSource.getMessage("status.mai", null, locale)));
         status.add(new StatusVO("PLA", messageSource.getMessage("status.pla", null, locale)));
         return status;
     }

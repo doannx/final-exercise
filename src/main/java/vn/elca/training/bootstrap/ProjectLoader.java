@@ -68,11 +68,11 @@ public class ProjectLoader implements ApplicationListener<ContextRefreshedEvent>
         this.projectRepository.save(dummyPrj);
         dummyPrj = new Project(10L, "Touristik", new Date(), "INP", "Siemens AG", group);
         this.projectRepository.save(dummyPrj);
-        dummyPrj = new Project(11L, "Automobilzulieferer", new Date(), "PLN", "Deutsche Telekom AG", group);
+        dummyPrj = new Project(11L, "Automobilzulieferer", new Date(), "PLA", "Deutsche Telekom AG", group);
         this.projectRepository.save(dummyPrj);
-        dummyPrj = new Project(12L, "Medien", new Date(), "PLN", "Deutsche Post DHL Group", group);
+        dummyPrj = new Project(12L, "Medien", new Date(), "PLA", "Deutsche Post DHL Group", group);
         this.projectRepository.save(dummyPrj);
-        dummyPrj = new Project(13L, "Finanzdienstleistungen", new Date(), "PLN", "Rewe Group", group);
+        dummyPrj = new Project(13L, "Finanzdienstleistungen", new Date(), "PLA", "Rewe Group", group);
         this.projectRepository.save(dummyPrj);
         dummyPrj = new Project(14L, "Konsumgüter", new Date(), "FIN", "BP Europa SE", group);
         this.projectRepository.save(dummyPrj);

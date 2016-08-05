@@ -1,8 +1,8 @@
 package vn.elca.training.service;
 
 import java.util.ArrayList;
-
-import javax.persistence.EntityNotFoundException;
+import java.util.Calendar;
+import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -10,9 +10,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-
-import com.google.common.collect.Lists;
-import com.mysema.query.types.expr.BooleanExpression;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import vn.elca.training.dao.IGroupRepository;
 import vn.elca.training.dao.IProjectRepository;
@@ -24,6 +23,9 @@ import vn.elca.training.model.ProjectVO;
 import vn.elca.training.model.SearchCriteriaVO;
 import vn.elca.training.model.SearchResultVO;
 import vn.elca.training.util.StringUtil;
+
+import com.google.common.collect.Lists;
+import com.mysema.query.types.expr.BooleanExpression;
 
 @Service
 @Qualifier(value = "hibernateProjectService")
@@ -134,5 +136,30 @@ public class ProjectServiceImpl implements IProjectService {
     @Override
     public void delete(Long id) {
         this.projectRepository.delete(id);
+    }
+
+    /**
+     * Clone one project from existing one.
+     * 
+     * @param id
+     *            project's id
+     * @return id of clone one
+     */
+    @Override
+    @Transactional(propagation = Propagation.REQUIRED)
+    public Long clone(Long id) {
+        Project old = this.projectRepository.findOne(id);
+        // get the max id
+        Pageable page = new PageRequest(0, 1, Sort.Direction.DESC, "id");
+        Long maxId = this.projectRepository.findAll(page).getContent().get(0).getId() + 1;
+        // create the clone one
+        Project clone = new Project(maxId, old.getName() + "Maint." + Calendar.getInstance().get(Calendar.YEAR),
+                new Date(), "NEW", old.getCustomer(), old.getGroup(), null, null);
+        this.projectRepository.saveAndFlush(clone);
+        // update the old one
+        old.setStatus("MAI");
+        this.projectRepository.saveAndFlush(old);
+        // return result
+        return clone.getId();
     }
 }

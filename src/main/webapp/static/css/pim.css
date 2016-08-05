@@ -172,16 +172,14 @@ input {
 
 .tbl-list thead tr td {
 	height: 32px;
-	padding-left: 10px;
+	padding: 5px;
 	border: 1px #E5E4E2 solid;
-	padding-right: 10px;
-	padding-bottom: 10px;
 }
 
 .tbl-list tbody tr td, .tbl-list tbody tr td:first-child, tbl-list tbody tr:last-child td
 	{
 	height: 38px;
-	padding-left: 10px;
+	padding: 5px;
 	border-right: 1px #E5E4E2 solid;
 	vertical-align: middle;
 }
