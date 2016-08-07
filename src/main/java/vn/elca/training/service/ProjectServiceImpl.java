@@ -54,8 +54,8 @@ public class ProjectServiceImpl implements IProjectService {
             String regex = StringUtil.buildRegexFromcriterion(criteria.getCreteria().get("text").toLowerCase());
             try {
                 // filter by [project number]
-                Long id = Long.parseLong(criteria.getCreteria().get("text"));
-                condExp = QProject.project.id.eq(id);
+                Integer id = Integer.parseInt(criteria.getCreteria().get("text"));
+                condExp = QProject.project.number.eq(id);
             } catch (NumberFormatException ex) {
                 // filter by [project name] and [customer name]
                 condExp = QProject.project.name.lower().matches(regex)
