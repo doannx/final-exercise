@@ -1,12 +1,15 @@
 package vn.elca.training.dom;
 
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
@@ -18,18 +21,18 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 @Table(name = "DEPARTMENT")
 public class Department {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "ID")
     private Long id;
-    @Column(name = "GROUP_LEADER_ID")
     private String name;
     @Version
     @Column(name = "VERSION")
     private Integer version;
     @JsonIgnore
     @OneToMany(mappedBy = "group", cascade = CascadeType.ALL)
-    private Set<Project> projects;
-    @OneToOne
+    private List<Project> projects = new ArrayList<Project>();
+    @OneToOne(cascade = { CascadeType.ALL })
+    @JoinColumn(name = "GROUP_LEADER_ID", nullable = true)
     private Member leader;
 
     public Department() {
@@ -70,11 +73,11 @@ public class Department {
         this.version = version;
     }
 
-    public Set<Project> getProjects() {
+    public List<Project> getProjects() {
         return projects;
     }
 
-    public void setProjects(Set<Project> projects) {
+    public void setProjects(List<Project> projects) {
         this.projects = projects;
     }
 

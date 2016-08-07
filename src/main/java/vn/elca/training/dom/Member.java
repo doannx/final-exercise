@@ -1,5 +1,6 @@
 package vn.elca.training.dom;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -17,7 +18,7 @@ public class Member {
     private String name;
     @ManyToMany(mappedBy = "members")
     @JsonBackReference
-    private List<Project> projects;
+    private List<Project> projects = new ArrayList<Project>();
 
     public Member() {
     }

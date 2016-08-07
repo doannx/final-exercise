@@ -1,5 +1,6 @@
 package vn.elca.training.dom;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -13,6 +14,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.Transient;
 import javax.persistence.Version;
 
 @Entity
@@ -31,8 +33,9 @@ public class Project {
     private String status;
     @Column(name = "CUSTOMER")
     private String customer;
+    @Transient
+    private Long groupId;
     @ManyToOne
-    @JoinColumn(name = "department_id")
     private Department group;
     @Column(name = "END_DATE")
     private Date endDate;
@@ -40,8 +43,8 @@ public class Project {
     @Column(name = "VERSION")
     private Integer version;
     @ManyToMany(cascade = CascadeType.ALL)
-    @JoinTable(name = "project_member", joinColumns = @JoinColumn(name = "project_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "member_id", referencedColumnName = "visa"))
-    private List<Member> members;
+    @JoinTable(name = "project_member", joinColumns = @JoinColumn(name = "project_id", referencedColumnName = "id") , inverseJoinColumns = @JoinColumn(name = "member_id", referencedColumnName = "visa") )
+    private List<Member> members = new ArrayList<Member>();
 
     public void setStatus(String status) {
         this.status = status;
@@ -177,4 +180,13 @@ public class Project {
     public void setNumber(Integer prjNumber) {
         this.number = prjNumber;
     }
+
+    public Long getGroupId() {
+        return groupId;
+    }
+
+    public void setGroupId(Long groupId) {
+        this.groupId = groupId;
+    }
+
 }
