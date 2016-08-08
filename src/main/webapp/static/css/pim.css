@@ -280,7 +280,7 @@ input {
 	color: #b29999;
 }
 
-select option {
+select option, .selectOpt {
 	color: #555;
 }
 

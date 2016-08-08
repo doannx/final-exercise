@@ -47,7 +47,12 @@
             </tr>
             <tr>
               <td><spring:message code="form.group" />&nbsp;<span class="mandatory">*</span></td>
-              <td><form:select path="group" class="form-control" cssErrorClass="form-control height30px error" items="${allGroups}" itemValue="id" itemLabel="name" /></td>
+              <td>
+                <form:select path="group" class="form-control" cssErrorClass="form-control height30px error"  >
+                  <form:option value="-1" disabled="true" selected="true" hidden="true"><spring:message code="ddl.selectgroup" /></form:option>
+                  <form:options items="${allGroups}" itemValue="id" itemLabel="name"></form:options>
+                </form:select>
+              </td>
               <td>&nbsp;</td>
               <td>&nbsp;</td>
             </tr>

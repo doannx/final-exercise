@@ -89,7 +89,6 @@ public class UpdatationController {
     @ModelAttribute("allGroups")
     public List<Department> populateGroups(Locale locale) {
         List<Department> groups = new ArrayList<Department>();
-        groups.add(new Department(-1L, messageSource.getMessage("ddl.selectgroup", null, locale)));
         groups.addAll(this.groupService.findAll());
         return groups;
     }
@@ -97,7 +96,6 @@ public class UpdatationController {
     @ModelAttribute("allStatus")
     public List<StatusVO> populateStatus(Locale locale) {
         List<StatusVO> status = new ArrayList<StatusVO>();
-        status.add(new StatusVO("", messageSource.getMessage("ddl.selectstatus", null, locale)));
         status.add(new StatusVO("FIN", messageSource.getMessage("status.fin", null, locale)));
         status.add(new StatusVO("INP", messageSource.getMessage("status.inp", null, locale)));
         status.add(new StatusVO("NEW", messageSource.getMessage("status.new", null, locale)));
