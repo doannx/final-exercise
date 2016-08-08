@@ -54,12 +54,13 @@ public class ApplicationController {
 
     @RequestMapping(value = "/", method = { RequestMethod.GET })
     ModelAndView main() {
-        int numOfRecords = (int) projectService.countAll();
+        SearchResultVO<Project> resultVo = getSearchResult(0, "all", "-1", "asc", "id");
         Map<String, Object> model = new HashMap<String, Object>();
         model.put("currentPage", "1");
         model.put("beginIndex", "1");
         model.put("recordsPerPage", recordsPerPage);
-        model.put("totalPage", this.getTotalPage(numOfRecords, Integer.valueOf(recordsPerPage)));
+        model.put("totalPage", this.getTotalPage((int) resultVo.getSize(), Integer.valueOf(recordsPerPage)));
+        model.put("lstOfCurrentPage", resultVo.getLstResult());
         return new ModelAndView("search", model);
     }
 
@@ -73,6 +74,11 @@ public class ApplicationController {
     @RequestMapping(value = "/{lang}", method = RequestMethod.GET)
     public String multilingual(Locale locale, Model model) {
         return "search";
+    }
+    
+    @RequestMapping(value = "/login", method = RequestMethod.GET)
+    public String loginPage() {
+        return "login";
     }
 
     /**
@@ -131,12 +137,12 @@ public class ApplicationController {
     @RequestMapping("/paging/{page}")
     @ResponseBody
     List<Project> paging(HttpSession session, @PathVariable Integer page, Model model, Locale locale) {
-        String searchCriteria = (session.getAttribute("TEXT_SEARCH_CRITERIA") != null ? session.getAttribute(
-                "TEXT_SEARCH_CRITERIA").toString() : "all");
-        String status = (session.getAttribute("STATUS_SEARCH_CRITERIA") != null ? session.getAttribute(
-                "STATUS_SEARCH_CRITERIA").toString() : "-1");
-        String sortOrdering = (session.getAttribute("SORT_ORDERING") != null ? session.getAttribute("SORT_ORDERING")
-                .toString() : "asc");
+        String searchCriteria = (session.getAttribute("TEXT_SEARCH_CRITERIA") != null
+                ? session.getAttribute("TEXT_SEARCH_CRITERIA").toString() : "all");
+        String status = (session.getAttribute("STATUS_SEARCH_CRITERIA") != null
+                ? session.getAttribute("STATUS_SEARCH_CRITERIA").toString() : "-1");
+        String sortOrdering = (session.getAttribute("SORT_ORDERING") != null
+                ? session.getAttribute("SORT_ORDERING").toString() : "asc");
         String sortName = (session.getAttribute("SORT_NAME") != null ? session.getAttribute("SORT_NAME").toString()
                 : "id");
         // return the search result
@@ -158,10 +164,10 @@ public class ApplicationController {
     @ResponseBody
     List<Project> sort(HttpSession session, @PathVariable String colName, Model model, Locale locale) {
         // process session variables
-        String searchCriteria = (session.getAttribute("TEXT_SEARCH_CRITERIA") != null ? session.getAttribute(
-                "TEXT_SEARCH_CRITERIA").toString() : "all");
-        String status = (session.getAttribute("STATUS_SEARCH_CRITERIA") != null ? session.getAttribute(
-                "STATUS_SEARCH_CRITERIA").toString() : "-1");
+        String searchCriteria = (session.getAttribute("TEXT_SEARCH_CRITERIA") != null
+                ? session.getAttribute("TEXT_SEARCH_CRITERIA").toString() : "all");
+        String status = (session.getAttribute("STATUS_SEARCH_CRITERIA") != null
+                ? session.getAttribute("STATUS_SEARCH_CRITERIA").toString() : "-1");
         String sortOrdering = "asc";
         if (session.getAttribute("SORT_ORDERING") != null) {
             sortOrdering = session.getAttribute("SORT_ORDERING").toString();
@@ -275,8 +281,8 @@ public class ApplicationController {
     }
 
     /**
-     * Convert from [String] type to [Date] type for [finishingDate] parameter. The input formatting of [finishingDate]
-     * should be [dd/MM/yyyy"].
+     * Convert from [String] type to [Date] type for [finishingDate] parameter.
+     * The input formatting of [finishingDate] should be [dd/MM/yyyy"].
      * 
      * @param binder
      */

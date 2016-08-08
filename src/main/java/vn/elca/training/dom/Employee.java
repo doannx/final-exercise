@@ -10,13 +10,14 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
 @Entity
 @Table(name = "EMPLOYEE")
-@AttributeOverrides({ @AttributeOverride(name = "id", column = @Column(name = "ID")),
-        @AttributeOverride(name = "version", column = @Column(name = "VERSION")) })
+@AttributeOverrides({ @AttributeOverride(name = "id", column = @Column(name = "ID") ),
+        @AttributeOverride(name = "version", column = @Column(name = "VERSION") ) })
 public class Employee extends Root {
     @Column(name = "VISA", unique = true)
     private String visa;
@@ -29,14 +30,17 @@ public class Employee extends Root {
     @ManyToMany(mappedBy = "members")
     @JsonBackReference
     private List<Project> projects = new ArrayList<Project>();
+    @Transient
+    private String displayName;
 
     public Employee() {
     }
 
-    public Employee(String visa, String name) {
+    public Employee(String visa, String firstName, String lastName) {
         super();
         this.visa = visa;
-        this.firstName = name;
+        this.firstName = firstName;
+        this.lastName = lastName;
     }
 
     public String getVisa() {
@@ -78,4 +82,13 @@ public class Employee extends Root {
     public void setProjects(List<Project> projects) {
         this.projects = projects;
     }
+
+    public String getDisplayName() {
+        return displayName;
+    }
+
+    public void setDisplayName(String displayName) {
+        this.displayName = displayName;
+    }
+    
 }

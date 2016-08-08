@@ -147,16 +147,6 @@ public class ProjectServiceImpl implements IProjectService {
     }
 
     /**
-     * Count all existing projects.
-     * 
-     * @return the number of projects
-     */
-    @Override
-    public long countAll() {
-        return this.projectRepository.count();
-    }
-
-    /**
      * Delete one project.
      * 
      * @param id

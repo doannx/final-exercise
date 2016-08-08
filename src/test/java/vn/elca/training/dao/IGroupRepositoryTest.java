@@ -37,7 +37,7 @@ public class IGroupRepositoryTest {
     @Transactional
     public void testSaveGroup() {
         // new member
-        Employee member = new Employee("TC1", "TEST ACC 1");
+        Employee member = new Employee("TC1", "TEST ACC 1", "NGUYEN");
         // new group
         Department g = new Department();
         g.setName("TEST");

@@ -44,7 +44,7 @@ public class ProjectLoader implements ApplicationListener<ContextRefreshedEvent>
     public void onApplicationEvent(ContextRefreshedEvent event) {
         Department group = new Department("KTG");
         this.groupRepository.save(group);
-        Employee member = new Employee("KIM", "NGUYEN KIM THY");
+        Employee member = new Employee("KIM", "KIM THY", "NGUYEN");
         this.memberRepository.save(member);
         List<Employee> members = new ArrayList<Employee>();
         members.add(member);

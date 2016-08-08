@@ -10,6 +10,7 @@
 <input type="hidden" id="hidNoPrjFoundText" value="&nbsp;<spring:message code="gird.noprjfound" />" />
 <input type="hidden" id="hidConfirmDelText" value="&nbsp;<spring:message code="confirm.delete" />" />
 <input type="hidden" id="hidConfirmCloneText" value="&nbsp;<spring:message code="confirm.clone" />" />
+<input type="hidden" id="hidConfirmLoginText" value="&nbsp;<spring:message code="confirm.login" />" />
 <input type="hidden" id="hidSearchRes" value="0" />
 <input type="hidden" id="hidTotalPage" value="${sessionScope.TOTAL_PAGE_OF_LATEST_QUERY }" />
 <input type="hidden" id="hidBeginIndex" value="${beginIndex }" />

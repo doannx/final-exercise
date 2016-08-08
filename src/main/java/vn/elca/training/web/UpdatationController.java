@@ -109,7 +109,8 @@ public class UpdatationController {
     public List<Employee> populateMembers() {
         List<Employee> members = this.memberService.findAll();
         this.lstMemberCache = new HashMap<String, Employee>();
-        for (Employee m : this.memberService.findAll()) {
+        for (Employee m : members) {
+            m.setDisplayName(m.getVisa() + ":" + m.getFirstName() + " " + m.getLastName());
             this.lstMemberCache.put(String.valueOf(m.getId()), m);
         }
         return members;
@@ -173,8 +174,8 @@ public class UpdatationController {
             // once more check in [add] mode
             if ("add".equals(mode)) {
                 if (this.projectService.getByPrjNumber(vo.getNumber()) != null) {
-                    result.addError(new FieldError("project", "number", messageSource.getMessage("error.idduplicate",
-                            null, locale)));
+                    result.addError(new FieldError("project", "number",
+                            messageSource.getMessage("error.idduplicate", null, locale)));
                     return "update";
                 }
             }

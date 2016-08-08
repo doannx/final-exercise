@@ -52,13 +52,6 @@ public interface IProjectService {
     Long update(ProjectVO p, String mode) throws ProjectNumberAlreadyExistsException;
 
     /**
-     * Count all existing projects.
-     * 
-     * @return the number of projects
-     */
-    long countAll();
-
-    /**
      * Delete one project.
      * 
      * @param id

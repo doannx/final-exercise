@@ -309,7 +309,10 @@ $(document).ready(function() {
 				window.location="/";
 			}).fail(function (jqXHR, textStatus, errorThrown) {
 		        if (jqXHR.status === 401) {
-		            alert('401');
+		        	var r = confirm($('#hidConfirmLoginText').val());
+		    		if (r == true) {
+		    			window.location = '/login';
+		    		}
 		        } else if (jqXHR.status === 403) {
 		            alert('403');
 		        } else {

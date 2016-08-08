@@ -36,7 +36,7 @@ public class MySecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         // ask whether this is an authenticated-user
-        http.authorizeRequests().antMatchers(HttpMethod.GET, "/delete/**").authenticated().and().httpBasic();
+        http.authorizeRequests().antMatchers(HttpMethod.POST, "/delete/**").authenticated().and().httpBasic();
         http.exceptionHandling().authenticationEntryPoint(new AuthenticationEntryPoint() {
             @Override
             public void commence(HttpServletRequest arg0, HttpServletResponse arg1, AuthenticationException arg2)
@@ -46,7 +46,7 @@ public class MySecurityConfiguration extends WebSecurityConfigurerAdapter {
             }
         });
         // ask whether this authenticated-user is an ADMIN
-        http.authorizeRequests().antMatchers(HttpMethod.GET, "/delete/**").access("hasRole('ROLE_ADMIN')");
+        http.authorizeRequests().antMatchers(HttpMethod.POST, "/delete/**").access("hasRole('ROLE_ADMIN')");
         http.exceptionHandling().accessDeniedHandler(new AccessDeniedHandler() {
             @Override
             public void handle(HttpServletRequest arg0, HttpServletResponse arg1, AccessDeniedException arg2)

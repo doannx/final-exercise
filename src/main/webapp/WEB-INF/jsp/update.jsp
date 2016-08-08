@@ -59,7 +59,7 @@
             <tr>
               <td><spring:message code="form.members" /></td>
               <td colspan="3">
-              	<form:select path="members" data-placeholder=" " class="form-control height30px chosen-select" multiple="true" items="${allMember}" itemValue="id" itemLabel="firstName" />
+              	<form:select path="members" data-placeholder=" " class="form-control height30px chosen-select" multiple="true" items="${allMember}" itemValue="id" itemLabel="displayName" />
               </td>
             </tr>
             <tr>
