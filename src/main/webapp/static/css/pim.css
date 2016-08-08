@@ -277,12 +277,7 @@ input {
 }
 
 .placeholder {
-	color: grey;
-}
-
-select option:first-child {
-	color: grey;
-	display: none;
+	color: #b29999;
 }
 
 select option {

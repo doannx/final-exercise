@@ -29,16 +29,16 @@
 						data-bind="value: prjName"
 						placeholder="<spring:message code="screen.textplaceholder" />" />
 					</td>
-					<td style="border: 0px solid white; width: 15%;"><select
-						class="form-control placeholder" id="status">
-							<option value="-1" disabled selected hidden=true><spring:message
-									code="screen.statusplaceholder" /></option>
-							<option value="FIN"><spring:message code="status.fin" /></option>
-							<option value="INP"><spring:message code="status.inp" /></option>
-							<option value="NEW"><spring:message code="status.new" /></option>
-              <option value="MAI"><spring:message code="status.mai" /></option>
-							<option value="PLA"><spring:message code="status.pla" /></option>
-					</select></td>
+					<td style="border: 0px solid white; width: 15%;">
+            <select	class="form-control placeholder" id="status">
+  							<option value="-1" disabled selected hidden="true"><spring:message code="screen.statusplaceholder" /></option>
+  							<option value="FIN"><spring:message code="status.fin" /></option>
+  							<option value="INP"><spring:message code="status.inp" /></option>
+  							<option value="NEW"><spring:message code="status.new" /></option>
+                <option value="MAI"><spring:message code="status.mai" /></option>
+  							<option value="PLA"><spring:message code="status.pla" /></option>
+  					</select>
+          </td>
 					<td style="border: 0px solid white; width: 2%;">&nbsp;</td>
 					<td style="border: 0px solid white; width: 12%;">
             <input type="button" class="btn btn-primary" style="width: 150px;" value="<spring:message code='btn.search' />" id="btnSearch"

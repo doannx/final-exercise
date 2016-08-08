@@ -78,6 +78,7 @@ $(document).ready(function() {
 		$('#filterStatus').val('');
 		$('#filterCustomer').val('');
 		$('#filterStartDate').val('');
+		$('#status').addClass('placeholder');
 		$.ajax({
 			method : "POST",
 			url : "/query",
@@ -224,11 +225,11 @@ $(document).ready(function() {
 	window.renderPaging = function(totalPage, beginIndex, currentPage) {
 		var html = "";
 		if (totalPage > 1) {
-			html = '<ul class="pagination" style="height: 32px;">';
+			html = '<ul class="pagination">';
 			if (currentPage == 1) {
-				html += '<li class="disabled"><a href="#"><img src="/static/img/previous_page.png"/></a></li>';
+				html += '<li class="disabled"><a style="height: 34px;" href="#"><img src="/static/img/previous_page.png"/></a></li>';
 			} else {
-				html += '<li><a onclick="javascript:prev()"><img src="/static/img/previous_page.png"/></a></li>';
+				html += '<li><a style="height: 34px;" onclick="javascript:prev()"><img src="/static/img/previous_page.png"/></a></li>';
 			}
 			for (i = beginIndex; i <= totalPage; i++) {
 				if (i === currentPage) {
@@ -242,9 +243,9 @@ $(document).ready(function() {
 				}
 			}
 			if (currentPage == totalPage) {
-				html += '<li class="disabled"><a href="#"><img src="/static/img/nextpage_icon.png" /></a></li>';
+				html += '<li class="disabled"><a style="height: 34px;" href="#"><img src="/static/img/nextpage_icon.png" /></a></li>';
 			} else {
-				html += '<li><a onclick="javascript:next()"><img src="/static/img/nextpage_icon.png" /></a></li>';
+				html += '<li><a style="height: 34px;" onclick="javascript:next()"><img src="/static/img/nextpage_icon.png" /></a></li>';
 			}
 			html += '</ul>';
 		}
