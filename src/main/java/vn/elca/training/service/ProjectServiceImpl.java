@@ -9,8 +9,8 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import vn.elca.training.dao.IGroupRepository;
@@ -35,6 +35,15 @@ public class ProjectServiceImpl implements IProjectService {
     @Autowired
     private IGroupRepository groupRepository;
 
+    /**
+     * Find all existing project(s). Support for paging and sorting.
+     * 
+     * @param nextPage
+     * @param num
+     * @param sortColName
+     * @param sortDirection
+     * @return SearchResultVO<Project>
+     */
     @Override
     public SearchResultVO<Project> findAll(int nextPage, int num, String sortColName, String sortDirection) {
         Pageable page = new PageRequest(nextPage, num, Sort.Direction.fromString(sortDirection), sortColName);
@@ -44,6 +53,16 @@ public class ProjectServiceImpl implements IProjectService {
         return res;
     }
 
+    /**
+     * Find project(s) based on [multiple search criteria]. Support for paging and sorting.
+     * 
+     * @param criteria
+     * @param currentPage
+     * @param num
+     * @param sortColName
+     * @param sortDirection
+     * @return SearchResultVO<Project>
+     */
     @Override
     public SearchResultVO<Project> findByCriteria(SearchCriteriaVO criteria, int nextPage, int num, String sortColName,
             String sortDirection) {
@@ -93,7 +112,7 @@ public class ProjectServiceImpl implements IProjectService {
     }
 
     /**
-     * Update one project.
+     * Update/add one project.
      * 
      * @param p
      *            project with new information
@@ -101,13 +120,13 @@ public class ProjectServiceImpl implements IProjectService {
      * @throws Exception
      */
     @Override
+    @Transactional(rollbackFor = { Throwable.class })
     public Long update(ProjectVO vo, String mode) throws ProjectNumberAlreadyExistsException {
         if ("add".equals(mode) && this.getByPrjNumber(vo.getNumber()) != null) {
             throw new ProjectNumberAlreadyExistsException();
         }
         Project originalEntity = new Project();
         if ("update".equals(mode)) {
-            originalEntity = this.projectRepository.findOne(vo.getId());
             originalEntity.setId(vo.getId());
             originalEntity.setVersion(vo.getVersion());
         }
@@ -120,7 +139,11 @@ public class ProjectServiceImpl implements IProjectService {
         originalEntity.setNumber(vo.getNumber());
         originalEntity.setMembers(vo.getMembers());
         originalEntity.setStatus(vo.getStatus());
-        return this.projectRepository.saveAndFlush(originalEntity).getId();
+        try {
+            return this.projectRepository.save(originalEntity).getId();
+        } catch (ObjectOptimisticLockingFailureException ex) {
+            throw ex;
+        }
     }
 
     /**
@@ -133,6 +156,13 @@ public class ProjectServiceImpl implements IProjectService {
         return this.projectRepository.count();
     }
 
+    /**
+     * Delete one project.
+     * 
+     * @param id
+     *            project's id
+     * @return void
+     */
     @Override
     public void delete(Long id) {
         this.projectRepository.delete(id);
@@ -146,7 +176,7 @@ public class ProjectServiceImpl implements IProjectService {
      * @return id of clone one
      */
     @Override
-    @Transactional(propagation = Propagation.REQUIRED)
+    @Transactional(rollbackFor = { Throwable.class })
     public Long clone(Long id) {
         Project old = this.projectRepository.findOne(id);
         // get the max id
@@ -164,6 +194,12 @@ public class ProjectServiceImpl implements IProjectService {
         return clone.getId();
     }
 
+    /**
+     * Get the information of one project by its [number].
+     * 
+     * @param number
+     * @return Project
+     */
     @Override
     public Project getByPrjNumber(Integer num) {
         return this.projectRepository.findOne(QProject.project.number.eq(num));

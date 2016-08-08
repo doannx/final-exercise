@@ -4,26 +4,22 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.persistence.AttributeOverride;
+import javax.persistence.AttributeOverrides;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Transient;
-import javax.persistence.Version;
 
 @Entity
-public class Project {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "ID")
-    private Long id;
+@AttributeOverrides({ @AttributeOverride(name = "id", column = @Column(name = "ID")),
+        @AttributeOverride(name = "version", column = @Column(name = "VERSION")) })
+public class Project extends Root {
     @Column(name = "PROJECT_NUMBER", unique = true)
     private Integer number;
     @Column(name = "NAME")
@@ -40,12 +36,9 @@ public class Project {
     private Department group;
     @Column(name = "END_DATE")
     private Date endDate;
-    @Version
-    @Column(name = "VERSION")
-    private Integer version;
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinTable(name = "project_member", joinColumns = @JoinColumn(name = "project_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "member_id", referencedColumnName = "visa"))
-    private List<Member> members = new ArrayList<Member>();
+    @JoinTable(name = "project_member", joinColumns = @JoinColumn(name = "project_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "employee_id", referencedColumnName = "id"))
+    private List<Employee> members = new ArrayList<Employee>();
 
     public void setStatus(String status) {
         this.status = status;
@@ -86,7 +79,7 @@ public class Project {
     }
 
     public Project(Integer number, String name, Date finishingDate, String status, String customer, Department group,
-            List<Member> members) {
+            List<Employee> members) {
         super();
         this.number = number;
         this.name = name;
@@ -110,7 +103,7 @@ public class Project {
     }
 
     public Project(Integer number, String name, Date finishingDate, String status, String customer, Department group,
-            Date endDate, List<Member> members) {
+            Date endDate, List<Employee> members) {
         super();
         this.number = number;
         this.name = name;
@@ -120,10 +113,6 @@ public class Project {
         this.group = group;
         this.endDate = endDate;
         this.members = members;
-    }
-
-    public Long getId() {
-        return id;
     }
 
     public String getName() {
@@ -142,24 +131,12 @@ public class Project {
         return customer;
     }
 
-    public List<Member> getMembers() {
+    public List<Employee> getMembers() {
         return members;
     }
 
-    public void setMembers(List<Member> members) {
+    public void setMembers(List<Employee> members) {
         this.members = members;
-    }
-
-    public Integer getVersion() {
-        return version;
-    }
-
-    public void setVersion(Integer version) {
-        this.version = version;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public void setName(String name) {

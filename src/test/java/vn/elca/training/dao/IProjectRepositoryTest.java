@@ -16,7 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import vn.elca.training.ApplicationLauncher;
 import vn.elca.training.dom.Department;
-import vn.elca.training.dom.Member;
+import vn.elca.training.dom.Employee;
 import vn.elca.training.dom.Project;
 import vn.elca.training.dom.QProject;
 
@@ -36,17 +36,17 @@ public class IProjectRepositoryTest {
     @Test
     @Transactional
     public void testAdd001() {
-        Member member1 = new Member("QMV", "FULL NAME OF QMV");
-        Member member2 = new Member("HTV", "FULL NAME OF HTV");
-        Member member3 = new Member("TQP", "FULL NAME OF TQP");
-        Member member4 = new Member("HNH", "FULL NAME OF HNH");
-        Member member5 = new Member("NQN", "FULL NAME OF NQN");
-        Member member6 = new Member("QKP", "FULL NAME OF QKP");
-        Member member7 = new Member("PLH", "FULL NAME OF PLH");
-        Member member8 = new Member("HNL", "FULL NAME OF HNL");
-        Member member9 = new Member("MKN", "FULL NAME OF MKN");
-        Member member10 = new Member("TBH", "FULL NAME OF TBH");
-        Member member11 = new Member("TDN", "FULL NAME OF TDN");
+        Employee member1 = new Employee("QMV", "FULL NAME OF QMV");
+        Employee member2 = new Employee("HTV", "FULL NAME OF HTV");
+        Employee member3 = new Employee("TQP", "FULL NAME OF TQP");
+        Employee member4 = new Employee("HNH", "FULL NAME OF HNH");
+        Employee member5 = new Employee("NQN", "FULL NAME OF NQN");
+        Employee member6 = new Employee("QKP", "FULL NAME OF QKP");
+        Employee member7 = new Employee("PLH", "FULL NAME OF PLH");
+        Employee member8 = new Employee("HNL", "FULL NAME OF HNL");
+        Employee member9 = new Employee("MKN", "FULL NAME OF MKN");
+        Employee member10 = new Employee("TBH", "FULL NAME OF TBH");
+        Employee member11 = new Employee("TDN", "FULL NAME OF TDN");
 
         Department dep = new Department("QMV");
 
@@ -96,17 +96,17 @@ public class IProjectRepositoryTest {
     @Test
     @Transactional
     public void testAdd002() {
-        Member member1 = new Member("QMV", "FULL NAME OF QMV");
-        Member member2 = new Member("HTV", "FULL NAME OF HTV");
-        Member member3 = new Member("TQP", "FULL NAME OF TQP");
-        Member member4 = new Member("HNH", "FULL NAME OF HNH");
-        Member member5 = new Member("NQN", "FULL NAME OF NQN");
-        Member member6 = new Member("QKP", "FULL NAME OF QKP");
-        Member member7 = new Member("PLH", "FULL NAME OF PLH");
-        Member member8 = new Member("HNL", "FULL NAME OF HNL");
-        Member member9 = new Member("MKN", "FULL NAME OF MKN");
-        Member member10 = new Member("TBH", "FULL NAME OF TBH");
-        Member member11 = new Member("TDN", "FULL NAME OF TDN");
+        Employee member1 = new Employee("QMV", "FULL NAME OF QMV");
+        Employee member2 = new Employee("HTV", "FULL NAME OF HTV");
+        Employee member3 = new Employee("TQP", "FULL NAME OF TQP");
+        Employee member4 = new Employee("HNH", "FULL NAME OF HNH");
+        Employee member5 = new Employee("NQN", "FULL NAME OF NQN");
+        Employee member6 = new Employee("QKP", "FULL NAME OF QKP");
+        Employee member7 = new Employee("PLH", "FULL NAME OF PLH");
+        Employee member8 = new Employee("HNL", "FULL NAME OF HNL");
+        Employee member9 = new Employee("MKN", "FULL NAME OF MKN");
+        Employee member10 = new Employee("TBH", "FULL NAME OF TBH");
+        Employee member11 = new Employee("TDN", "FULL NAME OF TDN");
 
         Department dep = new Department("QMV");
 
@@ -157,7 +157,7 @@ public class IProjectRepositoryTest {
     public void testUpdate001() {
         // prepare test data
         Department dep = new Department("FSU15");
-        Member member = new Member("XDG999", "NGUYEN XUAN DOAN 1");
+        Employee member = new Employee("XDG999", "NGUYEN XUAN DOAN 1");
         dep.setLeader(member);
         Project dummyPrj = new Project(999, "KSTA999", new Date(), "NEW", "Helm AG", dep);
         dep.getProjects().add(dummyPrj);
@@ -173,7 +173,7 @@ public class IProjectRepositoryTest {
     public void testUpdate002() {
         // prepare test data
         Department dep = new Department("FSU15");
-        Member member = this.memberRepository.findOne("XDG12");
+        Employee member = this.memberRepository.findOne("XDG12");
         dep.setLeader(member);
         Project dummyPrj = new Project(998, "KSTA999", new Date(), "NEW", "Helm AG", dep);
         dep.getProjects().add(dummyPrj);

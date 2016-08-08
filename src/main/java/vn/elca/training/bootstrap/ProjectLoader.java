@@ -14,7 +14,7 @@ import vn.elca.training.dao.IGroupRepository;
 import vn.elca.training.dao.IMemberRepository;
 import vn.elca.training.dao.IProjectRepository;
 import vn.elca.training.dom.Department;
-import vn.elca.training.dom.Member;
+import vn.elca.training.dom.Employee;
 import vn.elca.training.dom.Project;
 
 @Component
@@ -44,9 +44,9 @@ public class ProjectLoader implements ApplicationListener<ContextRefreshedEvent>
     public void onApplicationEvent(ContextRefreshedEvent event) {
         Department group = new Department("KTG");
         this.groupRepository.save(group);
-        Member member = new Member("KIM", "NGUYEN KIM THY");
+        Employee member = new Employee("KIM", "NGUYEN KIM THY");
         this.memberRepository.save(member);
-        List<Member> members = new ArrayList<Member>();
+        List<Employee> members = new ArrayList<Employee>();
         members.add(member);
         Project dummyPrj = new Project(1, "KSTA", new Date(), "NEW", "Helm AG", group);
         this.projectRepository.save(dummyPrj);

@@ -16,7 +16,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import vn.elca.training.ApplicationLauncher;
 import vn.elca.training.config.MyRepositoryConfiguration;
 import vn.elca.training.dom.Department;
-import vn.elca.training.dom.Member;
+import vn.elca.training.dom.Employee;
 import vn.elca.training.dom.Project;
 import vn.elca.training.dom.QDepartment;
 
@@ -37,20 +37,20 @@ public class IGroupRepositoryTest {
     @Transactional
     public void testSaveGroup() {
         // new member
-        Member member = new Member("TC1", "TEST ACC 1");
+        Employee member = new Employee("TC1", "TEST ACC 1");
         // new group
         Department g = new Department();
         g.setName("TEST");
         g.setLeader(member);
         this.groupRepo.save(g);
         // new project
-        List<Member> members = new ArrayList<Member>();
+        List<Employee> members = new ArrayList<Employee>();
         members.add(member);
         Project dummyPrj = new Project(555, "TEST PRJ", new Date(), "NEW", "TEST CUS", g, members);
         this.projectRepo.save(dummyPrj);
         // verify
         BooleanExpression groupName = QDepartment.department.name.eq("TEST");
         Assert.assertEquals("TEST ACC 1", Lists.newArrayList(this.groupRepo.findAll(groupName).iterator()).get(0)
-                .getLeader().getName());
+                .getLeader().getFirstName());
     }
 }

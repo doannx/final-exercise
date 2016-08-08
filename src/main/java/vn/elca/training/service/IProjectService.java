@@ -7,13 +7,26 @@ import vn.elca.training.model.SearchCriteriaVO;
 import vn.elca.training.model.SearchResultVO;
 
 public interface IProjectService {
+    /**
+     * Find all existing project(s). Support for paging and sorting.
+     * 
+     * @param nextPage
+     * @param num
+     * @param sortColName
+     * @param sortDirection
+     * @return SearchResultVO<Project>
+     */
     SearchResultVO<Project> findAll(int nextPage, int num, String sortColName, String sortDirection);
 
     /**
-     * Find project(s) based on name. Search condition is LIKE operator.
+     * Find project(s) based on [multiple search criteria]. Support for paging and sorting.
      * 
-     * @param name
-     * @return List<Project>
+     * @param criteria
+     * @param currentPage
+     * @param num
+     * @param sortColName
+     * @param sortDirection
+     * @return SearchResultVO<Project>
      */
     SearchResultVO<Project> findByCriteria(SearchCriteriaVO criteria, int currentPage, int num, String sortColName,
             String sortDirection);
@@ -27,7 +40,7 @@ public interface IProjectService {
     Project getById(String id);
 
     /**
-     * Update one project.
+     * Update/add one project.
      * 
      * @param p
      *            project with new information
@@ -62,7 +75,12 @@ public interface IProjectService {
      * @return id of clone one
      */
     Long clone(Long id);
-    
+
+    /**
+     * Get the information of one project by its [number].
+     * 
+     * @param number
+     * @return Project
+     */
     Project getByPrjNumber(Integer num);
-    
 }

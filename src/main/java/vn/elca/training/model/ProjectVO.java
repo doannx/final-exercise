@@ -8,7 +8,7 @@ import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.NotEmpty;
 
-import vn.elca.training.dom.Member;
+import vn.elca.training.dom.Employee;
 
 public class ProjectVO implements Serializable {
     private static final long serialVersionUID = 1L;
@@ -26,7 +26,7 @@ public class ProjectVO implements Serializable {
     private String customer;
     @NotEmpty
     private String group;
-    private List<Member> members;
+    private List<Employee> members;
     private Date endDate;
     private Integer version;
 
@@ -52,7 +52,7 @@ public class ProjectVO implements Serializable {
         this.finishingDate = finishingDate;
     }
 
-    public ProjectVO(Long id, Integer number, String name, Date finishingDate, String status, String customer, List<Member> members,
+    public ProjectVO(Long id, Integer number, String name, Date finishingDate, String status, String customer, List<Employee> members,
             String group, Date endDate) {
         super();
         this.id = id;
@@ -86,7 +86,7 @@ public class ProjectVO implements Serializable {
         return customer;
     }
 
-    public List<Member> getMembers() {
+    public List<Employee> getMembers() {
         return members;
     }
 
@@ -122,7 +122,7 @@ public class ProjectVO implements Serializable {
         this.customer = customer;
     }
 
-    public void setMembers(List<Member> members) {
+    public void setMembers(List<Employee> members) {
         this.members = members;
     }
 

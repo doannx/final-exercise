@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.propertyeditors.CustomCollectionEditor;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.context.MessageSource;
+import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -33,7 +34,7 @@ import org.springframework.web.servlet.ModelAndView;
 import vn.elca.training.convertor.GroupEditor;
 import vn.elca.training.convertor.StatusEditor;
 import vn.elca.training.dom.Department;
-import vn.elca.training.dom.Member;
+import vn.elca.training.dom.Employee;
 import vn.elca.training.dom.Project;
 import vn.elca.training.exception.ProjectNumberAlreadyExistsException;
 import vn.elca.training.model.GroupVO;
@@ -47,7 +48,7 @@ import vn.elca.training.validator.ProjectValidator;
 @Controller
 public class UpdatationController {
     /**
-     * Declare the [DummyProjectService].
+     * Declare the [hibernateProjectService].
      */
     @Autowired
     @Qualifier(value = "hibernateProjectService")
@@ -60,7 +61,7 @@ public class UpdatationController {
     MessageSource messageSource;
     @Autowired
     private ProjectValidator validator;
-    private Map<String, Member> lstMemberCache;
+    private Map<String, Employee> lstMemberCache;
 
     @InitBinder
     public void initBinder(WebDataBinder binder) {
@@ -71,13 +72,13 @@ public class UpdatationController {
         binder.registerCustomEditor(Date.class, new CustomDateEditor(dateFormat, true));
         binder.registerCustomEditor(List.class, "members", new CustomCollectionEditor(List.class) {
             protected Object convertElement(Object element) {
-                if (element instanceof Member) {
+                if (element instanceof Employee) {
                     System.out.println("Converting from Member to Member: " + element);
                     return element;
                 }
                 if (element instanceof String) {
-                    Member staff = lstMemberCache.get(element);
-                    System.out.println("Looking up member for visa " + element + ": " + staff);
+                    Employee staff = lstMemberCache.get(element);
+                    System.out.println("Looking up member for id " + element + ": " + staff);
                     return staff;
                 }
                 System.out.println("Don't know what to do with: " + element);
@@ -105,11 +106,11 @@ public class UpdatationController {
     }
 
     @ModelAttribute("allMember")
-    public List<Member> populateMembers() {
-        List<Member> members = this.memberService.findAll();
-        this.lstMemberCache = new HashMap<String, Member>();
-        for (Member m : this.memberService.findAll()) {
-            this.lstMemberCache.put(String.valueOf(m.getVisa()), m);
+    public List<Employee> populateMembers() {
+        List<Employee> members = this.memberService.findAll();
+        this.lstMemberCache = new HashMap<String, Employee>();
+        for (Employee m : this.memberService.findAll()) {
+            this.lstMemberCache.put(String.valueOf(m.getId()), m);
         }
         return members;
     }
@@ -130,6 +131,8 @@ public class UpdatationController {
         vo.setVersion(entity.getVersion());
         model.addAttribute("project", vo);
         session.setAttribute("UPDATE_MODE", "update");
+        session.setAttribute("ERROR_STATUS", false);
+        session.setAttribute("ERROR_CONTENT", "");
         return "update";
     }
 
@@ -146,6 +149,7 @@ public class UpdatationController {
         model.addAttribute("project", p);
         session.setAttribute("UPDATE_MODE", "add");
         session.setAttribute("ERROR_STATUS", false);
+        session.setAttribute("ERROR_CONTENT", "");
         return "update";
     }
 
@@ -163,6 +167,7 @@ public class UpdatationController {
         validator.validate(vo, result);
         if (result.hasErrors()) {
             session.setAttribute("ERROR_STATUS", true);
+            session.setAttribute("ERROR_CONTENT", messageSource.getMessage("error.all", null, locale));
             return "update";
         } else {
             // once more check in [add] mode
@@ -175,13 +180,27 @@ public class UpdatationController {
             }
         }
         session.setAttribute("ERROR_STATUS", false);
+        session.setAttribute("ERROR_CONTENT", "");
         // store the project change in database
-        projectService.update(vo, mode);
+        try {
+            projectService.update(vo, mode);
+        } catch (ObjectOptimisticLockingFailureException ex) {
+            session.setAttribute("ERROR_STATUS", true);
+            session.setAttribute("ERROR_CONTENT", messageSource.getMessage("error.concurrency", null, locale));
+            return "update";
+        }
         // mark session complete
         status.setComplete();
         return "redirect:/";
     }
 
+    /**
+     * Exception handler for ProjectNumberAlreadyExistsException.
+     * 
+     * @param req
+     * @param ex
+     * @return [myerrorpage]
+     */
     @ExceptionHandler(ProjectNumberAlreadyExistsException.class)
     public ModelAndView handleTypeMismatchException(HttpServletRequest req, ProjectNumberAlreadyExistsException ex) {
         ModelAndView model = new ModelAndView();

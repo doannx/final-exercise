@@ -19,7 +19,7 @@
   <c:if test="${sessionScope.ERROR_STATUS }">
     <div class="header alert alert-danger" style="font-size: 14pt; padding-left: 15px; margin-top: 5px; height: 50px; padding-top: 10px; padding-bottom: 10px;">
       <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-      <strong><spring:message code="error.all" /></strong>
+      <strong>${sessionScope.ERROR_CONTENT }</strong>
     </div>
   </c:if>
   <br class="clear" />
@@ -59,7 +59,7 @@
             <tr>
               <td><spring:message code="form.members" /></td>
               <td colspan="3">
-              	<form:select path="members" data-placeholder=" " class="form-control height30px chosen-select" multiple="true" items="${allMember}" itemValue="visa" itemLabel="name" />
+              	<form:select path="members" data-placeholder=" " class="form-control height30px chosen-select" multiple="true" items="${allMember}" itemValue="id" itemLabel="firstName" />
               </td>
             </tr>
             <tr>

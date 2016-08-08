@@ -28,7 +28,9 @@ vn\elca\training\service\MemberServiceImpl.class
 vn\elca\training\bootstrap\GroupLoader.class
 vn\elca\training\model\MemberVO.class
 vn\elca\training\config\MySecurityConfiguration$2.class
+vn\elca\training\dom\QEmployee.class
 vn\elca\training\dom\Project.class
+vn\elca\training\dom\QRoot.class
 vn\elca\training\convertor\GroupEditor.class
 vn\elca\training\web\UpdatationController$1.class
 vn\elca\training\service\IMemberService.class
@@ -37,7 +39,6 @@ vn\elca\training\dao\IMemberRepository.class
 vn\elca\training\service\IGroupService.class
 vn\elca\training\util\SortUtil.class
 vn\elca\training\web\GlobalDefaultExceptionHandler.class
-vn\elca\training\dom\Member.class
 vn\elca\training\convertor\StatusEditor.class
 vn\elca\training\util\MySafeSession.class
 vn\elca\training\service\GroupServiceImpl.class
