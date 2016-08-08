@@ -38,7 +38,6 @@ public class IGroupRepositoryTest {
     public void testSaveGroup() {
         // new member
         Member member = new Member("TC1", "TEST ACC 1");
-        this.memberRepo.save(member);
         // new group
         Department g = new Department();
         g.setName("TEST");
@@ -47,7 +46,7 @@ public class IGroupRepositoryTest {
         // new project
         List<Member> members = new ArrayList<Member>();
         members.add(member);
-        Project dummyPrj = new Project(123, "TEST PRJ", new Date(), "NEW", "TEST CUS", g, members);
+        Project dummyPrj = new Project(555, "TEST PRJ", new Date(), "NEW", "TEST CUS", g, members);
         this.projectRepo.save(dummyPrj);
         // verify
         BooleanExpression groupName = QDepartment.department.name.eq("TEST");

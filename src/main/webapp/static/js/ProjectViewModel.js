@@ -7,10 +7,18 @@ function ProjectViewModel(value) {
 		method : "POST",
 		url : "/query",
 		data : {
-			name : self.prjName
+			name : self.prjName,
+			status : $('#status').val()
 		}
 	}).done(function(data) {
-		renderPaging($('#hidTotalPage').val(), 1, 1);
+		$.ajax({
+			method : "POST",
+			url : "/count",
+		}).done(function(data) {
+			$('#hidTotalPage').val(data);
+			renderPaging(data, 1, 1);
+		}).fail(function(data) {
+		});
 		hideNoResult();
 		self.projects(data);
 		if (data.length == 0) {
@@ -65,6 +73,17 @@ $(document).ready(function() {
 	// process footer
 	$('#tbl-footer').css('visibility', 'hidden');
 	var prevPage = "1";
+	if ($('#statusCriteria').val() != "") {
+		if ($('#statusCriteria').val() != "-1") {
+			$('#status').removeClass('placeholder');
+		} else {
+			$('#status').addClass('placeholder');
+		}
+		$('#status').val($('#statusCriteria').val());
+	} else {
+		$('#status').val('-1');
+		$('#status').addClass('placeholder');
+	}
 	var textCriteria = $('#textCriteria').val();
 	var myViewModel = new ProjectViewModel(textCriteria);
 	ko.applyBindings(myViewModel);
@@ -79,6 +98,7 @@ $(document).ready(function() {
 		$('#filterCustomer').val('');
 		$('#filterStartDate').val('');
 		$('#status').addClass('placeholder');
+		myViewModel.prjName('');
 		$.ajax({
 			method : "POST",
 			url : "/query",

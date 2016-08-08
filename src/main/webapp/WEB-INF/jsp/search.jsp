@@ -11,7 +11,7 @@
 <input type="hidden" id="hidConfirmDelText" value="&nbsp;<spring:message code="confirm.delete" />" />
 <input type="hidden" id="hidConfirmCloneText" value="&nbsp;<spring:message code="confirm.clone" />" />
 <input type="hidden" id="hidSearchRes" value="0" />
-<input type="hidden" id="hidTotalPage" value="${totalPage }" />
+<input type="hidden" id="hidTotalPage" value="${sessionScope.TOTAL_PAGE_OF_LATEST_QUERY }" />
 <input type="hidden" id="hidBeginIndex" value="${beginIndex }" />
 <input type="hidden" id="hidCurrentPage" value="${currentPage }" />
 <div class="content">
@@ -86,8 +86,7 @@
 					<td><input type="checkbox"
 						data-bind="attr: {id: id, disabled: status !== 'New' && status !== 'Nouveau'}"
 						onclick="javascript:clickCheckbox();" /></td>
-					<td style="text-align: right; padding-right: 10px;"><a style="color: #666666;"
-						data-bind="attr: {href: '/detail/' + id}, text: number"></a></td>
+					<td style="text-align: right; padding-right: 10px;"><a style="color: #666666;" data-bind="attr: {href: '/detail/' + id}, text: number"></a></td>
 					<td data-bind="text: name"></td>
 					<td data-bind="text: status"></td>
 					<td data-bind="text: customer"></td>

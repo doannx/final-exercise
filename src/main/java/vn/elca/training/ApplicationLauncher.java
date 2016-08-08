@@ -40,7 +40,7 @@ import vn.elca.training.web.UpdatationController;
 @Import(value = { MySecurityConfiguration.class, MyRepositoryConfiguration.class })
 @PropertySource({ "classpath:/application.properties", "classpath:/message.properties",
         "classpath:/message_fr.properties" })
-@EnableAspectJAutoProxy
+@EnableAspectJAutoProxy(proxyTargetClass = true)
 public class ApplicationLauncher extends WebMvcConfigurerAdapter {
     public static void main(String[] args) {
         SpringApplication.run(ApplicationLauncher.class, args);
@@ -57,10 +57,10 @@ public class ApplicationLauncher extends WebMvcConfigurerAdapter {
         resourceBundleMessageSource.setBasename("message");
         return resourceBundleMessageSource;
     }
-    
+
     @Bean
-    ServletRegistrationBean h2servletRegistration(){
-        ServletRegistrationBean registrationBean = new ServletRegistrationBean( new WebServlet());
+    ServletRegistrationBean h2servletRegistration() {
+        ServletRegistrationBean registrationBean = new ServletRegistrationBean(new WebServlet());
         registrationBean.addUrlMappings("/console/*");
         return registrationBean;
     }

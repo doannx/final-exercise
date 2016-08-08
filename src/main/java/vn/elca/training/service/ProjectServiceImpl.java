@@ -120,7 +120,6 @@ public class ProjectServiceImpl implements IProjectService {
         originalEntity.setNumber(vo.getNumber());
         originalEntity.setMembers(vo.getMembers());
         originalEntity.setStatus(vo.getStatus());
-        
         return this.projectRepository.saveAndFlush(originalEntity).getId();
     }
 
@@ -154,8 +153,9 @@ public class ProjectServiceImpl implements IProjectService {
         Pageable page = new PageRequest(0, 1, Sort.Direction.DESC, "number");
         Integer nextPrjNumber = this.projectRepository.findAll(page).getContent().get(0).getNumber() + 1;
         // create the clone one
-        Project clone = new Project(nextPrjNumber, old.getName() + "Maint." + Calendar.getInstance().get(Calendar.YEAR),
-                new Date(), "NEW", old.getCustomer(), old.getGroup(), null, null);
+        Project clone = new Project(nextPrjNumber,
+                old.getName() + "Maint." + Calendar.getInstance().get(Calendar.YEAR), new Date(), "NEW",
+                old.getCustomer(), old.getGroup(), null, null);
         this.projectRepository.saveAndFlush(clone);
         // update the old one
         old.setStatus("MAI");
@@ -168,5 +168,4 @@ public class ProjectServiceImpl implements IProjectService {
     public Project getByPrjNumber(Integer num) {
         return this.projectRepository.findOne(QProject.project.number.eq(num));
     }
-
 }

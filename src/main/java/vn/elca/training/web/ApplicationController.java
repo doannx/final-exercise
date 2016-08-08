@@ -87,8 +87,6 @@ public class ApplicationController {
     List<Project> query(HttpSession session, @RequestParam(value = "name", defaultValue = "all") String searchCriteria,
             @RequestParam(value = "status", defaultValue = "-1") String status, Model model, Locale locale) {
         this.userPref.setUserCriterion(searchCriteria);
-        SearchResultVO<Project> resultVo;
-        SearchCriteriaVO criteriaVo;
         // in case search criteria is not [all] => save it into session
         if (!"all".equals(this.userPref.getUserCriterion())) {
             session.setAttribute("TEXT_SEARCH_CRITERIA", searchCriteria);
@@ -101,15 +99,7 @@ public class ApplicationController {
             session.removeAttribute("STATUS_SEARCH_CRITERIA");
         }
         // update the search criteria object
-        if ("all".equals(searchCriteria) && "-1".equals(status)) {
-            resultVo = projectService.findAll(0, Integer.valueOf(this.recordsPerPage).intValue(), "id", "asc");
-        } else {
-            criteriaVo = new SearchCriteriaVO();
-            criteriaVo.getCreteria().put("text", searchCriteria);
-            criteriaVo.getCreteria().put("status", status);
-            resultVo = projectService.findByCriteria(criteriaVo, 0, Integer.valueOf(this.recordsPerPage).intValue(),
-                    "id", "asc");
-        }
+        SearchResultVO<Project> resultVo = getSearchResult(0, searchCriteria, status, "asc", "id");
         // return the search result
         model.addAttribute("lstOfCurrentPage", resultVo.getLstResult());
         session.setAttribute("TOTAL_PAGE_OF_LATEST_QUERY",
@@ -125,7 +115,7 @@ public class ApplicationController {
      */
     @RequestMapping("/count")
     @ResponseBody
-    String query(HttpSession session) {
+    String count(HttpSession session) {
         return session.getAttribute("TOTAL_PAGE_OF_LATEST_QUERY").toString();
     }
 
@@ -141,8 +131,6 @@ public class ApplicationController {
     @RequestMapping("/paging/{page}")
     @ResponseBody
     List<Project> paging(HttpSession session, @PathVariable Integer page, Model model, Locale locale) {
-        SearchResultVO<Project> resultVo;
-        SearchCriteriaVO criteriaVo;
         String searchCriteria = (session.getAttribute("TEXT_SEARCH_CRITERIA") != null ? session.getAttribute(
                 "TEXT_SEARCH_CRITERIA").toString() : "all");
         String status = (session.getAttribute("STATUS_SEARCH_CRITERIA") != null ? session.getAttribute(
@@ -152,16 +140,7 @@ public class ApplicationController {
         String sortName = (session.getAttribute("SORT_NAME") != null ? session.getAttribute("SORT_NAME").toString()
                 : "id");
         // return the search result
-        if ("all".equals(searchCriteria) && "-1".equals(status)) {
-            resultVo = projectService.findAll(page - 1, Integer.valueOf(this.recordsPerPage).intValue(), sortName,
-                    sortOrdering);
-        } else {
-            criteriaVo = new SearchCriteriaVO();
-            criteriaVo.getCreteria().put("text", searchCriteria);
-            criteriaVo.getCreteria().put("status", status);
-            resultVo = projectService.findByCriteria(criteriaVo, page - 1, Integer.valueOf(this.recordsPerPage)
-                    .intValue(), sortName, sortOrdering);
-        }
+        SearchResultVO<Project> resultVo = getSearchResult(page - 1, searchCriteria, status, sortOrdering, sortName);
         model.addAttribute("lstOfCurrentPage", resultVo.getLstResult());
         return this.multilingualForStatus(resultVo.getLstResult(), locale);
     }
@@ -178,8 +157,6 @@ public class ApplicationController {
     @RequestMapping("/sort/{colName}")
     @ResponseBody
     List<Project> sort(HttpSession session, @PathVariable String colName, Model model, Locale locale) {
-        SearchResultVO<Project> resultVo;
-        SearchCriteriaVO criteriaVo;
         // process session variables
         String searchCriteria = (session.getAttribute("TEXT_SEARCH_CRITERIA") != null ? session.getAttribute(
                 "TEXT_SEARCH_CRITERIA").toString() : "all");
@@ -197,16 +174,7 @@ public class ApplicationController {
         session.setAttribute("SORT_ORDERING", sortOrdering);
         session.setAttribute("SORT_NAME", colName);
         // return the search result
-        if ("all".equals(searchCriteria) && "-1".equals(status)) {
-            resultVo = projectService
-                    .findAll(0, Integer.valueOf(this.recordsPerPage).intValue(), colName, sortOrdering);
-        } else {
-            criteriaVo = new SearchCriteriaVO();
-            criteriaVo.getCreteria().put("text", searchCriteria);
-            criteriaVo.getCreteria().put("status", status);
-            resultVo = projectService.findByCriteria(criteriaVo, 0, Integer.valueOf(this.recordsPerPage).intValue(),
-                    colName, sortOrdering);
-        }
+        SearchResultVO<Project> resultVo = getSearchResult(0, searchCriteria, status, sortOrdering, colName);
         model.addAttribute("lstOfCurrentPage", resultVo.getLstResult());
         return this.multilingualForStatus(resultVo.getLstResult(), locale);
     }
@@ -319,6 +287,13 @@ public class ApplicationController {
         binder.registerCustomEditor(Date.class, new CustomDateEditor(dateFormat, false));
     }
 
+    /**
+     * Get the total page based on search result [pagination].
+     * 
+     * @param numOfRecords
+     * @param recordsPerPage
+     * @return total page
+     */
     private int getTotalPage(int numOfRecords, int recordsPerPage) {
         int totalPage = numOfRecords / Integer.valueOf(recordsPerPage);
         if (numOfRecords % Integer.valueOf(recordsPerPage) > 0) {
@@ -327,6 +302,13 @@ public class ApplicationController {
         return totalPage;
     }
 
+    /**
+     * Apply [multilingual] for [status].
+     * 
+     * @param lst
+     * @param locale
+     * @return lst with [multilingual] status.
+     */
     private List<Project> multilingualForStatus(List<Project> lst, Locale locale) {
         String newSta = messageSource.getMessage("status.new", null, locale);
         String finSta = messageSource.getMessage("status.fin", null, locale);
@@ -356,5 +338,32 @@ public class ApplicationController {
             }
         }
         return lst;
+    }
+
+    /**
+     * Get search result.
+     * 
+     * @param page
+     * @param searchCriteria
+     * @param status
+     * @param sortOrdering
+     * @param sortName
+     * @return SearchResultVO<Project>
+     */
+    private SearchResultVO<Project> getSearchResult(Integer page, String searchCriteria, String status,
+            String sortOrdering, String sortName) {
+        SearchResultVO<Project> resultVo;
+        SearchCriteriaVO criteriaVo;
+        if ("all".equals(searchCriteria) && "-1".equals(status)) {
+            resultVo = projectService.findAll(page, Integer.valueOf(this.recordsPerPage).intValue(), sortName,
+                    sortOrdering);
+        } else {
+            criteriaVo = new SearchCriteriaVO();
+            criteriaVo.getCreteria().put("text", searchCriteria);
+            criteriaVo.getCreteria().put("status", status);
+            resultVo = projectService.findByCriteria(criteriaVo, page, Integer.valueOf(this.recordsPerPage).intValue(),
+                    sortName, sortOrdering);
+        }
+        return resultVo;
     }
 }

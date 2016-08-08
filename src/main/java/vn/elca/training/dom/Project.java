@@ -7,6 +7,7 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -42,8 +43,8 @@ public class Project {
     @Version
     @Column(name = "VERSION")
     private Integer version;
-    @ManyToMany(cascade = CascadeType.ALL)
-    @JoinTable(name = "project_member", joinColumns = @JoinColumn(name = "project_id", referencedColumnName = "id") , inverseJoinColumns = @JoinColumn(name = "member_id", referencedColumnName = "visa") )
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinTable(name = "project_member", joinColumns = @JoinColumn(name = "project_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "member_id", referencedColumnName = "visa"))
     private List<Member> members = new ArrayList<Member>();
 
     public void setStatus(String status) {
@@ -188,5 +189,4 @@ public class Project {
     public void setGroupId(Long groupId) {
         this.groupId = groupId;
     }
-
 }
