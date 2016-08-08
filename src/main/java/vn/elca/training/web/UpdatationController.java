@@ -126,9 +126,9 @@ public class UpdatationController {
     @RequestMapping("/detail/{id}")
     String detail(@PathVariable String id, HttpSession session, Model model) {
         Project entity = projectService.getById(id);
-        ProjectVO vo = new ProjectVO(entity.getId(), entity.getNumber(), entity.getName(), entity.getFinishingDate(), entity.getStatus(),
-                entity.getCustomer(), entity.getMembers(), String.valueOf(entity.getGroup().getId()),
-                entity.getEndDate());
+        ProjectVO vo = new ProjectVO(entity.getId(), entity.getNumber(), entity.getName(), entity.getFinishingDate(),
+                entity.getStatus(), entity.getCustomer(), entity.getMembers(),
+                String.valueOf(entity.getGroup().getId()), entity.getEndDate());
         vo.setVersion(entity.getVersion());
         model.addAttribute("project", vo);
         session.setAttribute("UPDATE_MODE", "update");
@@ -147,6 +147,7 @@ public class UpdatationController {
         p.setStatus("NEW");
         model.addAttribute("project", p);
         session.setAttribute("UPDATE_MODE", "add");
+        session.setAttribute("ERROR_STATUS", false);
         return "update";
     }
 
@@ -169,8 +170,8 @@ public class UpdatationController {
             // once more check in [add] mode
             if ("add".equals(mode)) {
                 if (this.projectService.getByPrjNumber(vo.getNumber()) != null) {
-                    result.addError(new FieldError("project", "number", messageSource.getMessage("error.idduplicate", null,
-                            locale)));
+                    result.addError(new FieldError("project", "number", messageSource.getMessage("error.idduplicate",
+                            null, locale)));
                     return "update";
                 }
             }

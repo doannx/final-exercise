@@ -77,7 +77,7 @@
               <td>
                 <div class="input-group">
                   <form:input path="endDate" type="text" id="datepicker2" class="form-control height30px" cssErrorClass="form-control height30px error" style="border-right: none;"/>
-                  <span class="input-group-addon" id="btn2" style="height:5px; width: 5px; cursor:pointer; background-color: white; border: 1px solid rgba(0,0,0,0.3); border-left: none;">
+                  <span class="input-group-addon" id="btn2" style="cursor:pointer; background-color: white; border: 1px solid #ccc; border-left: none;">
                               <span class="glyphicon glyphicon-calendar"></span>
                   </span>
                 </div>

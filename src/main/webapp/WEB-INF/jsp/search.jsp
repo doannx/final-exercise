@@ -44,7 +44,7 @@
             <input type="button" class="btn btn-primary" style="width: 150px;" value="<spring:message code='btn.search' />" id="btnSearch"
 						        data-bind="click: query" />
           </td>
-					<td style="border: 0px solid white; vertical-align: middle;"><a
+					<td style="border: 0px solid white; vertical-align: middle; color: #2F85FA;"><a
 						href="#" id="btnReset"><spring:message code="btn.reset" /></a></td>
 				</tr>
 			</table>
@@ -106,7 +106,7 @@
 				<tr>
 					<td colspan="3" align="left" style="padding-left: 10px;"><div
 							style="color: #1E90FF;" id="selectedItem"></div></td>
-					<td colspan="5" align="right" style="padding-right: 30px;"><a
+					<td colspan="5" align="right" style="padding-right: 25px;"><a
 						href="#" style="color: #FF7F50;" id="deleteSelectedItems"><spring:message
 								code="grid.deleteselected" />&nbsp;<span
 							class="glyphicon glyphicon-trash"></span></a></td>
