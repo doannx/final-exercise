@@ -5,12 +5,10 @@ D:\projects\xdg\java\on-boarding-exercise\target\generated-sources\vn\elca\train
 D:\projects\xdg\java\on-boarding-exercise\src\main\java\vn\elca\training\service\MemberServiceImpl.java
 D:\projects\xdg\java\on-boarding-exercise\src\main\java\vn\elca\training\ApplicationLauncher.java
 D:\projects\xdg\java\on-boarding-exercise\src\main\java\vn\elca\training\dom\Project.java
-D:\projects\xdg\java\on-boarding-exercise\src\main\java\vn\elca\training\dom\QEmployee.java
 D:\projects\xdg\java\on-boarding-exercise\src\main\java\vn\elca\training\service\IProjectService.java
 D:\projects\xdg\java\on-boarding-exercise\src\main\java\vn\elca\training\service\GroupServiceImpl.java
 D:\projects\xdg\java\on-boarding-exercise\src\main\java\vn\elca\training\exception\ProjectNumberAlreadyExistsException.java
 D:\projects\xdg\java\on-boarding-exercise\src\main\java\vn\elca\training\model\GroupVO.java
-D:\projects\xdg\java\on-boarding-exercise\src\main\java\vn\elca\training\dom\QRoot.java
 D:\projects\xdg\java\on-boarding-exercise\src\main\java\vn\elca\training\service\ProjectServiceImpl.java
 D:\projects\xdg\java\on-boarding-exercise\src\main\java\vn\elca\training\dom\Department.java
 D:\projects\xdg\java\on-boarding-exercise\src\main\java\vn\elca\training\dom\Root.java
@@ -26,7 +24,6 @@ D:\projects\xdg\java\on-boarding-exercise\src\main\java\vn\elca\training\model\P
 D:\projects\xdg\java\on-boarding-exercise\src\main\java\vn\elca\training\web\GlobalDefaultExceptionHandler.java
 D:\projects\xdg\java\on-boarding-exercise\src\main\java\vn\elca\training\model\UserPreference.java
 D:\projects\xdg\java\on-boarding-exercise\src\main\java\vn\elca\training\web\ApplicationController.java
-D:\projects\xdg\java\on-boarding-exercise\src\main\java\vn\elca\training\dom\QProject.java
 D:\projects\xdg\java\on-boarding-exercise\src\main\java\vn\elca\training\util\MySafeSession.java
 D:\projects\xdg\java\on-boarding-exercise\src\main\java\vn\elca\training\model\SearchResultVO.java
 D:\projects\xdg\java\on-boarding-exercise\src\main\java\vn\elca\training\dao\IGroupRepository.java
@@ -42,5 +39,4 @@ D:\projects\xdg\java\on-boarding-exercise\src\main\java\vn\elca\training\dao\IPr
 D:\projects\xdg\java\on-boarding-exercise\src\main\java\vn\elca\training\convertor\StatusEditor.java
 D:\projects\xdg\java\on-boarding-exercise\src\main\java\vn\elca\training\config\MyRepositoryConfiguration.java
 D:\projects\xdg\java\on-boarding-exercise\src\main\java\vn\elca\training\util\StringUtil.java
-D:\projects\xdg\java\on-boarding-exercise\src\main\java\vn\elca\training\dom\QDepartment.java
 D:\projects\xdg\java\on-boarding-exercise\src\main\java\vn\elca\training\model\SearchCriteriaVO.java

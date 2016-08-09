@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.PageRequest;
@@ -34,6 +35,7 @@ public class ProjectServiceImpl implements IProjectService {
     private IProjectRepository projectRepository;
     @Autowired
     private IGroupRepository groupRepository;
+    private Logger log = Logger.getLogger(ProjectServiceImpl.class);
 
     /**
      * Find all existing project(s). Support for paging and sorting.
@@ -142,6 +144,7 @@ public class ProjectServiceImpl implements IProjectService {
         try {
             return this.projectRepository.save(originalEntity).getId();
         } catch (ObjectOptimisticLockingFailureException ex) {
+            log.error(ex.getMessage());
             throw ex;
         }
     }
