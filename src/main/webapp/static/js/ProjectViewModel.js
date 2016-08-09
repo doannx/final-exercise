@@ -306,17 +306,18 @@ $(document).ready(function() {
 					prjIds : [id]
 				}
 			}).done(function(data) {
+				if (data == "fail") {
+					alert($('#hidCanNotDeleteText').val());
+				}
 				window.location="/";
 			}).fail(function (jqXHR, textStatus, errorThrown) {
 		        if (jqXHR.status === 401) {
 		        	var r = confirm($('#hidConfirmLoginText').val());
 		    		if (r == true) {
-		    			window.location = '/login';
+		    			window.location = '/loginUrl';
 		    		}
 		        } else if (jqXHR.status === 403) {
 		            alert('403');
-		        } else {
-		            alert('Houston, we have a problem...');
 		        }
 		    });
 		}
@@ -342,8 +343,6 @@ $(document).ready(function() {
 	            alert('401');
 	        } else if (jqXHR.status === 403) {
 	            alert('403');
-	        } else {
-	            alert('Houston, we have a problem...');
 	        }
 	    });
 		

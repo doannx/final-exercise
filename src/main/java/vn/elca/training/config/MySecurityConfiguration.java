@@ -16,9 +16,12 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.access.AccessDeniedHandler;
+import org.springframework.security.web.authentication.AuthenticationFailureHandler;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 
 @Configuration
 @EnableWebSecurity
@@ -36,7 +39,8 @@ public class MySecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         // ask whether this is an authenticated-user
-        http.authorizeRequests().antMatchers(HttpMethod.POST, "/delete/**").authenticated().and().httpBasic();
+        http.authorizeRequests().antMatchers(HttpMethod.GET, "/delete/**").authenticated().and().formLogin()
+                .loginPage("/loginUrl");
         http.exceptionHandling().authenticationEntryPoint(new AuthenticationEntryPoint() {
             @Override
             public void commence(HttpServletRequest arg0, HttpServletResponse arg1, AuthenticationException arg2)
@@ -46,7 +50,7 @@ public class MySecurityConfiguration extends WebSecurityConfigurerAdapter {
             }
         });
         // ask whether this authenticated-user is an ADMIN
-        http.authorizeRequests().antMatchers(HttpMethod.POST, "/delete/**").access("hasRole('ROLE_ADMIN')");
+        http.authorizeRequests().antMatchers(HttpMethod.GET, "/delete/**").access("hasRole('ROLE_ADMIN')");
         http.exceptionHandling().accessDeniedHandler(new AccessDeniedHandler() {
             @Override
             public void handle(HttpServletRequest arg0, HttpServletResponse arg1, AccessDeniedException arg2)
@@ -56,6 +60,20 @@ public class MySecurityConfiguration extends WebSecurityConfigurerAdapter {
             }
         });
         http.authorizeRequests().antMatchers("/console/**").permitAll();
+        http.formLogin().successHandler(new AuthenticationSuccessHandler() {
+            @Override
+            public void onAuthenticationSuccess(HttpServletRequest arg0, HttpServletResponse arg1, Authentication arg2)
+                    throws IOException, ServletException {
+                log.info("onAuthenticationSuccess");
+            }
+        });
+        http.formLogin().failureHandler(new AuthenticationFailureHandler() {
+            @Override
+            public void onAuthenticationFailure(HttpServletRequest arg0, HttpServletResponse arg1,
+                    AuthenticationException arg2) throws IOException, ServletException {
+                log.info("onAuthenticationFailure");
+            }
+        });
         http.csrf().disable();
         http.headers().frameOptions().disable();
     }
