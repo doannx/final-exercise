@@ -35,7 +35,7 @@
     <table style="width: 50%; margin: 50px auto;">
       <tr>
         <td align="right" style="width: 20%; padding-right: 10px;"><span style="color: #FF7F50; font-size: 150pt;" class="glyphicon glyphicon-remove-sign"></span></td>
-        <td align="left" style="width: 50%; padding-left: 10px;">
+        <td align="left" style="width: 50%; padding-left: 10px;" class="regularItem">
             <spring:message code="error.title" />&nbsp;${errorURL}:${errorCode}:${errorStatus}<br/>
             <spring:message code="error.contact" /><br/>
             <br/>

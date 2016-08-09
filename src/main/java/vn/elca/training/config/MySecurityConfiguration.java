@@ -38,6 +38,8 @@ public class MySecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
+        
+        http.authorizeRequests().antMatchers(HttpMethod.POST, "/update").access("hasRole('ROLE_ADMIN')").and().httpBasic();
         // ask whether this is an authenticated-user
         http.authorizeRequests().antMatchers(HttpMethod.GET, "/delete/**").authenticated().and().formLogin()
                 .loginPage("/loginUrl");

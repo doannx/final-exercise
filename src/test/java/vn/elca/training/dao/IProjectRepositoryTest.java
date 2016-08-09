@@ -159,14 +159,6 @@ public class IProjectRepositoryTest {
     }
 
     @Test
-    public void testDelete() {
-        Project prj = this.projectRepository.findOne(QProject.project.number.eq(998));
-        if (prj != null) {
-            this.projectRepository.delete(prj);
-        }
-    }
-
-    @Test
     public void testFindByCriteria001() {
         // set up test data
         Employee member1 = new Employee("QMV", "FULL NAME OF QMV", "NGUYEN");
