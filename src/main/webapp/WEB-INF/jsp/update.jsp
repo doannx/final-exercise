@@ -72,7 +72,7 @@
               <td><spring:message code="form.startdate" />&nbsp;<span class="mandatory">*</span></td>
               <td>
                 <div class="input-group">
-                  <form:input path="finishingDate" type="text" id="datepicker1" class="form-control height30px" cssErrorClass="form-control height30px error" style="border-right: none;"/>
+                  <form:input path="startDate" type="text" id="datepicker1" class="form-control height30px" cssErrorClass="form-control height30px error" style="border-right: none;"/>
                   <span class="input-group-addon" id="btn1" style="cursor:pointer; background-color: white; border: 1px solid #ccc; border-left: none;">
                               <span class="glyphicon glyphicon-calendar"></span>
                   </span>

@@ -1,6 +1,10 @@
 package vn.elca.training.model;
 
-public class StatusVO {
+import java.io.Serializable;
+
+public class StatusVO implements Serializable {
+    private static final long serialVersionUID = 5340895214623283980L;
+
     public StatusVO(String id, String name) {
         super();
         this.id = id;

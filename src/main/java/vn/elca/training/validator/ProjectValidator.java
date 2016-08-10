@@ -19,13 +19,13 @@ public class ProjectValidator implements Validator {
         ValidationUtils.rejectIfEmptyOrWhitespace(errors, "customer", "error.customer", "");
         ValidationUtils.rejectIfEmptyOrWhitespace(errors, "group", "error.group", "");
         ValidationUtils.rejectIfEmptyOrWhitespace(errors, "status", "error.status", "");
-        ValidationUtils.rejectIfEmptyOrWhitespace(errors, "finishingDate", "error.finishingDate", "");
+        ValidationUtils.rejectIfEmptyOrWhitespace(errors, "startDate", "error.startDate", "");
         ProjectVO p = (ProjectVO) target;
         if ("-1".equals(p.getGroup())) {
             errors.rejectValue("group", "error.group");
         }
-        if (p.getEndDate() != null && p.getFinishingDate() != null) {
-            if (p.getEndDate().before(p.getFinishingDate())) {
+        if (p.getEndDate() != null && p.getStartDate() != null) {
+            if (p.getEndDate().before(p.getStartDate())) {
                 errors.rejectValue("endDate", "error.endDate");
             }
         }

@@ -136,7 +136,7 @@ public class ProjectServiceImpl implements IProjectService {
         originalEntity.setName(vo.getName());
         originalEntity.setCustomer(vo.getCustomer());
         originalEntity.setEndDate(vo.getEndDate());
-        originalEntity.setStartDate(vo.getFinishingDate());
+        originalEntity.setStartDate(vo.getStartDate());
         originalEntity.setGroup(group);
         originalEntity.setNumber(vo.getNumber());
         originalEntity.setMembers(vo.getMembers());

@@ -10,6 +10,7 @@ import org.springframework.web.context.WebApplicationContext;
 @Component
 @Scope(value = WebApplicationContext.SCOPE_SESSION, proxyMode = ScopedProxyMode.TARGET_CLASS)
 public class UserPreference implements Serializable {
+    private static final long serialVersionUID = -4981096288740094961L;
     private String userCriterion = "";
 
     public String getUserCriterion() {

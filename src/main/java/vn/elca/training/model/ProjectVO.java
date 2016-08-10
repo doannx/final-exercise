@@ -19,7 +19,7 @@ public class ProjectVO implements Serializable {
     @NotEmpty
     private String name;
     @NotNull
-    private Date finishingDate;
+    private Date startDate;
     @NotEmpty
     private String status;
     @NotEmpty
@@ -30,35 +30,15 @@ public class ProjectVO implements Serializable {
     private Date endDate;
     private Integer version;
 
-    public Integer getVersion() {
-        return version;
-    }
-
-    public void setVersion(Integer version) {
-        this.version = version;
-    }
-
     public ProjectVO() {
     }
 
-    public ProjectVO(String name, Date finishingDate) {
-        this.name = name;
-        this.finishingDate = finishingDate;
-    }
-
-    public ProjectVO(Long id, String name, Date finishingDate) {
-        this.id = id;
-        this.name = name;
-        this.finishingDate = finishingDate;
-    }
-
-    public ProjectVO(Long id, Integer number, String name, Date finishingDate, String status, String customer, List<Employee> members,
-            String group, Date endDate) {
-        super();
+    public ProjectVO(Long id, Integer number, String name, Date startDate, String status, String customer,
+            List<Employee> members, String group, Date endDate) {
         this.id = id;
         this.number = number;
         this.name = name;
-        this.finishingDate = finishingDate;
+        this.startDate = startDate;
         this.status = status;
         this.customer = customer;
         this.group = group;
@@ -74,8 +54,8 @@ public class ProjectVO implements Serializable {
         return name;
     }
 
-    public Date getFinishingDate() {
-        return finishingDate;
+    public Date getStartDate() {
+        return startDate;
     }
 
     public String getStatus() {
@@ -110,8 +90,8 @@ public class ProjectVO implements Serializable {
         this.name = name;
     }
 
-    public void setFinishingDate(Date finishingDate) {
-        this.finishingDate = finishingDate;
+    public void setStartDate(Date startDate) {
+        this.startDate = startDate;
     }
 
     public void setStatus(String status) {
@@ -137,5 +117,13 @@ public class ProjectVO implements Serializable {
     public void setNumber(Integer number) {
         this.number = number;
     }
-    
+
+    public Integer getVersion() {
+        return version;
+    }
+
+    public void setVersion(Integer version) {
+        this.version = version;
+    }
+
 }
