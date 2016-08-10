@@ -1,7 +1,5 @@
 package vn.elca.training.service;
 
-import org.springframework.security.access.prepost.PreAuthorize;
-
 import vn.elca.training.dom.Project;
 import vn.elca.training.exception.ProjectNumberAlreadyExistsException;
 import vn.elca.training.model.ProjectVO;

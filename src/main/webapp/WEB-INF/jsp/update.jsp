@@ -34,7 +34,7 @@
           <table class="tbl normalText">
             <tr>
               <td><spring:message code="form.prjnumber" />&nbsp;<span class="mandatory">*</span></td>
-              <td><form:input id="prjnumber" path="number" class="form-control height30px" cssErrorClass="form-control height30px error" autofocus="true"/></td>
+              <td><form:input maxlength="4" id="prjnumber" path="number" class="form-control height30px" cssErrorClass="form-control height30px error" autofocus="true"/></td>
               <td colspan="2" style="padding-left: 10px;"><form:errors path="number" cssClass="error-text" /></td>
             </tr>
             <tr>

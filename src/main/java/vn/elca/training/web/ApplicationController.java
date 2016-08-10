@@ -39,6 +39,10 @@ import vn.elca.training.util.StringUtil;
 @Controller
 @SessionAttributes("lstOfCurrentPage")
 public class ApplicationController {
+    private static final String DEFAULT_SORT_COLUMN = "id";
+    private static final String DEFAULT_SORT_ORDER = "asc";
+    private static final String ALL_STATUS_CRITERIA = "-1";
+    private static final String ALL_TEXT_CRITERIA = "all";
     /**
      * Declare the [DummyProjectService].
      */
@@ -54,7 +58,7 @@ public class ApplicationController {
 
     @RequestMapping(value = "/", method = { RequestMethod.GET })
     ModelAndView main() {
-        SearchResultVO<Project> resultVo = getSearchResult(0, "all", "-1", "asc", "id");
+        SearchResultVO<Project> resultVo = getSearchResult(0, ALL_TEXT_CRITERIA, ALL_STATUS_CRITERIA, DEFAULT_SORT_ORDER, DEFAULT_SORT_COLUMN);
         Map<String, Object> model = new HashMap<String, Object>();
         model.put("currentPage", "1");
         model.put("beginIndex", "1");
@@ -90,22 +94,24 @@ public class ApplicationController {
      */
     @RequestMapping("/query")
     @ResponseBody
-    List<Project> query(HttpSession session, @RequestParam(value = "name", defaultValue = "all") String searchCriteria,
-            @RequestParam(value = "status", defaultValue = "-1") String status, Model model, Locale locale) {
+    List<Project> query(HttpSession session,
+            @RequestParam(value = "name", defaultValue = ALL_TEXT_CRITERIA) String searchCriteria,
+            @RequestParam(value = "status", defaultValue = ALL_STATUS_CRITERIA) String status, Model model,
+            Locale locale) {
         this.userPref.setUserCriterion(searchCriteria);
         // in case search criteria is not [all] => save it into session
-        if (!"all".equals(this.userPref.getUserCriterion())) {
+        if (!ALL_TEXT_CRITERIA.equals(this.userPref.getUserCriterion())) {
             session.setAttribute("TEXT_SEARCH_CRITERIA", searchCriteria);
         } else {
             session.removeAttribute("TEXT_SEARCH_CRITERIA");
         }
-        if (!"-1".equals(status)) {
+        if (!ALL_STATUS_CRITERIA.equals(status)) {
             session.setAttribute("STATUS_SEARCH_CRITERIA", status);
         } else {
             session.removeAttribute("STATUS_SEARCH_CRITERIA");
         }
         // update the search criteria object
-        SearchResultVO<Project> resultVo = getSearchResult(0, searchCriteria, status, "asc", "id");
+        SearchResultVO<Project> resultVo = getSearchResult(0, searchCriteria, status, DEFAULT_SORT_ORDER, DEFAULT_SORT_COLUMN);
         // return the search result
         model.addAttribute("lstOfCurrentPage", resultVo.getLstResult());
         session.setAttribute("TOTAL_PAGE_OF_LATEST_QUERY",
@@ -138,13 +144,13 @@ public class ApplicationController {
     @ResponseBody
     List<Project> paging(HttpSession session, @PathVariable Integer page, Model model, Locale locale) {
         String searchCriteria = (session.getAttribute("TEXT_SEARCH_CRITERIA") != null ? session.getAttribute(
-                "TEXT_SEARCH_CRITERIA").toString() : "all");
+                "TEXT_SEARCH_CRITERIA").toString() : ALL_TEXT_CRITERIA);
         String status = (session.getAttribute("STATUS_SEARCH_CRITERIA") != null ? session.getAttribute(
-                "STATUS_SEARCH_CRITERIA").toString() : "-1");
+                "STATUS_SEARCH_CRITERIA").toString() : ALL_STATUS_CRITERIA);
         String sortOrdering = (session.getAttribute("SORT_ORDERING") != null ? session.getAttribute("SORT_ORDERING")
-                .toString() : "asc");
+                .toString() : DEFAULT_SORT_ORDER);
         String sortName = (session.getAttribute("SORT_NAME") != null ? session.getAttribute("SORT_NAME").toString()
-                : "id");
+                : DEFAULT_SORT_COLUMN);
         // return the search result
         SearchResultVO<Project> resultVo = getSearchResult(page - 1, searchCriteria, status, sortOrdering, sortName);
         model.addAttribute("lstOfCurrentPage", resultVo.getLstResult());
@@ -165,15 +171,15 @@ public class ApplicationController {
     List<Project> sort(HttpSession session, @PathVariable String colName, Model model, Locale locale) {
         // process session variables
         String searchCriteria = (session.getAttribute("TEXT_SEARCH_CRITERIA") != null ? session.getAttribute(
-                "TEXT_SEARCH_CRITERIA").toString() : "all");
+                "TEXT_SEARCH_CRITERIA").toString() : ALL_TEXT_CRITERIA);
         String status = (session.getAttribute("STATUS_SEARCH_CRITERIA") != null ? session.getAttribute(
-                "STATUS_SEARCH_CRITERIA").toString() : "-1");
-        String sortOrdering = "asc";
+                "STATUS_SEARCH_CRITERIA").toString() : ALL_STATUS_CRITERIA);
+        String sortOrdering = DEFAULT_SORT_ORDER;
         if (session.getAttribute("SORT_ORDERING") != null) {
             sortOrdering = session.getAttribute("SORT_ORDERING").toString();
-            sortOrdering = ("asc".equals(sortOrdering) ? "desc" : "asc");
+            sortOrdering = (DEFAULT_SORT_ORDER.equals(sortOrdering) ? "desc" : DEFAULT_SORT_ORDER);
         } else {
-            if ("id".equals(colName)) {
+            if (DEFAULT_SORT_COLUMN.equals(colName)) {
                 sortOrdering = "desc";
             }
         }
@@ -215,7 +221,7 @@ public class ApplicationController {
      */
     @RequestMapping("/clone")
     @ResponseBody
-    String clone(@RequestParam(value = "id") Long id) {
+    String clone(@RequestParam(value = DEFAULT_SORT_COLUMN) Long id) {
         return this.projectService.clone(id) != -1 ? "success" : "fail";
     }
 
@@ -235,10 +241,10 @@ public class ApplicationController {
         List<Project> lst = new ArrayList<Project>(lstOfCurrentPage);
         Project p;
         String regex = "";
-        if (!"".equals(filterCondition.get("id"))) {
+        if (!"".equals(filterCondition.get(DEFAULT_SORT_COLUMN))) {
             for (Iterator<Project> iterator = lst.iterator(); iterator.hasNext();) {
                 p = iterator.next();
-                if (p.getId() != Long.parseLong(filterCondition.get("id"))) {
+                if (p.getId() != Long.parseLong(filterCondition.get(DEFAULT_SORT_COLUMN))) {
                     iterator.remove();
                 }
             }
@@ -366,7 +372,7 @@ public class ApplicationController {
             String sortOrdering, String sortName) {
         SearchResultVO<Project> resultVo;
         SearchCriteriaVO criteriaVo;
-        if ("all".equals(searchCriteria) && "-1".equals(status)) {
+        if (ALL_TEXT_CRITERIA.equals(searchCriteria) && ALL_STATUS_CRITERIA.equals(status)) {
             resultVo = projectService.findAll(page, Integer.valueOf(this.recordsPerPage).intValue(), sortName,
                     sortOrdering);
         } else {

@@ -323,29 +323,31 @@ $(document).ready(function() {
 		}
 	};
 	$('#deleteSelectedItems').click(function() {
-		var prjIds = [];
-		$('.tbl-list tr').each(function (i, row) {
-	        var $row = $(row);
-	        if($row.find('input:checked').val()==="on") {
-	        	prjIds.push($row.find('input:checked').attr("id"));
-	        }
-		});
-		$.ajax({
-			method : "POST",
-			url : "/delete",
-			data : {
-				prjIds : prjIds
-			}
-		}).done(function(data) {
-			window.location="/";
-		}).fail(function (jqXHR, textStatus, errorThrown) {
-	        if (jqXHR.status === 401) {
-	            alert('401');
-	        } else if (jqXHR.status === 403) {
-	            alert('403');
-	        }
-	    });
-		
+		var r = confirm($('#hidConfirmMultipleDelText').val());
+		if (r == true) {
+			var prjIds = [];
+			$('.tbl-list tr').each(function (i, row) {
+		        var $row = $(row);
+		        if($row.find('input:checked').val()==="on") {
+		        	prjIds.push($row.find('input:checked').attr("id"));
+		        }
+			});
+			$.ajax({
+				method : "POST",
+				url : "/delete",
+				data : {
+					prjIds : prjIds
+				}
+			}).done(function(data) {
+				window.location="/";
+			}).fail(function (jqXHR, textStatus, errorThrown) {
+		        if (jqXHR.status === 401) {
+		            alert('401');
+		        } else if (jqXHR.status === 403) {
+		            alert('403');
+		        }
+		    });
+		}
 	});
 	window.clone = function(id, name) {
 		var r = confirm($('#hidConfirmCloneText').val() + name + ']?');

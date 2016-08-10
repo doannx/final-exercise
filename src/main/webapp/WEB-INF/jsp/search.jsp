@@ -9,6 +9,7 @@
 <input type="hidden" id="hidSelectedItemText"	value="&nbsp;<spring:message code="grid.itemsslected" />" />
 <input type="hidden" id="hidNoPrjFoundText" value="&nbsp;<spring:message code="gird.noprjfound" />" />
 <input type="hidden" id="hidConfirmDelText" value="&nbsp;<spring:message code="confirm.delete" />" />
+<input type="hidden" id="hidConfirmMultipleDelText" value="&nbsp;<spring:message code="confirm.deletemultiple" />" />
 <input type="hidden" id="hidConfirmCloneText" value="&nbsp;<spring:message code="confirm.clone" />" />
 <input type="hidden" id="hidConfirmLoginText" value="&nbsp;<spring:message code="confirm.login" />" />
 <input type="hidden" id="hidCanNotDeleteText" value="&nbsp;<spring:message code="confirm.cannotdel" />" />

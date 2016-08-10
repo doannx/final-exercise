@@ -17,7 +17,6 @@ import org.springframework.beans.propertyeditors.CustomCollectionEditor;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.context.MessageSource;
 import org.springframework.orm.ObjectOptimisticLockingFailureException;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -74,15 +73,12 @@ public class UpdatationController {
         binder.registerCustomEditor(List.class, "members", new CustomCollectionEditor(List.class) {
             protected Object convertElement(Object element) {
                 if (element instanceof Employee) {
-                    System.out.println("Converting from Member to Member: " + element);
                     return element;
                 }
                 if (element instanceof String) {
                     Employee staff = lstMemberCache.get(element);
-                    System.out.println("Looking up member for id " + element + ": " + staff);
                     return staff;
                 }
-                System.out.println("Don't know what to do with: " + element);
                 return null;
             }
         });
@@ -175,8 +171,8 @@ public class UpdatationController {
             // once more check in [add] mode
             if ("add".equals(mode)) {
                 if (this.projectService.getByPrjNumber(vo.getNumber()) != null) {
-                    result.addError(new FieldError("project", "number",
-                            messageSource.getMessage("error.idduplicate", null, locale)));
+                    result.addError(new FieldError("project", "number", messageSource.getMessage("error.idduplicate",
+                            null, locale)));
                     return "update";
                 }
             }
