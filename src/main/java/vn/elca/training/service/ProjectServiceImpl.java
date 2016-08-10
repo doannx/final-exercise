@@ -56,7 +56,8 @@ public class ProjectServiceImpl implements IProjectService {
     }
 
     /**
-     * Find project(s) based on [multiple search criteria]. Support for paging and sorting.
+     * Find project(s) based on [multiple search criteria]. Support for paging
+     * and sorting.
      * 
      * @param criteria
      * @param currentPage
@@ -139,7 +140,9 @@ public class ProjectServiceImpl implements IProjectService {
         originalEntity.setStartDate(vo.getStartDate());
         originalEntity.setGroup(group);
         originalEntity.setNumber(vo.getNumber());
-        originalEntity.setMembers(vo.getMembers());
+        if (vo.getMembers() != null) {
+            originalEntity.setMembers(vo.getMembers());
+        }
         originalEntity.setStatus(vo.getStatus());
         try {
             return this.projectRepository.save(originalEntity).getId();
@@ -176,9 +179,8 @@ public class ProjectServiceImpl implements IProjectService {
         Pageable page = new PageRequest(0, 1, Sort.Direction.DESC, "number");
         Integer nextPrjNumber = this.projectRepository.findAll(page).getContent().get(0).getNumber() + 1;
         // create the clone one
-        Project clone = new Project(nextPrjNumber,
-                old.getName() + "Maint." + Calendar.getInstance().get(Calendar.YEAR), new Date(), "NEW",
-                old.getCustomer(), old.getGroup(), null, null);
+        Project clone = new Project(nextPrjNumber, old.getName() + "Maint." + Calendar.getInstance().get(Calendar.YEAR),
+                new Date(), "NEW", old.getCustomer(), old.getGroup(), null, null);
         this.projectRepository.saveAndFlush(clone);
         // update the old one
         old.setStatus("MAI");
