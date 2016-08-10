@@ -27,17 +27,17 @@ import org.springframework.security.web.authentication.AuthenticationSuccessHand
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class MySecurityConfiguration extends WebSecurityConfigurerAdapter {
-    private Logger log = Logger.getLogger(MySecurityConfiguration.class);
+    private static final Logger LOGGER = Logger.getLogger(MySecurityConfiguration.class);
 
     @Autowired
     public void configureGlobalSecurity(AuthenticationManagerBuilder auth) throws Exception {
-        auth.inMemoryAuthentication().withUser("bill").password("abc123").roles("USER");
-        auth.inMemoryAuthentication().withUser("admin").password("root123").roles("ADMIN");
-        auth.inMemoryAuthentication().withUser("dba").password("root123").roles("ADMIN", "DBA");
+        auth.inMemoryAuthentication().withUser("emp").password("emp123").roles("USER");
+        auth.inMemoryAuthentication().withUser("admin").password("admin123").roles("ADMIN");
     }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
+
         // ask whether this is an authenticated-user
         http.authorizeRequests().antMatchers(HttpMethod.GET, "/delete/**").authenticated().and().formLogin()
                 .loginPage("/loginUrl");
@@ -45,7 +45,7 @@ public class MySecurityConfiguration extends WebSecurityConfigurerAdapter {
             @Override
             public void commence(HttpServletRequest arg0, HttpServletResponse arg1, AuthenticationException arg2)
                     throws IOException, ServletException {
-                log.error(arg2.getMessage());
+                LOGGER.error(arg2.getMessage());
                 arg1.sendError(HttpServletResponse.SC_UNAUTHORIZED);
             }
         });
@@ -55,7 +55,7 @@ public class MySecurityConfiguration extends WebSecurityConfigurerAdapter {
             @Override
             public void handle(HttpServletRequest arg0, HttpServletResponse arg1, AccessDeniedException arg2)
                     throws IOException, ServletException {
-                log.error(arg2.getMessage());
+                LOGGER.error(arg2.getMessage());
                 arg1.sendError(HttpServletResponse.SC_FORBIDDEN);
             }
         });
@@ -63,14 +63,14 @@ public class MySecurityConfiguration extends WebSecurityConfigurerAdapter {
             @Override
             public void onAuthenticationSuccess(HttpServletRequest arg0, HttpServletResponse arg1, Authentication arg2)
                     throws IOException, ServletException {
-                log.info("onAuthenticationSuccess");
+                LOGGER.info("onAuthenticationSuccess");
             }
         });
         http.formLogin().failureHandler(new AuthenticationFailureHandler() {
             @Override
             public void onAuthenticationFailure(HttpServletRequest arg0, HttpServletResponse arg1,
                     AuthenticationException arg2) throws IOException, ServletException {
-                log.info("onAuthenticationFailure");
+                LOGGER.info("onAuthenticationFailure");
             }
         });
         http.csrf().disable();

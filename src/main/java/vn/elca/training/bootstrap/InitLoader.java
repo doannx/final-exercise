@@ -1,26 +1,35 @@
 package vn.elca.training.bootstrap;
 
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationListener;
-import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
 
 import vn.elca.training.dao.IEmployeeRepository;
+import vn.elca.training.dao.IGroupRepository;
 import vn.elca.training.dom.Employee;
+import vn.elca.training.dom.Group;
 
 @Component
-public class MemberLoader implements ApplicationListener<ContextRefreshedEvent> {
+public class InitLoader implements InitializingBean {
+
     private IEmployeeRepository memberRepository;
-    private Logger log = Logger.getLogger(MemberLoader.class);
+    private IGroupRepository groupRepository;
+    private static final Logger LOGGER = Logger.getLogger(InitLoader.class);
 
     @Autowired
     public void setMemberRepository(IEmployeeRepository memberRepository) {
         this.memberRepository = memberRepository;
     }
 
+    @Autowired
+    public void setGroupRepository(IGroupRepository groupRepository) {
+        this.groupRepository = groupRepository;
+    }
+
     @Override
-    public void onApplicationEvent(ContextRefreshedEvent event) {
+    public void afterPropertiesSet() throws Exception {
+        LOGGER.info("WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW");
         Employee x = new Employee("XDG", "XUAN DOAN", "NGUYEN");
         this.memberRepository.save(x);
         x = new Employee("XDG2", "XUAN DOAN 2", "NGUYEN");
@@ -45,6 +54,19 @@ public class MemberLoader implements ApplicationListener<ContextRefreshedEvent> 
         this.memberRepository.save(x);
         x = new Employee("XDG12", "XUAN DOAN 12", "NGUYEN");
         this.memberRepository.save(x);
-        log.info("Save 12 initial Members...");
+        LOGGER.info("Save 12 initial Members...");
+        
+        Group g = new Group("XDG");
+        this.groupRepository.save(g);
+        g = new Group("KIM");
+        this.groupRepository.save(g);
+        g = new Group("VVH");
+        this.groupRepository.save(g);
+        g = new Group("THU");
+        this.groupRepository.save(g);
+        g = new Group("TDP");
+        this.groupRepository.save(g);
+        LOGGER.info("Save 5 initial groups...");
+        LOGGER.info("WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW");
     }
 }
