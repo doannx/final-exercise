@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import vn.elca.training.dao.IGroupRepository;
 import vn.elca.training.dao.IProjectRepository;
+import vn.elca.training.dom.Employee;
 import vn.elca.training.dom.Group;
 import vn.elca.training.dom.Project;
 import vn.elca.training.dom.QProject;
@@ -178,7 +179,7 @@ public class ProjectServiceImpl implements IProjectService {
         Integer nextPrjNumber = this.projectRepository.findAll(page).getContent().get(0).getNumber() + 1;
         // create the clone one
         Project clone = new Project(nextPrjNumber, old.getName() + "Maint." + Calendar.getInstance().get(Calendar.YEAR),
-                new Date(), "NEW", old.getCustomer(), old.getGroup(), null, null);
+                new Date(), "NEW", old.getCustomer(), old.getGroup(), null, new ArrayList<Employee>());
         this.projectRepository.saveAndFlush(clone);
         // update the old one
         old.setStatus("MAI");
