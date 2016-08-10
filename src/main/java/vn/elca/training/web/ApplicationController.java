@@ -58,7 +58,8 @@ public class ApplicationController {
 
     @RequestMapping(value = "/", method = { RequestMethod.GET })
     ModelAndView main() {
-        SearchResultVO<Project> resultVo = getSearchResult(0, ALL_TEXT_CRITERIA, ALL_STATUS_CRITERIA, DEFAULT_SORT_ORDER, DEFAULT_SORT_COLUMN);
+        SearchResultVO<Project> resultVo = getSearchResult(0, ALL_TEXT_CRITERIA, ALL_STATUS_CRITERIA,
+                DEFAULT_SORT_ORDER, DEFAULT_SORT_COLUMN);
         Map<String, Object> model = new HashMap<String, Object>();
         model.put("currentPage", "1");
         model.put("beginIndex", "1");
@@ -111,7 +112,8 @@ public class ApplicationController {
             session.removeAttribute("STATUS_SEARCH_CRITERIA");
         }
         // update the search criteria object
-        SearchResultVO<Project> resultVo = getSearchResult(0, searchCriteria, status, DEFAULT_SORT_ORDER, DEFAULT_SORT_COLUMN);
+        SearchResultVO<Project> resultVo = getSearchResult(0, searchCriteria, status, DEFAULT_SORT_ORDER,
+                DEFAULT_SORT_COLUMN);
         // return the search result
         model.addAttribute("lstOfCurrentPage", resultVo.getLstResult());
         session.setAttribute("TOTAL_PAGE_OF_LATEST_QUERY",
@@ -143,12 +145,12 @@ public class ApplicationController {
     @RequestMapping("/paging/{page}")
     @ResponseBody
     List<Project> paging(HttpSession session, @PathVariable Integer page, Model model, Locale locale) {
-        String searchCriteria = (session.getAttribute("TEXT_SEARCH_CRITERIA") != null ? session.getAttribute(
-                "TEXT_SEARCH_CRITERIA").toString() : ALL_TEXT_CRITERIA);
-        String status = (session.getAttribute("STATUS_SEARCH_CRITERIA") != null ? session.getAttribute(
-                "STATUS_SEARCH_CRITERIA").toString() : ALL_STATUS_CRITERIA);
-        String sortOrdering = (session.getAttribute("SORT_ORDERING") != null ? session.getAttribute("SORT_ORDERING")
-                .toString() : DEFAULT_SORT_ORDER);
+        String searchCriteria = (session.getAttribute("TEXT_SEARCH_CRITERIA") != null
+                ? session.getAttribute("TEXT_SEARCH_CRITERIA").toString() : ALL_TEXT_CRITERIA);
+        String status = (session.getAttribute("STATUS_SEARCH_CRITERIA") != null
+                ? session.getAttribute("STATUS_SEARCH_CRITERIA").toString() : ALL_STATUS_CRITERIA);
+        String sortOrdering = (session.getAttribute("SORT_ORDERING") != null
+                ? session.getAttribute("SORT_ORDERING").toString() : DEFAULT_SORT_ORDER);
         String sortName = (session.getAttribute("SORT_NAME") != null ? session.getAttribute("SORT_NAME").toString()
                 : DEFAULT_SORT_COLUMN);
         // return the search result
@@ -170,10 +172,10 @@ public class ApplicationController {
     @ResponseBody
     List<Project> sort(HttpSession session, @PathVariable String colName, Model model, Locale locale) {
         // process session variables
-        String searchCriteria = (session.getAttribute("TEXT_SEARCH_CRITERIA") != null ? session.getAttribute(
-                "TEXT_SEARCH_CRITERIA").toString() : ALL_TEXT_CRITERIA);
-        String status = (session.getAttribute("STATUS_SEARCH_CRITERIA") != null ? session.getAttribute(
-                "STATUS_SEARCH_CRITERIA").toString() : ALL_STATUS_CRITERIA);
+        String searchCriteria = (session.getAttribute("TEXT_SEARCH_CRITERIA") != null
+                ? session.getAttribute("TEXT_SEARCH_CRITERIA").toString() : ALL_TEXT_CRITERIA);
+        String status = (session.getAttribute("STATUS_SEARCH_CRITERIA") != null
+                ? session.getAttribute("STATUS_SEARCH_CRITERIA").toString() : ALL_STATUS_CRITERIA);
         String sortOrdering = DEFAULT_SORT_ORDER;
         if (session.getAttribute("SORT_ORDERING") != null) {
             sortOrdering = session.getAttribute("SORT_ORDERING").toString();
@@ -293,8 +295,8 @@ public class ApplicationController {
     }
 
     /**
-     * Convert from [String] type to [Date] type for [finishingDate] parameter. The input formatting of [finishingDate]
-     * should be [dd/MM/yyyy"].
+     * Convert from [String] type to [Date] type for [finishingDate] parameter.
+     * The input formatting of [finishingDate] should be [dd/MM/yyyy"].
      * 
      * @param binder
      */
@@ -377,11 +379,20 @@ public class ApplicationController {
                     sortOrdering);
         } else {
             criteriaVo = new SearchCriteriaVO();
-            criteriaVo.getCreteria().put("text", searchCriteria);
+            if (this.isNumeric(searchCriteria)) {
+                criteriaVo.getCreteria().put("id", searchCriteria);
+            } else {
+                criteriaVo.getCreteria().put("id", "");
+                criteriaVo.getCreteria().put("name", searchCriteria);
+            }
             criteriaVo.getCreteria().put("status", status);
             resultVo = projectService.findByCriteria(criteriaVo, page, Integer.valueOf(this.recordsPerPage).intValue(),
                     sortName, sortOrdering);
         }
         return resultVo;
+    }
+
+    private boolean isNumeric(String s) {
+        return s.matches("[-+]?\\d*\\.?\\d+");
     }
 }

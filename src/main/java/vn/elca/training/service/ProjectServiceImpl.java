@@ -35,7 +35,7 @@ public class ProjectServiceImpl implements IProjectService {
     private IProjectRepository projectRepository;
     @Autowired
     private IGroupRepository groupRepository;
-    private Logger log = Logger.getLogger(ProjectServiceImpl.class);
+    private static final Logger LOGGER = Logger.getLogger(ProjectServiceImpl.class);
 
     /**
      * Find all existing project(s). Support for paging and sorting.
@@ -72,17 +72,14 @@ public class ProjectServiceImpl implements IProjectService {
         SearchResultVO<Project> res = new SearchResultVO<Project>();
         BooleanExpression condExp = null;
         // the first search criterion
-        if (!"all".equals(criteria.getCreteria().get("text"))) {
-            String regex = StringUtil.buildRegexFromcriterion(criteria.getCreteria().get("text").toLowerCase());
-            try {
-                // filter by [project number]
-                Integer id = Integer.parseInt(criteria.getCreteria().get("text"));
-                condExp = QProject.project.number.eq(id);
-            } catch (NumberFormatException ex) {
-                // filter by [project name] and [customer name]
-                condExp = QProject.project.name.lower().matches(regex)
-                        .or(QProject.project.customer.lower().matches(regex));
-            }
+        if (!"".equals(criteria.getCreteria().get("id"))) {
+            // filter by [project number]
+            Integer id = Integer.parseInt(criteria.getCreteria().get("id"));
+            condExp = QProject.project.number.eq(id);
+        } else if (!"all".equals(criteria.getCreteria().get("name"))) {
+            String regex = StringUtil.buildRegexFromcriterion(criteria.getCreteria().get("name").toLowerCase());
+            // filter by [project name] and [customer name]
+            condExp = QProject.project.name.lower().matches(regex).or(QProject.project.customer.lower().matches(regex));
         }
         // the second search criterion
         if (!"-1".equals(criteria.getCreteria().get("status"))) {
@@ -126,6 +123,7 @@ public class ProjectServiceImpl implements IProjectService {
     @Transactional(rollbackFor = { Throwable.class })
     public Long update(ProjectVO vo, String mode) throws ProjectNumberAlreadyExistsException {
         if ("add".equals(mode) && this.getByPrjNumber(vo.getNumber()) != null) {
+            LOGGER.error("ProjectNumberAlreadyExists");
             throw new ProjectNumberAlreadyExistsException();
         }
         Project originalEntity = new Project();
@@ -147,7 +145,7 @@ public class ProjectServiceImpl implements IProjectService {
         try {
             return this.projectRepository.save(originalEntity).getId();
         } catch (ObjectOptimisticLockingFailureException ex) {
-            log.error(ex.getMessage());
+            LOGGER.error(ex.getMessage());
             throw ex;
         }
     }
