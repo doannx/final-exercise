@@ -93,7 +93,7 @@
 					<td data-bind="text: name"></td>
 					<td data-bind="text: status"></td>
 					<td data-bind="text: customer"></td>
-					<td data-bind="text: moment(finishingDate).format('DD.MM.YYYY')"></td>
+					<td data-bind="text: moment(startDate).format('DD.MM.YYYY')"></td>
 					<td style="text-align: center;padding: 0px;"><a
             style="vertical-align: middle; padding-bottom: 2px; color: #FF7F50;cursor: pointer;"
             data-bind="visible: status != 'Maintenance' && status != 'Entretien', attr: {onclick: 'clone(' + id + ',\'' + name + '\')'}">

@@ -34,20 +34,20 @@ public class Group extends Root {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public Employee getLeader() {
+        return leader;
     }
-    
+
     public Set<Project> getProjects() {
         return projects;
     }
 
-    public void setProjects(Set<Project> projects) {
-        this.projects = projects;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public Employee getLeader() {
-        return leader;
+    public void setProjects(Set<Project> projects) {
+        this.projects = projects;
     }
 
     public void setLeader(Employee leader) {

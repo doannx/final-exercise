@@ -21,12 +21,12 @@ public abstract class Root {
         return id;
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
     public Integer getVersion() {
         return version;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public void setVersion(Integer version) {

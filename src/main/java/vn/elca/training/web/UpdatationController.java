@@ -118,7 +118,7 @@ public class UpdatationController {
     @RequestMapping("/detail/{id}")
     String detail(@PathVariable String id, HttpSession session, Model model) {
         Project entity = projectService.getById(id);
-        ProjectVO vo = new ProjectVO(entity.getId(), entity.getNumber(), entity.getName(), entity.getFinishingDate(),
+        ProjectVO vo = new ProjectVO(entity.getId(), entity.getNumber(), entity.getName(), entity.getStartDate(),
                 entity.getStatus(), entity.getCustomer(), entity.getMembers(),
                 String.valueOf(entity.getGroup().getId()), entity.getEndDate());
         vo.setVersion(entity.getVersion());

@@ -282,7 +282,7 @@ public class ApplicationController {
             String dateValue = "";
             for (Iterator<Project> iterator = lst.iterator(); iterator.hasNext();) {
                 p = iterator.next();
-                dateValue = dateFormat.format(p.getFinishingDate()).toString();
+                dateValue = dateFormat.format(p.getStartDate()).toString();
                 if (!dateValue.toLowerCase().matches(regex)) {
                     iterator.remove();
                 }

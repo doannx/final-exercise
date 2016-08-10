@@ -15,19 +15,14 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 @Entity
 @Table(name = "EMPLOYEE")
 public class Employee extends Root {
-    @Column(name = "VISA", unique = true)
     private String visa;
-    @Column(name = "FIRST_NAME")
     private String firstName;
-    @Column(name = "LAST_NAME")
     private String lastName;
-    @Column(name = "BIRTH_DATE")
     private Date birthDate;
+    private String displayName;
     @ManyToMany(mappedBy = "members")
     @JsonBackReference
     private Set<Project> projects = new HashSet<Project>();
-    @Transient
-    private String displayName;
 
     public Employee() {
     }
@@ -39,52 +34,57 @@ public class Employee extends Root {
         this.lastName = lastName;
     }
 
+    @Column(name = "VISA", unique = true)
     public String getVisa() {
         return visa;
     }
 
-    public void setVisa(String visa) {
-        this.visa = visa;
-    }
-
+    @Column(name = "FIRST_NAME")
     public String getFirstName() {
         return firstName;
     }
 
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
+    @Column(name = "LAST_NAME")
     public String getLastName() {
         return lastName;
     }
 
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
+    @Column(name = "BIRTH_DATE")
     public Date getBirthDate() {
         return birthDate;
-    }
-
-    public void setBirthDate(Date birthDate) {
-        this.birthDate = birthDate;
     }
 
     public Set<Project> getProjects() {
         return projects;
     }
 
-    public void setProjects(Set<Project> projects) {
-        this.projects = projects;
-    }
-
+    @Transient
     public String getDisplayName() {
         return displayName;
+    }
+
+    public void setVisa(String visa) {
+        this.visa = visa;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public void setBirthDate(Date birthDate) {
+        this.birthDate = birthDate;
+    }
+
+    public void setProjects(Set<Project> projects) {
+        this.projects = projects;
     }
 
     public void setDisplayName(String displayName) {
         this.displayName = displayName;
     }
-    
+
 }
