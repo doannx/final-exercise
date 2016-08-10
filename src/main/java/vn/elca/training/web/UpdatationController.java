@@ -10,6 +10,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -65,6 +66,7 @@ public class UpdatationController {
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
         dateFormat.setLenient(false);
         binder.registerCustomEditor(Date.class, new CustomDateEditor(dateFormat, true));
+        binder.addValidators(this.validator);
         binder.registerCustomEditor(List.class, "members", new CustomCollectionEditor(List.class) {
             protected Object convertElement(Object element) {
                 if (element instanceof Employee) {
@@ -153,11 +155,10 @@ public class UpdatationController {
      * @return [home] view after updating changes.
      */
     @RequestMapping(value = "/update", method = RequestMethod.POST)
-    public String save(@ModelAttribute("project") ProjectVO vo, BindingResult result, HttpSession session,
+    public String save(@ModelAttribute("project") @Valid ProjectVO vo, BindingResult result, HttpSession session,
             SessionStatus status, Locale locale) throws ProjectNumberAlreadyExistsException {
         String mode = session.getAttribute("UPDATE_MODE").toString();
         // validate
-        validator.validate(vo, result);
         if (result.hasErrors()) {
             session.setAttribute("ERROR_STATUS", true);
             session.setAttribute("ERROR_CONTENT", messageSource.getMessage("error.all", null, locale));

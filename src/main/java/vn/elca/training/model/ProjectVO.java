@@ -4,27 +4,16 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
-import javax.validation.constraints.NotNull;
-
-import org.hibernate.validator.constraints.NotEmpty;
-
 import vn.elca.training.dom.Employee;
 
 public class ProjectVO implements Serializable {
     private static final long serialVersionUID = 1L;
-    @NotNull
     private Long id;
-    @NotNull
     private Integer number;
-    @NotEmpty
     private String name;
-    @NotNull
     private Date startDate;
-    @NotEmpty
     private String status;
-    @NotEmpty
     private String customer;
-    @NotEmpty
     private String group;
     private List<Employee> members;
     private Date endDate;
