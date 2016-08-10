@@ -38,8 +38,6 @@ public class MySecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.authorizeRequests().antMatchers(HttpMethod.GET, "/update").access("hasRole('ROLE_ADMIN')").and()
-                .httpBasic();
         // ask whether this is an authenticated-user
         http.authorizeRequests().antMatchers(HttpMethod.GET, "/delete/**").authenticated().and().formLogin()
                 .loginPage("/loginUrl");
@@ -61,7 +59,6 @@ public class MySecurityConfiguration extends WebSecurityConfigurerAdapter {
                 arg1.sendError(HttpServletResponse.SC_FORBIDDEN);
             }
         });
-        http.authorizeRequests().antMatchers("/console/**").permitAll();
         http.formLogin().successHandler(new AuthenticationSuccessHandler() {
             @Override
             public void onAuthenticationSuccess(HttpServletRequest arg0, HttpServletResponse arg1, Authentication arg2)
@@ -77,6 +74,5 @@ public class MySecurityConfiguration extends WebSecurityConfigurerAdapter {
             }
         });
         http.csrf().disable();
-        http.headers().frameOptions().disable();
     }
 }

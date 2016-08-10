@@ -31,13 +31,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.ModelAndView;
 
-import vn.elca.training.convertor.GroupEditor;
-import vn.elca.training.convertor.StatusEditor;
-import vn.elca.training.dom.Department;
 import vn.elca.training.dom.Employee;
+import vn.elca.training.dom.Group;
 import vn.elca.training.dom.Project;
 import vn.elca.training.exception.ProjectNumberAlreadyExistsException;
-import vn.elca.training.model.GroupVO;
 import vn.elca.training.model.ProjectVO;
 import vn.elca.training.model.StatusVO;
 import vn.elca.training.service.IGroupService;
@@ -65,8 +62,6 @@ public class UpdatationController {
 
     @InitBinder
     public void initBinder(WebDataBinder binder) {
-        binder.registerCustomEditor(GroupVO.class, new GroupEditor());
-        binder.registerCustomEditor(StatusVO.class, new StatusEditor());
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
         dateFormat.setLenient(false);
         binder.registerCustomEditor(Date.class, new CustomDateEditor(dateFormat, true));
@@ -85,8 +80,8 @@ public class UpdatationController {
     }
 
     @ModelAttribute("allGroups")
-    public List<Department> populateGroups(Locale locale) {
-        List<Department> groups = new ArrayList<Department>();
+    public List<Group> populateGroups(Locale locale) {
+        List<Group> groups = new ArrayList<Group>();
         groups.addAll(this.groupService.findAll());
         return groups;
     }

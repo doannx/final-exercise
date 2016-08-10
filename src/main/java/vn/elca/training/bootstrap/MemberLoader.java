@@ -6,16 +6,16 @@ import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
 
-import vn.elca.training.dao.IMemberRepository;
+import vn.elca.training.dao.IEmployeeRepository;
 import vn.elca.training.dom.Employee;
 
 @Component
 public class MemberLoader implements ApplicationListener<ContextRefreshedEvent> {
-    private IMemberRepository memberRepository;
+    private IEmployeeRepository memberRepository;
     private Logger log = Logger.getLogger(MemberLoader.class);
 
     @Autowired
-    public void setMemberRepository(IMemberRepository memberRepository) {
+    public void setMemberRepository(IEmployeeRepository memberRepository) {
         this.memberRepository = memberRepository;
     }
 

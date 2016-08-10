@@ -14,7 +14,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 
 import vn.elca.training.ApplicationLauncher;
-import vn.elca.training.dom.Department;
+import vn.elca.training.dom.Group;
 import vn.elca.training.dom.Employee;
 import vn.elca.training.dom.Project;
 import vn.elca.training.dom.QEmployee;
@@ -33,7 +33,7 @@ public class IProjectRepositoryTest {
     @Autowired
     private IGroupRepository groupRepository;
     @Autowired
-    private IMemberRepository memberRepository;
+    private IEmployeeRepository memberRepository;
 
     @Test
     public void testAdd001() {
@@ -49,7 +49,7 @@ public class IProjectRepositoryTest {
         Employee member9 = new Employee("MKN", "FULL NAME OF MKN", "NGUYEN");
         Employee member10 = new Employee("TBH", "FULL NAME OF TBH", "NGUYEN");
         Employee member11 = new Employee("TDN", "FULL NAME OF TDN", "NGUYEN");
-        Department dep = new Department("QMV");
+        Group dep = new Group("QMV");
         Project prj1 = new Project(111, "EFV", new Date(), "NEW", "Customer 1", dep);
         prj1.getMembers().add(member2);
         prj1.getMembers().add(member3);
@@ -96,7 +96,7 @@ public class IProjectRepositoryTest {
         Employee member7 = new Employee("XHP", "FULL NAME OF XHP", "NGUYEN");
         Employee member8 = new Employee("QMV", "FULL NAME OF QMV", "NGUYEN");
         Employee member9 = new Employee("VVT", "FULL NAME OF VVT", "NGUYEN");
-        Department dep = new Department("HNH");
+        Group dep = new Group("HNH");
         Project prj1 = new Project(444, "IOC CLIENT EXTRANET", new Date(), "NEW", "Customer 1", dep);
         prj1.getMembers().add(member2);
         prj1.getMembers().add(member3);
@@ -129,7 +129,7 @@ public class IProjectRepositoryTest {
     @Test
     public void testUpdate001() {
         // prepare test data
-        Department dep = new Department("FSU15");
+        Group dep = new Group("FSU15");
         Employee member = new Employee("XDG999", "XUAN DOAN 1", "NGUYEN");
         dep.setLeader(member);
         Project dummyPrj = new Project(999, "KSTA999", new Date(), "NEW", "Helm AG", dep);
@@ -144,7 +144,7 @@ public class IProjectRepositoryTest {
     @Test
     public void testUpdate002() {
         // prepare test data
-        Department dep = new Department("FSU15");
+        Group dep = new Group("FSU15");
         Employee member = this.memberRepository.findOne(QEmployee.employee.visa.eq("XDG1"));
         dep.setLeader(member);
         Project dummyPrj = new Project(998, "KSTA998", new Date(), "NEW", "Helm AG", dep);
@@ -172,7 +172,7 @@ public class IProjectRepositoryTest {
         Employee member9 = new Employee("MKN", "FULL NAME OF MKN", "NGUYEN");
         Employee member10 = new Employee("TBH", "FULL NAME OF TBH", "NGUYEN");
         Employee member11 = new Employee("TDN", "FULL NAME OF TDN", "NGUYEN");
-        Department dep = new Department("QMV");
+        Group dep = new Group("QMV");
         Project prj1 = new Project(111, "EFV", new Date(), "NEW", "Customer 1", dep);
         prj1.getMembers().add(member2);
         prj1.getMembers().add(member3);
@@ -225,7 +225,7 @@ public class IProjectRepositoryTest {
         Employee member9 = new Employee("MKN", "FULL NAME OF MKN", "NGUYEN");
         Employee member10 = new Employee("TBH", "FULL NAME OF TBH", "NGUYEN");
         Employee member11 = new Employee("TDN", "FULL NAME OF TDN", "NGUYEN");
-        Department dep = new Department("QMV");
+        Group dep = new Group("QMV");
         Project prj1 = new Project(111, "EFV", new Date(), "NEW", "Customer 1", dep);
         prj1.getMembers().add(member2);
         prj1.getMembers().add(member3);

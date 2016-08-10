@@ -16,7 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import vn.elca.training.dao.IGroupRepository;
 import vn.elca.training.dao.IProjectRepository;
-import vn.elca.training.dom.Department;
+import vn.elca.training.dom.Group;
 import vn.elca.training.dom.Project;
 import vn.elca.training.dom.QProject;
 import vn.elca.training.exception.ProjectNumberAlreadyExistsException;
@@ -132,7 +132,7 @@ public class ProjectServiceImpl implements IProjectService {
             originalEntity.setId(vo.getId());
             originalEntity.setVersion(vo.getVersion());
         }
-        Department group = this.groupRepository.getOne(Long.parseLong(vo.getGroup()));
+        Group group = this.groupRepository.getOne(Long.parseLong(vo.getGroup()));
         originalEntity.setName(vo.getName());
         originalEntity.setCustomer(vo.getCustomer());
         originalEntity.setEndDate(vo.getEndDate());

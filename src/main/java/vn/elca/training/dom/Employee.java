@@ -1,11 +1,9 @@
 package vn.elca.training.dom;
 
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
-import javax.persistence.AttributeOverride;
-import javax.persistence.AttributeOverrides;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ManyToMany;
@@ -16,8 +14,6 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 
 @Entity
 @Table(name = "EMPLOYEE")
-@AttributeOverrides({ @AttributeOverride(name = "id", column = @Column(name = "ID") ),
-        @AttributeOverride(name = "version", column = @Column(name = "VERSION") ) })
 public class Employee extends Root {
     @Column(name = "VISA", unique = true)
     private String visa;
@@ -29,7 +25,7 @@ public class Employee extends Root {
     private Date birthDate;
     @ManyToMany(mappedBy = "members")
     @JsonBackReference
-    private List<Project> projects = new ArrayList<Project>();
+    private Set<Project> projects = new HashSet<Project>();
     @Transient
     private String displayName;
 
@@ -75,11 +71,11 @@ public class Employee extends Root {
         this.birthDate = birthDate;
     }
 
-    public List<Project> getProjects() {
+    public Set<Project> getProjects() {
         return projects;
     }
 
-    public void setProjects(List<Project> projects) {
+    public void setProjects(Set<Project> projects) {
         this.projects = projects;
     }
 

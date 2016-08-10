@@ -1,12 +1,9 @@
 package vn.elca.training.dom;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
-import javax.persistence.AttributeOverride;
-import javax.persistence.AttributeOverrides;
 import javax.persistence.CascadeType;
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
@@ -17,22 +14,19 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name = "\"GROUP\"")
-@AttributeOverrides({ @AttributeOverride(name = "id", column = @Column(name = "ID")),
-        @AttributeOverride(name = "version", column = @Column(name = "VERSION")) })
-public class Department extends Root {
+public class Group extends Root {
     private String name;
     @JsonIgnore
     @OneToMany(mappedBy = "group", cascade = CascadeType.ALL)
-    private List<Project> projects = new ArrayList<Project>();
+    private Set<Project> projects = new HashSet<Project>();
     @OneToOne(cascade = { CascadeType.ALL })
     @JoinColumn(name = "GROUP_LEADER_ID", nullable = true)
     private Employee leader;
 
-    public Department() {
+    public Group() {
     }
 
-    public Department(String name) {
-        super();
+    public Group(String name) {
         this.name = name;
     }
 
@@ -43,12 +37,12 @@ public class Department extends Root {
     public void setName(String name) {
         this.name = name;
     }
-
-    public List<Project> getProjects() {
+    
+    public Set<Project> getProjects() {
         return projects;
     }
 
-    public void setProjects(List<Project> projects) {
+    public void setProjects(Set<Project> projects) {
         this.projects = projects;
     }
 

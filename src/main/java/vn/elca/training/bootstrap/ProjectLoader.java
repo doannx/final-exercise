@@ -11,9 +11,9 @@ import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
 
 import vn.elca.training.dao.IGroupRepository;
-import vn.elca.training.dao.IMemberRepository;
+import vn.elca.training.dao.IEmployeeRepository;
 import vn.elca.training.dao.IProjectRepository;
-import vn.elca.training.dom.Department;
+import vn.elca.training.dom.Group;
 import vn.elca.training.dom.Employee;
 import vn.elca.training.dom.Project;
 
@@ -21,7 +21,7 @@ import vn.elca.training.dom.Project;
 public class ProjectLoader implements ApplicationListener<ContextRefreshedEvent> {
     private IProjectRepository projectRepository;
     private IGroupRepository groupRepository;
-    private IMemberRepository memberRepository;
+    private IEmployeeRepository memberRepository;
 
     @Autowired
     public void setGroupRepository(IGroupRepository groupRepository) {
@@ -34,7 +34,7 @@ public class ProjectLoader implements ApplicationListener<ContextRefreshedEvent>
     }
 
     @Autowired
-    public void setMemberRepository(IMemberRepository memberRepository) {
+    public void setMemberRepository(IEmployeeRepository memberRepository) {
         this.memberRepository = memberRepository;
     }
 
@@ -42,7 +42,7 @@ public class ProjectLoader implements ApplicationListener<ContextRefreshedEvent>
 
     @Override
     public void onApplicationEvent(ContextRefreshedEvent event) {
-        Department group = new Department("KTG");
+        Group group = new Group("KTG");
         this.groupRepository.save(group);
         Employee member = new Employee("KIM", "KIM THY", "NGUYEN");
         this.memberRepository.save(member);

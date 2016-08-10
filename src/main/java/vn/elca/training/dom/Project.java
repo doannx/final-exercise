@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import javax.persistence.AttributeOverride;
-import javax.persistence.AttributeOverrides;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -17,15 +15,13 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Transient;
 
 @Entity
-@AttributeOverrides({ @AttributeOverride(name = "id", column = @Column(name = "ID")),
-        @AttributeOverride(name = "version", column = @Column(name = "VERSION")) })
 public class Project extends Root {
     @Column(name = "PROJECT_NUMBER", unique = true)
     private Integer number;
     @Column(name = "NAME")
     private String name;
     @Column(name = "START_DATE")
-    private Date finishingDate;
+    private Date startDate;
     @Column(name = "STATUS")
     private String status;
     @Column(name = "CUSTOMER")
@@ -33,10 +29,10 @@ public class Project extends Root {
     @Transient
     private Long groupId;
     @ManyToOne
-    private Department group;
+    private Group group;
     @Column(name = "END_DATE")
     private Date endDate;
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name = "project_member", joinColumns = @JoinColumn(name = "project_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "employee_id", referencedColumnName = "id"))
     private List<Employee> members = new ArrayList<Employee>();
 
@@ -52,11 +48,11 @@ public class Project extends Root {
         this.endDate = endDate;
     }
 
-    public Department getGroup() {
+    public Group getGroup() {
         return group;
     }
 
-    public void setGroup(Department group) {
+    public void setGroup(Group group) {
         this.group = group;
     }
 
@@ -65,49 +61,49 @@ public class Project extends Root {
 
     public Project(String name, Date finishingDate) {
         this.name = name;
-        this.finishingDate = finishingDate;
+        this.startDate = finishingDate;
     }
 
-    public Project(Integer number, String name, Date finishingDate, String status, String customer, Department group) {
+    public Project(Integer number, String name, Date finishingDate, String status, String customer, Group group) {
         super();
         this.number = number;
         this.name = name;
-        this.finishingDate = finishingDate;
+        this.startDate = finishingDate;
         this.status = status;
         this.customer = customer;
         this.group = group;
     }
 
-    public Project(Integer number, String name, Date finishingDate, String status, String customer, Department group,
+    public Project(Integer number, String name, Date finishingDate, String status, String customer, Group group,
             List<Employee> members) {
         super();
         this.number = number;
         this.name = name;
-        this.finishingDate = finishingDate;
+        this.startDate = finishingDate;
         this.status = status;
         this.customer = customer;
         this.group = group;
         this.members = members;
     }
 
-    public Project(Integer number, String name, Date finishingDate, String status, String customer, Department group,
+    public Project(Integer number, String name, Date finishingDate, String status, String customer, Group group,
             Date endDate) {
         super();
         this.number = number;
         this.name = name;
-        this.finishingDate = finishingDate;
+        this.startDate = finishingDate;
         this.status = status;
         this.customer = customer;
         this.group = group;
         this.endDate = endDate;
     }
 
-    public Project(Integer number, String name, Date finishingDate, String status, String customer, Department group,
+    public Project(Integer number, String name, Date finishingDate, String status, String customer, Group group,
             Date endDate, List<Employee> members) {
         super();
         this.number = number;
         this.name = name;
-        this.finishingDate = finishingDate;
+        this.startDate = finishingDate;
         this.status = status;
         this.customer = customer;
         this.group = group;
@@ -120,7 +116,7 @@ public class Project extends Root {
     }
 
     public Date getFinishingDate() {
-        return finishingDate;
+        return startDate;
     }
 
     public String getStatus() {
@@ -144,7 +140,7 @@ public class Project extends Root {
     }
 
     public void setFinishingDate(Date finishingDate) {
-        this.finishingDate = finishingDate;
+        this.startDate = finishingDate;
     }
 
     public void setCustomer(String customer) {

@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import vn.elca.training.dao.IGroupRepository;
-import vn.elca.training.dom.Department;
+import vn.elca.training.dom.Group;
 
 @Service
 public class GroupServiceImpl implements IGroupService {
@@ -17,9 +17,9 @@ public class GroupServiceImpl implements IGroupService {
     private IGroupRepository repository;
 
     @Override
-    public List<Department> findAll() {
-        List<Department> lst = new ArrayList<Department>();
-        Iterator<Department> iter = this.repository.findAll().iterator();
+    public List<Group> findAll() {
+        List<Group> lst = new ArrayList<Group>();
+        Iterator<Group> iter = this.repository.findAll().iterator();
         while (iter.hasNext()) {
             lst.add(iter.next());
         }
@@ -28,14 +28,14 @@ public class GroupServiceImpl implements IGroupService {
     }
     
     @Override
-    public Department getById(Long id) {
+    public Group getById(Long id) {
         return this.repository.getOne(id);
     }
 
-    public List<Department> sortByName(List<Department> lst, final String ordering) {
-        lst.sort(new Comparator<Department>() {
+    public List<Group> sortByName(List<Group> lst, final String ordering) {
+        lst.sort(new Comparator<Group>() {
             @Override
-            public int compare(Department o1, Department o2) {
+            public int compare(Group o1, Group o2) {
                 if ("asc".equals(ordering)) {
                     return o1.getName().compareTo(o2.getName());
                 } else {
