@@ -1,6 +1,5 @@
 package vn.elca.training.dom;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -9,25 +8,27 @@ import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.Transient;
+
+import vn.elca.training.model.Status;
 
 @Entity
 public class Project extends Root {
-
     private Integer number;
     private String name;
     private Date startDate;
     private Date endDate;
-    private String status;
+    private Status status;
     private String customer;
-    @ManyToOne
     private Group group;
-    @ManyToMany(cascade = CascadeType.ALL)
-    @JoinTable(name = "project_member", joinColumns = @JoinColumn(name = "project_id", referencedColumnName = "id") , inverseJoinColumns = @JoinColumn(name = "employee_id", referencedColumnName = "id") )
     private Set<Employee> members = new HashSet<Employee>();
+    private String sttMultilingual;
 
     @Column(name = "PROJECT_NUMBER", unique = true)
     public Integer getNumber() {
@@ -45,7 +46,8 @@ public class Project extends Root {
     }
 
     @Column(name = "STATUS")
-    public String getStatus() {
+    @Enumerated(EnumType.STRING)
+    public Status getStatus() {
         return status;
     }
 
@@ -54,6 +56,7 @@ public class Project extends Root {
         return customer;
     }
 
+    @ManyToOne
     public Group getGroup() {
         return group;
     }
@@ -61,6 +64,26 @@ public class Project extends Root {
     @Column(name = "END_DATE")
     public Date getEndDate() {
         return endDate;
+    }
+
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(name = "project_member", joinColumns = @JoinColumn(name = "project_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "employee_id", referencedColumnName = "id"))
+    public
+            Set<Employee> getMembers() {
+        return members;
+    }
+
+    @Transient
+    public String getSttMultilingual() {
+        return sttMultilingual;
+    }
+
+    public void setSttMultilingual(String sttMultilingual) {
+        this.sttMultilingual = sttMultilingual;
+    }
+
+    public void setMembers(Set<Employee> members) {
+        this.members = members;
     }
 
     public void setNumber(Integer number) {
@@ -75,7 +98,7 @@ public class Project extends Root {
         this.startDate = startDate;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(Status status) {
         this.status = status;
     }
 
@@ -94,7 +117,7 @@ public class Project extends Root {
     public Project() {
     }
 
-    public Project(Integer number, String name, Date startDate, String status, String customer, Group group) {
+    public Project(Integer number, String name, Date startDate, Status status, String customer, Group group) {
         this.number = number;
         this.name = name;
         this.startDate = startDate;
@@ -103,29 +126,21 @@ public class Project extends Root {
         this.group = group;
     }
 
-    public Project(Integer number, String name, Date startDate, String status, String customer, Group group,
+    public Project(Integer number, String name, Date startDate, Status status, String customer, Group group,
             Date endDate) {
         this(number, name, startDate, status, customer, group);
         this.endDate = endDate;
     }
 
-    public Project(Integer number, String name, Date startDate, String status, String customer, Group group,
+    public Project(Integer number, String name, Date startDate, Status status, String customer, Group group,
             List<Employee> members) {
         this(number, name, startDate, status, customer, group);
         this.members = new HashSet<Employee>(members);
     }
 
-    public Project(Integer number, String name, Date startDate, String status, String customer, Group group,
+    public Project(Integer number, String name, Date startDate, Status status, String customer, Group group,
             Date endDate, List<Employee> members) {
         this(number, name, startDate, status, customer, group, endDate);
-        this.members = new HashSet<Employee>(members);
-    }
-
-    public List<Employee> getMembers() {
-        return new ArrayList<Employee>(this.members);
-    }
-
-    public void setMembers(List<Employee> members) {
         this.members = new HashSet<Employee>(members);
     }
 }

@@ -16,15 +16,15 @@
     </c:if>
   </div>
   <br class="clear" />
-  <c:if test="${sessionScope.ERROR_STATUS }">
+  <c:if test="${errorStatus }">
     <div class="header alert alert-danger" style="font-size: 14pt; padding-left: 15px; margin-top: 5px; height: 50px; padding-top: 10px; padding-bottom: 10px;">
       <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-      <strong>${sessionScope.ERROR_CONTENT }</strong>
+      <strong>${errorContent }</strong>
     </div>
   </c:if>
   <br class="clear" />
   <form:form method="post" modelAttribute="project" action="/update">
-  	<input type="hidden" id="mode" name="mode" value="${UPDATE_MODE}"/>
+  	<input type="hidden" id="mode" value="${mode}"/>
   	<input type="hidden" id="hidUpdatePrjBtn" name="hidUpdatePrjBtn" value="<spring:message code="btn.updateprj" />"/>
   	<form:hidden path="id"/>
   	<form:hidden path="version"/>

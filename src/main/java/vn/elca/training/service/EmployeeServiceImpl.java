@@ -11,12 +11,17 @@ import vn.elca.training.dao.IEmployeeRepository;
 import vn.elca.training.dom.Employee;
 
 @Service
-public class MemberServiceImpl implements IMemberService {
+public class EmployeeServiceImpl implements IEmployeeService {
     @Autowired
     private IEmployeeRepository repository;
 
     @Override
     public List<Employee> findAll() {
         return this.repository.findAll(new Sort(Direction.ASC, "firstName"));
+    }
+
+    @Override
+    public Employee getById(Long id) {
+        return this.repository.findOne(String.valueOf(id));
     }
 }

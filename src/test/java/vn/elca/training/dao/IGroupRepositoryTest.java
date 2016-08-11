@@ -13,15 +13,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import com.google.common.collect.Lists;
-import com.mysema.query.types.expr.BooleanExpression;
-
 import vn.elca.training.ApplicationLauncher;
 import vn.elca.training.config.MyRepositoryConfiguration;
 import vn.elca.training.dom.Employee;
 import vn.elca.training.dom.Group;
 import vn.elca.training.dom.Project;
 import vn.elca.training.dom.QGroup;
+import vn.elca.training.model.Status;
+
+import com.google.common.collect.Lists;
+import com.mysema.query.types.expr.BooleanExpression;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = { ApplicationLauncher.class, MyRepositoryConfiguration.class })
@@ -44,7 +45,7 @@ public class IGroupRepositoryTest {
         // new project
         List<Employee> members = new ArrayList<Employee>();
         members.add(member);
-        Project dummyPrj = new Project(555, "TEST PRJ", new Date(), "NEW", "TEST CUS", g, members);
+        Project dummyPrj = new Project(555, "TEST PRJ", new Date(), Status.NEW, "TEST CUS", g, members);
         this.projectRepo.save(dummyPrj);
         // verify
         BooleanExpression groupName = QGroup.group.name.eq("TEST");

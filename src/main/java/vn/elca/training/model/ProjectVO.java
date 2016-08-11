@@ -115,4 +115,7 @@ public class ProjectVO implements Serializable {
         this.version = version;
     }
 
+    public boolean isNew() {
+        return getId() == null;
+    }
 }

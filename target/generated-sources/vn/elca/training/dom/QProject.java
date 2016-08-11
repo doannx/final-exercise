@@ -33,7 +33,7 @@ public class QProject extends EntityPathBase<Project> {
     //inherited
     public final NumberPath<Long> id = _super.id;
 
-    public final ListPath<Employee, QEmployee> members = this.<Employee, QEmployee>createList("members", Employee.class, QEmployee.class, PathInits.DIRECT2);
+    public final SetPath<Employee, QEmployee> members = this.<Employee, QEmployee>createSet("members", Employee.class, QEmployee.class, PathInits.DIRECT2);
 
     public final StringPath name = createString("name");
 
@@ -41,7 +41,7 @@ public class QProject extends EntityPathBase<Project> {
 
     public final DateTimePath<java.util.Date> startDate = createDateTime("startDate", java.util.Date.class);
 
-    public final StringPath status = createString("status");
+    public final EnumPath<vn.elca.training.model.Status> status = createEnum("status", vn.elca.training.model.Status.class);
 
     //inherited
     public final NumberPath<Integer> version = _super.version;

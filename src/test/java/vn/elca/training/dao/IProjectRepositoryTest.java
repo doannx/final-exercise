@@ -14,11 +14,12 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 
 import vn.elca.training.ApplicationLauncher;
-import vn.elca.training.dom.Group;
 import vn.elca.training.dom.Employee;
+import vn.elca.training.dom.Group;
 import vn.elca.training.dom.Project;
 import vn.elca.training.dom.QEmployee;
 import vn.elca.training.dom.QProject;
+import vn.elca.training.model.Status;
 
 import com.google.common.collect.Lists;
 import com.mysema.query.types.expr.BooleanExpression;
@@ -50,7 +51,7 @@ public class IProjectRepositoryTest {
         Employee member10 = new Employee("TBH", "FULL NAME OF TBH", "NGUYEN");
         Employee member11 = new Employee("TDN", "FULL NAME OF TDN", "NGUYEN");
         Group dep = new Group("QMV");
-        Project prj1 = new Project(111, "EFV", new Date(), "NEW", "Customer 1", dep);
+        Project prj1 = new Project(111, "EFV", new Date(), Status.NEW, "Customer 1", dep);
         prj1.getMembers().add(member2);
         prj1.getMembers().add(member3);
         prj1.getMembers().add(member4);
@@ -59,14 +60,14 @@ public class IProjectRepositoryTest {
         member3.getProjects().add(prj1);
         member4.getProjects().add(prj1);
         member5.getProjects().add(prj1);
-        Project prj2 = new Project(222, "CXTRANET", new Date(), "NEW", "Customer 2", dep);
+        Project prj2 = new Project(222, "CXTRANET", new Date(), Status.NEW, "Customer 2", dep);
         prj2.getMembers().add(member6);
         prj2.getMembers().add(member7);
         prj2.getMembers().add(member8);
         member6.getProjects().add(prj2);
         member7.getProjects().add(prj2);
         member8.getProjects().add(prj2);
-        Project prj3 = new Project(333, "CRYSTAL BALL", new Date(), "NEW", "Customer 3", dep);
+        Project prj3 = new Project(333, "CRYSTAL BALL", new Date(), Status.NEW, "Customer 3", dep);
         prj3.getMembers().add(member9);
         prj3.getMembers().add(member10);
         prj3.getMembers().add(member11);
@@ -97,7 +98,7 @@ public class IProjectRepositoryTest {
         Employee member8 = new Employee("QMV", "FULL NAME OF QMV", "NGUYEN");
         Employee member9 = new Employee("VVT", "FULL NAME OF VVT", "NGUYEN");
         Group dep = new Group("HNH");
-        Project prj1 = new Project(444, "IOC CLIENT EXTRANET", new Date(), "NEW", "Customer 1", dep);
+        Project prj1 = new Project(444, "IOC CLIENT EXTRANET", new Date(), Status.NEW, "Customer 1", dep);
         prj1.getMembers().add(member2);
         prj1.getMembers().add(member3);
         prj1.getMembers().add(member4);
@@ -108,7 +109,7 @@ public class IProjectRepositoryTest {
         member4.getProjects().add(prj1);
         member5.getProjects().add(prj1);
         member6.getProjects().add(prj1);
-        Project prj2 = new Project(555, "KSTA MIGRATION", new Date(), "NEW", "Customer 2", dep);
+        Project prj2 = new Project(555, "KSTA MIGRATION", new Date(), Status.NEW, "Customer 2", dep);
         prj2.getMembers().add(member7);
         prj2.getMembers().add(member8);
         prj2.getMembers().add(member9);
@@ -132,7 +133,7 @@ public class IProjectRepositoryTest {
         Group dep = new Group("FSU15");
         Employee member = new Employee("XDG999", "XUAN DOAN 1", "NGUYEN");
         dep.setLeader(member);
-        Project dummyPrj = new Project(999, "KSTA999", new Date(), "NEW", "Helm AG", dep);
+        Project dummyPrj = new Project(999, "KSTA999", new Date(), Status.NEW, "Helm AG", dep);
         dep.getProjects().add(dummyPrj);
         // execute
         this.groupRepository.save(dep);
@@ -147,7 +148,7 @@ public class IProjectRepositoryTest {
         Group dep = new Group("FSU15");
         Employee member = this.memberRepository.findOne(QEmployee.employee.visa.eq("XDG1"));
         dep.setLeader(member);
-        Project dummyPrj = new Project(998, "KSTA998", new Date(), "NEW", "Helm AG", dep);
+        Project dummyPrj = new Project(998, "KSTA998", new Date(), Status.NEW, "Helm AG", dep);
         dep.getProjects().add(dummyPrj);
         dummyPrj.setGroup(dep);
         // execute
@@ -173,7 +174,7 @@ public class IProjectRepositoryTest {
         Employee member10 = new Employee("TBH", "FULL NAME OF TBH", "NGUYEN");
         Employee member11 = new Employee("TDN", "FULL NAME OF TDN", "NGUYEN");
         Group dep = new Group("QMV");
-        Project prj1 = new Project(111, "EFV", new Date(), "NEW", "Customer 1", dep);
+        Project prj1 = new Project(111, "EFV", new Date(), Status.NEW, "Customer 1", dep);
         prj1.getMembers().add(member2);
         prj1.getMembers().add(member3);
         prj1.getMembers().add(member4);
@@ -182,14 +183,14 @@ public class IProjectRepositoryTest {
         member3.getProjects().add(prj1);
         member4.getProjects().add(prj1);
         member5.getProjects().add(prj1);
-        Project prj2 = new Project(222, "CXTRANET", new Date(), "NEW", "Customer 2", dep);
+        Project prj2 = new Project(222, "CXTRANET", new Date(), Status.NEW, "Customer 2", dep);
         prj2.getMembers().add(member6);
         prj2.getMembers().add(member7);
         prj2.getMembers().add(member8);
         member6.getProjects().add(prj2);
         member7.getProjects().add(prj2);
         member8.getProjects().add(prj2);
-        Project prj3 = new Project(333, "CRYSTAL BALL", new Date(), "NEW", "Customer 3", dep);
+        Project prj3 = new Project(333, "CRYSTAL BALL", new Date(), Status.NEW, "Customer 3", dep);
         prj3.getMembers().add(member9);
         prj3.getMembers().add(member10);
         prj3.getMembers().add(member11);
@@ -203,7 +204,7 @@ public class IProjectRepositoryTest {
         // execute
         this.groupRepository.save(dep);
         BooleanExpression exp = QProject.project.name.toUpperCase().contains("BALL")
-                .and(QProject.project.status.toUpperCase().eq("NEW"));
+                .and(QProject.project.status.eq(Status.NEW));
         List<Project> prjs = Lists.newArrayList(this.projectRepository.findAll(exp));
         // verify
         Assert.assertEquals(1, prjs.size());
@@ -226,7 +227,7 @@ public class IProjectRepositoryTest {
         Employee member10 = new Employee("TBH", "FULL NAME OF TBH", "NGUYEN");
         Employee member11 = new Employee("TDN", "FULL NAME OF TDN", "NGUYEN");
         Group dep = new Group("QMV");
-        Project prj1 = new Project(111, "EFV", new Date(), "NEW", "Customer 1", dep);
+        Project prj1 = new Project(111, "EFV", new Date(), Status.NEW, "Customer 1", dep);
         prj1.getMembers().add(member2);
         prj1.getMembers().add(member3);
         prj1.getMembers().add(member4);
@@ -235,14 +236,14 @@ public class IProjectRepositoryTest {
         member3.getProjects().add(prj1);
         member4.getProjects().add(prj1);
         member5.getProjects().add(prj1);
-        Project prj2 = new Project(222, "CXTRANET", new Date(), "NEW", "Customer 2", dep);
+        Project prj2 = new Project(222, "CXTRANET", new Date(), Status.NEW, "Customer 2", dep);
         prj2.getMembers().add(member6);
         prj2.getMembers().add(member7);
         prj2.getMembers().add(member8);
         member6.getProjects().add(prj2);
         member7.getProjects().add(prj2);
         member8.getProjects().add(prj2);
-        Project prj3 = new Project(333, "CRYSTAL BALL", new Date(), "NEW", "Customer 3", dep);
+        Project prj3 = new Project(333, "CRYSTAL BALL", new Date(), Status.NEW, "Customer 3", dep);
         prj3.getMembers().add(member9);
         prj3.getMembers().add(member10);
         prj3.getMembers().add(member11);

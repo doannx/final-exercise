@@ -12,7 +12,7 @@ import com.mysema.query.types.Path;
 /**
  * QRoot is a Querydsl query type for Root
  */
-@Generated("com.mysema.query.codegen.EntitySerializer")
+@Generated("com.mysema.query.codegen.SupertypeSerializer")
 public class QRoot extends EntityPathBase<Root> {
 
     private static final long serialVersionUID = 1061556815L;

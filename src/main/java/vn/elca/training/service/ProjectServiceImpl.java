@@ -4,13 +4,11 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
-import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,6 +22,8 @@ import vn.elca.training.exception.ProjectNumberAlreadyExistsException;
 import vn.elca.training.model.ProjectVO;
 import vn.elca.training.model.SearchCriteriaVO;
 import vn.elca.training.model.SearchResultVO;
+import vn.elca.training.model.Status;
+import vn.elca.training.util.Constants;
 import vn.elca.training.util.StringUtil;
 
 import com.google.common.collect.Lists;
@@ -31,12 +31,12 @@ import com.mysema.query.types.expr.BooleanExpression;
 
 @Service
 @Qualifier(value = "hibernateProjectService")
+@Transactional(rollbackFor = { Throwable.class })
 public class ProjectServiceImpl implements IProjectService {
     @Autowired
     private IProjectRepository projectRepository;
     @Autowired
     private IGroupRepository groupRepository;
-    private static final Logger LOGGER = Logger.getLogger(ProjectServiceImpl.class);
 
     /**
      * Find all existing project(s). Support for paging and sorting.
@@ -57,8 +57,7 @@ public class ProjectServiceImpl implements IProjectService {
     }
 
     /**
-     * Find project(s) based on [multiple search criteria]. Support for paging
-     * and sorting.
+     * Find project(s) based on [multiple search criteria]. Support for paging and sorting.
      * 
      * @param criteria
      * @param currentPage
@@ -73,30 +72,26 @@ public class ProjectServiceImpl implements IProjectService {
         SearchResultVO<Project> res = new SearchResultVO<Project>();
         BooleanExpression condExp = null;
         // the first search criterion
-        if (!"".equals(criteria.getCreteria().get("id"))) {
+        if (criteria.getCreteria().get("number") != null) {
             // filter by [project number]
-            Integer id = Integer.parseInt(criteria.getCreteria().get("id"));
+            Integer id = Integer.parseInt(criteria.getCreteria().get("number"));
             condExp = QProject.project.number.eq(id);
-        } else if (!"all".equals(criteria.getCreteria().get("name"))) {
+        } else if (criteria.getCreteria().get("name") != null) {
             String regex = StringUtil.buildRegexFromcriterion(criteria.getCreteria().get("name").toLowerCase());
             // filter by [project name] and [customer name]
             condExp = QProject.project.name.lower().matches(regex).or(QProject.project.customer.lower().matches(regex));
         }
         // the second search criterion
-        if (!"-1".equals(criteria.getCreteria().get("status"))) {
-            condExp = condExp != null ? condExp.and(QProject.project.status.eq(criteria.getCreteria().get("status")))
-                    : QProject.project.status.eq(criteria.getCreteria().get("status"));
+        if (!Constants.NOT_SELECTED_YET.equals(criteria.getCreteria().get("status"))) {
+            condExp = condExp != null ? condExp.and(QProject.project.status.eq(Status.valueOf(criteria.getCreteria()
+                    .get("status")))) : QProject.project.status
+                    .eq(Status.valueOf(criteria.getCreteria().get("status")));
         }
         // get the result
         if (condExp != null) {
             Pageable page = new PageRequest(nextPage, num, Sort.Direction.fromString(sortDirection), sortColName);
-            try {
-                res.setSize(this.projectRepository.count(condExp));
-                res.setLstResult(Lists.newArrayList(this.projectRepository.findAll(condExp, page)));
-            } catch (Exception miscEx) {
-                res.setLstResult(new ArrayList<Project>());
-                res.setSize(0);
-            }
+            res.setSize(this.projectRepository.count(condExp));
+            res.setLstResult(Lists.newArrayList(this.projectRepository.findAll(condExp, page)));
         }
         return res;
     }
@@ -108,8 +103,8 @@ public class ProjectServiceImpl implements IProjectService {
      * @return null (must re-implement in class implementation)
      */
     @Override
-    public Project getById(String id) {
-        return projectRepository.findOne(Long.parseLong(id));
+    public Project getById(Long id) {
+        return projectRepository.findOne(id);
     }
 
     /**
@@ -121,14 +116,12 @@ public class ProjectServiceImpl implements IProjectService {
      * @throws Exception
      */
     @Override
-    @Transactional(rollbackFor = { Throwable.class })
-    public Long update(ProjectVO vo, String mode) throws ProjectNumberAlreadyExistsException {
-        if ("add".equals(mode) && this.getByPrjNumber(vo.getNumber()) != null) {
-            LOGGER.error("ProjectNumberAlreadyExists");
+    public Long update(ProjectVO vo) throws ProjectNumberAlreadyExistsException {
+        if (vo.getId() == null && this.getByPrjNumber(vo.getNumber()) != null) {
             throw new ProjectNumberAlreadyExistsException();
         }
         Project originalEntity = new Project();
-        if ("update".equals(mode)) {
+        if (vo.getId() != null) {
             originalEntity.setId(vo.getId());
             originalEntity.setVersion(vo.getVersion());
         }
@@ -139,16 +132,12 @@ public class ProjectServiceImpl implements IProjectService {
         originalEntity.setStartDate(vo.getStartDate());
         originalEntity.setGroup(group);
         originalEntity.setNumber(vo.getNumber());
+        originalEntity.setStatus(Status.valueOf(vo.getStatus()));
         if (vo.getMembers() != null) {
-            originalEntity.setMembers(vo.getMembers());
+            originalEntity.getMembers().clear();
+            originalEntity.getMembers().addAll(vo.getMembers());
         }
-        originalEntity.setStatus(vo.getStatus());
-        try {
-            return this.projectRepository.save(originalEntity).getId();
-        } catch (ObjectOptimisticLockingFailureException ex) {
-            LOGGER.error(ex.getMessage());
-            throw ex;
-        }
+        return this.projectRepository.save(originalEntity).getId();
     }
 
     /**
@@ -171,19 +160,18 @@ public class ProjectServiceImpl implements IProjectService {
      * @return id of clone one
      */
     @Override
-    @Transactional(rollbackFor = { Throwable.class })
     public Long clone(Long id) {
         Project old = this.projectRepository.findOne(id);
         // get the max id
         Pageable page = new PageRequest(0, 1, Sort.Direction.DESC, "number");
         Integer nextPrjNumber = this.projectRepository.findAll(page).getContent().get(0).getNumber() + 1;
         // create the clone one
-        Project clone = new Project(nextPrjNumber, old.getName() + "Maint." + Calendar.getInstance().get(Calendar.YEAR),
-                new Date(), "NEW", old.getCustomer(), old.getGroup(), null, new ArrayList<Employee>());
+        Project clone = new Project(nextPrjNumber,
+                old.getName() + "Maint." + Calendar.getInstance().get(Calendar.YEAR), new Date(), Status.NEW,
+                old.getCustomer(), old.getGroup(), null, new ArrayList<Employee>());
         this.projectRepository.saveAndFlush(clone);
         // update the old one
-        old.setStatus("MAI");
-        this.projectRepository.saveAndFlush(old);
+        old.setStatus(Status.MAI);
         // return result
         return clone.getId();
     }

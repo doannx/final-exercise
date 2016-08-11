@@ -31,7 +31,7 @@ public class QEmployee extends EntityPathBase<Employee> {
 
     public final StringPath lastName = createString("lastName");
 
-    public final ListPath<Project, QProject> projects = this.<Project, QProject>createList("projects", Project.class, QProject.class, PathInits.DIRECT2);
+    public final SetPath<Project, QProject> projects = this.<Project, QProject>createSet("projects", Project.class, QProject.class, PathInits.DIRECT2);
 
     //inherited
     public final NumberPath<Integer> version = _super.version;

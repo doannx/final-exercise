@@ -4,6 +4,8 @@ import java.util.List;
 
 import vn.elca.training.dom.Employee;
 
-public interface IMemberService {
+public interface IEmployeeService {
     List<Employee> findAll();
+
+    Employee getById(Long id);
 }

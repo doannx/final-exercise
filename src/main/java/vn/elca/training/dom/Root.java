@@ -9,18 +9,18 @@ import javax.persistence.Version;
 
 @MappedSuperclass
 public abstract class Root {
+    private Long id;
+    private Integer version;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID")
-    private Long id;
-    @Version
-    @Column(name = "VERSION")
-    private Integer version;
-
     public Long getId() {
         return id;
     }
 
+    @Version
+    @Column(name = "VERSION")
     public Integer getVersion() {
         return version;
     }

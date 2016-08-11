@@ -19,9 +19,6 @@ public class Employee extends Root {
     private String firstName;
     private String lastName;
     private Date birthDate;
-    private String displayName;
-    @ManyToMany(mappedBy = "members")
-    @JsonBackReference
     private Set<Project> projects = new HashSet<Project>();
 
     public Employee() {
@@ -54,13 +51,15 @@ public class Employee extends Root {
         return birthDate;
     }
 
+    @ManyToMany(mappedBy = "members")
+    @JsonBackReference
     public Set<Project> getProjects() {
         return projects;
     }
 
     @Transient
     public String getDisplayName() {
-        return displayName;
+        return this.visa + ":" + this.firstName + " " + this.lastName;
     }
 
     public void setVisa(String visa) {
@@ -82,9 +81,4 @@ public class Employee extends Root {
     public void setProjects(Set<Project> projects) {
         this.projects = projects;
     }
-
-    public void setDisplayName(String displayName) {
-        this.displayName = displayName;
-    }
-
 }

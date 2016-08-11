@@ -37,19 +37,17 @@ public interface IProjectService {
      * @param id
      * @return Project
      */
-    Project getById(String id);
+    Project getById(Long id);
 
     /**
      * Update/add one project.
      * 
      * @param p
      *            project with new information
-     * @param mode
-     *            update or add
      * @return id of updated project
      * @exception ProjectNumberAlreadyExistsException
      */
-    Long update(ProjectVO p, String mode) throws ProjectNumberAlreadyExistsException;
+    Long update(ProjectVO p) throws ProjectNumberAlreadyExistsException;
 
     /**
      * Delete one project.

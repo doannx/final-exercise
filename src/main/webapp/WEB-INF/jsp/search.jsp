@@ -87,20 +87,20 @@
 			<tbody data-bind="foreach: projects">
 				<tr>
 					<td><input type="checkbox"
-						data-bind="attr: {id: id, disabled: status !== 'New' && status !== 'Nouveau'}"
+						data-bind="attr: {id: id, disabled: sttMultilingual !== 'New' && sttMultilingual !== 'Nouveau'}"
 						onclick="javascript:clickCheckbox();" /></td>
 					<td style="text-align: right; padding-right: 10px;"><a style="color: #666666;" data-bind="attr: {href: '/detail/' + id}, text: number"></a></td>
 					<td data-bind="text: name"></td>
-					<td data-bind="text: status"></td>
+					<td data-bind="text: sttMultilingual"></td>
 					<td data-bind="text: customer"></td>
 					<td data-bind="text: moment(startDate).format('DD.MM.YYYY')"></td>
 					<td style="text-align: center;padding: 0px;"><a
             style="vertical-align: middle; padding-bottom: 2px; color: #FF7F50;cursor: pointer;"
-            data-bind="visible: status != 'Maintenance' && status != 'Entretien', attr: {onclick: 'clone(' + id + ',\'' + name + '\')'}">
+            data-bind="visible: sttMultilingual != 'Maintenance' && sttMultilingual != 'Entretien', attr: {onclick: 'clone(' + id + ',\'' + name + '\')'}">
             <span class="glyphicon glyphicon-plus"></span></a></td>
           <td><a
 						style="vertical-align: middle; padding-bottom: 2px; color: #FF7F50;cursor: pointer;"
-						data-bind="visible: status == 'New' || status == 'Nouveau', attr: {onclick: 'del(' + id + ',\'' + name + '\')'}">
+						data-bind="visible: sttMultilingual == 'New' || sttMultilingual == 'Nouveau', attr: {onclick: 'del(' + id + ',\'' + name + '\')'}">
             <span class="glyphicon glyphicon-trash"></span></a></td>
 				</tr>
 			</tbody>

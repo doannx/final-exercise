@@ -16,11 +16,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 @Table(name = "\"GROUP\"")
 public class Group extends Root {
     private String name;
-    @JsonIgnore
-    @OneToMany(mappedBy = "group", cascade = CascadeType.ALL)
     private Set<Project> projects = new HashSet<Project>();
-    @OneToOne(cascade = { CascadeType.ALL })
-    @JoinColumn(name = "GROUP_LEADER_ID", nullable = true)
     private Employee leader;
 
     public Group() {
@@ -34,10 +30,14 @@ public class Group extends Root {
         return name;
     }
 
+    @OneToOne(cascade = { CascadeType.ALL })
+    @JoinColumn(name = "GROUP_LEADER_ID", nullable = true)
     public Employee getLeader() {
         return leader;
     }
 
+    @JsonIgnore
+    @OneToMany(mappedBy = "group", cascade = CascadeType.ALL)
     public Set<Project> getProjects() {
         return projects;
     }
