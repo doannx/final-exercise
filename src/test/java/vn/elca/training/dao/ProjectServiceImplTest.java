@@ -28,7 +28,7 @@ import com.mysema.query.types.expr.BooleanExpression;
 @SpringApplicationConfiguration(classes = ApplicationLauncher.class)
 @Transactional
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
-public class IProjectRepositoryTest {
+public class ProjectServiceImplTest {
     @Autowired
     private IProjectRepository projectRepository;
     @Autowired
@@ -264,4 +264,64 @@ public class IProjectRepositoryTest {
         Assert.assertEquals("Customer 3", prjs.get(0).getCustomer());
         Assert.assertEquals(3, prjs.get(0).getMembers().size());
     }
+
+    @Test
+    public void testDelete001() {
+        // set up test data
+        Employee member1 = new Employee("QMV", "FULL NAME OF QMV", "NGUYEN");
+        Employee member2 = new Employee("HTV", "FULL NAME OF HTV", "NGUYEN");
+        Employee member3 = new Employee("TQP", "FULL NAME OF TQP", "NGUYEN");
+        Employee member4 = new Employee("HNH", "FULL NAME OF HNH", "NGUYEN");
+        Employee member5 = new Employee("NQN", "FULL NAME OF NQN", "NGUYEN");
+
+        Group dep = new Group("QMV");
+        Project prj1 = new Project(111, "EFV", new Date(), Status.NEW, "Customer 1", dep);
+        prj1.getMembers().add(member2);
+        prj1.getMembers().add(member3);
+        prj1.getMembers().add(member4);
+        prj1.getMembers().add(member5);
+        member2.getProjects().add(prj1);
+        member3.getProjects().add(prj1);
+        member4.getProjects().add(prj1);
+        member5.getProjects().add(prj1);
+        dep.getProjects().add(prj1);
+        dep.setLeader(member1);
+        // execute
+        this.groupRepository.saveAndFlush(dep);
+        Project verifyPrj = this.projectRepository.findOne(QProject.project.number.eq(111));
+        this.projectRepository.delete(verifyPrj.getId());
+        this.projectRepository.flush();
+        // verify
+        Project verifyDelPrj = this.projectRepository.findOne(QProject.project.number.eq(111));
+    }
+    
+    @Test
+    public void testException001() {
+        // set up test data
+        Employee member1 = new Employee("QMV", "FULL NAME OF QMV", "NGUYEN");
+        Employee member2 = new Employee("HTV", "FULL NAME OF HTV", "NGUYEN");
+        Employee member3 = new Employee("TQP", "FULL NAME OF TQP", "NGUYEN");
+        Employee member4 = new Employee("HNH", "FULL NAME OF HNH", "NGUYEN");
+        Employee member5 = new Employee("NQN", "FULL NAME OF NQN", "NGUYEN");
+
+        Group dep = new Group("QMV");
+        Project prj1 = new Project(111, "EFV", new Date(), Status.NEW, "Customer 1", dep);
+        prj1.getMembers().add(member2);
+        prj1.getMembers().add(member3);
+        prj1.getMembers().add(member4);
+        prj1.getMembers().add(member5);
+        member2.getProjects().add(prj1);
+        member3.getProjects().add(prj1);
+        member4.getProjects().add(prj1);
+        member5.getProjects().add(prj1);
+        dep.getProjects().add(prj1);
+        dep.setLeader(member1);
+        // execute
+        this.groupRepository.save(dep);
+        
+        // verify
+        Project verifyPrj = this.projectRepository.findOne(QProject.project.number.eq(111));
+        Assert.assertNotNull(verifyPrj);
+    }
+
 }

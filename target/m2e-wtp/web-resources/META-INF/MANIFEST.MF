@@ -1,9 +1,9 @@
 Manifest-Version: 1.0
 Implementation-Title: on-boarding-exercise
 Implementation-Version: 0.0.1-SNAPSHOT
-Built-By: xdg
+Built-By: john
 Implementation-Vendor-Id: vn.elca.training
-Build-Jdk: 1.8.0_92
+Build-Jdk: 1.8.0_51
 Created-By: Maven Integration for Eclipse
 Implementation-Vendor: Pivotal Software, Inc.
 

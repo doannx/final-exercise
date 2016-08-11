@@ -26,7 +26,7 @@ import com.mysema.query.types.expr.BooleanExpression;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = { ApplicationLauncher.class, MyRepositoryConfiguration.class })
-public class IGroupRepositoryTest {
+public class GroupServiceImplTest {
     @Autowired
     private IGroupRepository groupRepo;
     @Autowired
@@ -34,7 +34,7 @@ public class IGroupRepositoryTest {
 
     @Test
     @Transactional
-    public void testSaveGroup() {
+    public void testCreateCascade001() {
         // new member
         Employee member = new Employee("TC1", "TEST ACC 1", "NGUYEN");
         // new group
@@ -43,13 +43,32 @@ public class IGroupRepositoryTest {
         g.setLeader(member);
         this.groupRepo.save(g);
         // new project
-        List<Employee> members = new ArrayList<Employee>();
-        members.add(member);
-        Project dummyPrj = new Project(555, "TEST PRJ", new Date(), Status.NEW, "TEST CUS", g, members);
+        Project dummyPrj = new Project(555, "TEST PRJ", new Date(), Status.NEW, "TEST CUS", g, new ArrayList<Employee>());
         this.projectRepo.save(dummyPrj);
         // verify
         BooleanExpression groupName = QGroup.group.name.eq("TEST");
         Assert.assertEquals("TEST ACC 1", Lists.newArrayList(this.groupRepo.findAll(groupName).iterator()).get(0)
+                .getLeader().getFirstName());
+    }
+    
+    @Test
+    @Transactional
+    public void testCreateCascade002() {
+        // new member
+        Employee member = new Employee("TC2", "TEST ACC 2", "NGUYEN");
+        // new group
+        Group g = new Group();
+        g.setName("TEST");
+        g.setLeader(member);
+        this.groupRepo.save(g);
+        // new project
+        List<Employee> members = new ArrayList<Employee>();
+        members.add(member);
+        Project dummyPrj = new Project(666, "TEST PRJ 666", new Date(), Status.NEW, "TEST CUS 666", g, members);
+        this.projectRepo.save(dummyPrj);
+        // verify
+        BooleanExpression groupName = QGroup.group.name.eq("TEST");
+        Assert.assertEquals("TEST ACC 2", Lists.newArrayList(this.groupRepo.findAll(groupName).iterator()).get(0)
                 .getLeader().getFirstName());
     }
 }
