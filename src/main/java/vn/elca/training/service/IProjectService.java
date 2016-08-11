@@ -1,6 +1,9 @@
 package vn.elca.training.service;
 
+import java.util.List;
+
 import vn.elca.training.dom.Project;
+import vn.elca.training.exception.ProjectNotInAvailableStatusException;
 import vn.elca.training.exception.ProjectNumberAlreadyExistsException;
 import vn.elca.training.model.ProjectVO;
 import vn.elca.training.model.SearchCriteriaVO;
@@ -50,13 +53,13 @@ public interface IProjectService {
     Long update(ProjectVO p) throws ProjectNumberAlreadyExistsException;
 
     /**
-     * Delete one project.
+     * Delete multiple projects.
      * 
      * @param id
      *            project's id
      * @return void
      */
-    void delete(Long id);
+    void delete(List<Long> ids) throws ProjectNotInAvailableStatusException;
 
     /**
      * Clone one project from existing one.

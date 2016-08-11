@@ -3,6 +3,7 @@ package vn.elca.training.service;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -18,6 +19,7 @@ import vn.elca.training.dom.Employee;
 import vn.elca.training.dom.Group;
 import vn.elca.training.dom.Project;
 import vn.elca.training.dom.QProject;
+import vn.elca.training.exception.ProjectNotInAvailableStatusException;
 import vn.elca.training.exception.ProjectNumberAlreadyExistsException;
 import vn.elca.training.model.ProjectVO;
 import vn.elca.training.model.SearchCriteriaVO;
@@ -146,10 +148,19 @@ public class ProjectServiceImpl implements IProjectService {
      * @param id
      *            project's id
      * @return void
+     * @throws ProjectNotInAvailableStatusException
      */
     @Override
-    public void delete(Long id) {
-        this.projectRepository.delete(id);
+    public void delete(List<Long> prjIds) throws ProjectNotInAvailableStatusException {
+        Project verifyPrj;
+        for (Long id : prjIds) {
+            verifyPrj = this.getById(id);
+            if (Status.NEW.equals(verifyPrj.getStatus())) {
+                this.projectRepository.delete(id);
+            } else {
+                throw new ProjectNotInAvailableStatusException(String.valueOf(id));
+            }
+        }
     }
 
     /**

@@ -306,8 +306,8 @@ $(document).ready(function() {
 					prjIds : [id]
 				}
 			}).done(function(data) {
-				if (data == "fail") {
-					alert($('#hidCanNotDeleteText').val());
+				if (data != "success") {
+					alert($('#hidCanNotDeleteText').val() + data);
 				}
 				window.location="/";
 			}).fail(function (jqXHR, textStatus, errorThrown) {
@@ -339,6 +339,9 @@ $(document).ready(function() {
 					prjIds : prjIds
 				}
 			}).done(function(data) {
+				if (data != "success") {
+					alert($('#hidCanNotDeleteText').val() + data);
+				}
 				window.location="/";
 			}).fail(function (jqXHR, textStatus, errorThrown) {
 		        if (jqXHR.status === 401) {

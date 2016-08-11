@@ -10,6 +10,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpSession;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -26,9 +27,9 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.servlet.ModelAndView;
 
 import vn.elca.training.dom.Project;
+import vn.elca.training.exception.ProjectNotInAvailableStatusException;
 import vn.elca.training.model.SearchCriteriaVO;
 import vn.elca.training.model.SearchResultVO;
-import vn.elca.training.model.Status;
 import vn.elca.training.model.UserPreference;
 import vn.elca.training.service.IProjectService;
 import vn.elca.training.util.Constants;
@@ -46,6 +47,7 @@ public class ApplicationController {
     private UserPreference userPref;
     @Autowired
     MessageSource messageSource;
+    private static final Logger LOGGER = Logger.getLogger(ApplicationController.class);
 
     @RequestMapping(value = "/", method = { RequestMethod.GET })
     ModelAndView main() {
@@ -193,16 +195,12 @@ public class ApplicationController {
     @RequestMapping("/delete")
     @ResponseBody
     String delete(@RequestParam(value = "prjIds[]") List<Long> prjIds) {
-        Project verifyPrj;
-        for (Long id : prjIds) {
-            verifyPrj = this.projectService.getById(id);
-            if (Status.NEW.equals(verifyPrj.getStatus())) {
-                this.projectService.delete(id);
-            } else {
-                return "fail";
-            }
+        try {
+            this.projectService.delete(prjIds);
+        } catch (ProjectNotInAvailableStatusException e) {
+            LOGGER.error("ProjectNotInAvailableStatusException: " + e.getMessage());
+            return e.getMessage();
         }
-        // callback to main() to re-display [home] view
         return "success";
     }
 
