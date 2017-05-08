@@ -7,6 +7,8 @@
 <html lang="en-US">
 <head>
   <meta charset="utf-8">
+  <meta name="_csrf" content="${_csrf.token}"/>
+  <meta name="_csrf_header" content="${_csrf.headerName}"/>
   <script type='text/javascript' src='https://code.jquery.com/jquery-2.1.4.js'></script>
   <script type='text/javascript' src='http://ajax.aspnetcdn.com/ajax/knockout/knockout-3.1.0.js'></script>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.css">
@@ -17,6 +19,14 @@
   <script src="/static/js/common/common.js"></script>
   <link rel="stylesheet" href="/static/css/pim.css">
   <title><spring:message code="application.title" /></title>
+  <script>
+	  var token = $("meta[name='_csrf']").attr("content");
+	  var header = $("meta[name='_csrf_header']").attr("content");
+	   
+	  $(document).ajaxSend(function(e, xhr, options) {
+	      xhr.setRequestHeader(header, token);
+	  });
+  </script>
 </head>
 
 <body>
