@@ -14,6 +14,9 @@ public class MySecurityConfiguration extends WebSecurityConfigurerAdapter {
     private static final Logger LOGGER = Logger.getLogger(MySecurityConfiguration.class);
 
     @Autowired
+    private MyBasicAuthenticationEntryPoint authenticationEntryPoint;
+
+    @Autowired
     public void configureGlobalSecurity(AuthenticationManagerBuilder auth) throws Exception {
         auth.inMemoryAuthentication().withUser("emp").password("emp123").roles("USER");
         auth.inMemoryAuthentication().withUser("admin").password("admin123").roles("ADMIN");
@@ -21,8 +24,7 @@ public class MySecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http
-            .authorizeRequests()
-                .anyRequest().permitAll();
+        http.authorizeRequests().antMatchers("/delete/**").authenticated().and().httpBasic()
+                .authenticationEntryPoint(authenticationEntryPoint);
     }
 }
